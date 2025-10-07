@@ -1,0 +1,64 @@
+.details-card {
+    background: #f9fafb;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 1.5rem;
+}
+.details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+.details-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+.btn {
+    display: inline-block;
+    padding: 0.4em 1.1em;
+    border-radius: 0.5em;
+    font-size: 1em;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+.btn--blue {
+    background: #2563eb;
+    color: #fff;
+}
+.btn--blue:hover {
+    background: #1d4ed8;
+}
+.btn--sm {
+    font-size: 0.95em;
+    padding: 0.3em 0.9em;
+}
+.details-content {
+    margin-top: 0.5rem;
+}
+.details-value {
+    color: #111827;
+    font-weight: 500;
+    margin-bottom: 0.2em;
+}
+.details-value--sub {
+    color: #6b7280;
+    font-size: 0.97em;
+    font-weight: 400;
+}
+.details-value--small {
+    font-size: 0.85em;
+    margin-top: 0.2em;
+}
+.text-green {
+    color: #059669;
+}
+.text-red {
+    color: #dc2626;
+}

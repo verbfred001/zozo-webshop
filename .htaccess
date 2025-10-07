@@ -1,0 +1,81 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Admin instellingen pretty routes -> internal controller
+    RewriteRule ^admin/instellingen/?$ /zozo-admin/instellingen.php [L,QSA]
+    RewriteRule ^admin/instellingen/tijdsloten-instellen/?$ /zozo-admin/instellingen.php?tab=tijdsloten&sub=ts-main [L,QSA]
+    RewriteRule ^admin/instellingen/tijdsloten-aantal-dagen/?$ /zozo-admin/instellingen.php?tab=tijdsloten&sub=ts-days [L,QSA]
+    RewriteRule ^admin/instellingen/tijdsloten-vakantie/?$ /zozo-admin/instellingen.php?tab=tijdsloten&sub=ts-holiday [L,QSA]
+    RewriteRule ^admin/instellingen/webshop/?$ /zozo-admin/instellingen.php?tab=shop [L,QSA]
+    RewriteRule ^admin/instellingen/tijdelijke-melding/?$ /zozo-admin/instellingen.php?tab=melding [L,QSA]
+    RewriteRule ^admin/instellingen/talen/?$ /zozo-admin/instellingen.php?tab=talen [L,QSA]
+    RewriteRule ^admin/instellingen/(.*)$ /zozo-admin/instellingen.php [L,QSA]
+</IfModule>
+
+RewriteEngine On
+
+# --- HTTPS redirect ---
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+SetEnvIf X-Forwarded-Proto "https" HTTPS=on
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+AddDefaultCharset utf-8
+
+# --- Default page for the root of the site ---
+# DirectoryIndex zozo-pages/index.php
+DirectoryIndex index.html zozo-pages/index.php
+RewriteRule ^nieuw$ /zozo-pages/index.php [L,QSA]
+
+# --- PHP settings (only works with mod_php) - guarded so it won't break PHP-FPM setups ---
+<IfModule mod_php.c>
+    php_value memory_limit 30M
+    php_value post_max_size 100M
+    php_value upload_max_filesize 30M
+</IfModule>
+
+# --- Main rewrites ---
+RewriteRule ^welkom$ /zozo-pages/zozo-welkom.php?l=nl [L,QSA]
+RewriteRule ^bienvenue$ /zozo-pages/zozo-welkom.php?l=fr [L,QSA]
+RewriteRule ^welcome$ /zozo-pages/zozo-welkom.php?l=en [L,QSA]
+
+RewriteRule ^nieuwste$ /zozo-pages/zozo-welkom.php [L,QSA]
+RewriteRule ^winkelwagen$ /zozo-pages/cart.php [L,QSA]
+RewriteRule ^contact$ /zozo-pages/contact.php?l=nl [L,QSA]
+RewriteRule ^contact-fr$ /zozo-pages/contact.php?l=fr [L,QSA]
+RewriteRule ^contact-eng$ /zozo-pages/contact.php?l=en [L,QSA]
+
+# Bedankt (thank you) page
+RewriteRule ^bedankt$ /zozo-pages/zozo-bedankt.php [L,QSA]
+RewriteRule ^bedankt/([0-9]+)$ /zozo-pages/zozo-bedankt.php?order=$1 [L,QSA]
+
+# Winkelwagen per taal
+RewriteRule ^nl/cart$ /zozo-pages/zozo-cart.php?l=nl [L,QSA]
+RewriteRule ^fr/cart$ /zozo-pages/zozo-cart.php?l=fr [L,QSA]
+RewriteRule ^en/cart$ /zozo-pages/zozo-cart.php?l=en [L,QSA]
+RewriteRule ^nl/checkout$ /zozo-pages/zozo-checkout.php?l=nl [L,QSA]
+RewriteRule ^fr/checkout$ /zozo-pages/zozo-checkout.php?l=fr [L,QSA]
+RewriteRule ^en/checkout$ /zozo-pages/zozo-checkout.php?l=en [L,QSA]
+RewriteRule ^(nl|fr|en)/product/([0-9]+)/([^/]+)$ /zozo-pages/zozo-detail.php?id=$2&slug=$3&l=$1 [L,QSA]
+RewriteRule ^(nl|fr|en)/prod/(.+)$ /zozo-pages/product.php?fullpath=$2&l=$1 [L,QSA]
+RewriteRule ^(nl|fr|en)/(.*)$ /zozo-pages/zozo-products.php?page=products&cat=$2&l=$1 [L,QSA]
+RewriteRule ^suggesties$ /zozo-pages/products.php?page=products&cat=suggesties [L,QSA]
+RewriteRule ^prod/([^/]+)$ /zozo-pages/product.php?art_afkorting=$1 [L,QSA]
+
+# --- Admin rewrites ---
+RewriteRule ^admin/dashboard$ /zozo-admin/dashboard.php [L,QSA]
+RewriteRule ^admin/bestellingen$ /zozo-admin/bestellingen.php [L,QSA]
+RewriteRule ^admin/artikelen$ /zozo-admin/artikelen.php [L,QSA]
+RewriteRule ^admin/detail$ /zozo-admin/artikel_bewerk.php [L,QSA]
+RewriteRule ^admin/categorieen$ /zozo-admin/categorieen.php [L,QSA]
+RewriteRule ^admin/opties$ /zozo-admin/opties.php [L,QSA]
+RewriteRule ^admin/opties-toewijzen$ /zozo-admin/opties-toewijzen.php [L,QSA]
+RewriteRule ^admin/instellingen$ /zozo-admin/instellingen.php [L,QSA]
+RewriteRule ^admin/voorraad$ /zozo-admin/voorraad.php [L,QSA]
+RewriteRule ^admin/kalender$ /zozo-admin/kalender.php [L,QSA]
+
+# --- Fallback: only rewrite to front controller if not a real file/dir ---
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /zozo-pages/index.php [L,QSA]

@@ -1,0 +1,165 @@
+.hero {
+  position: relative;
+  background-image: url('/zozo-assets/img/hero-zozo.webp');
+  background-size: cover;
+  background-position: center;
+  padding: 40px 20px;
+  color: white;
+  height: 450px; /* vaste, beheersbare hoogte */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55); /* iets donkerder voor leesbaarheid */
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  gap: 1rem;
+}
+
+.hero-image-side {
+  display: none;
+}
+
+.hero-text-side {
+  text-align: center;
+  padding: 1rem;
+  max-width: 600px;
+}
+
+.hero-message {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+@media (min-width: 768px) {
+
+.hero-image-side {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    padding-left: 1rem;
+    flex: 0 0 40%;
+  }
+  .hero-content {
+    flex-direction: row;         /* horizontale indeling: afbeelding naast tekst */
+    justify-content: space-between;
+    align-items: stretch;        /* kolommen worden even hoog */
+    height: 100%;                /* vult de volledige .hero */
+    gap: 2rem;
+  }
+
+ .hero-image-side img {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: bottom;
+  margin-top: auto;
+  transform: translateY(40px); /* pas aan voor perfect visuele uitlijning */
+}
+
+  .hero-text-side {
+    flex: 0 0 55%;
+    text-align: left;
+    padding: 2rem;
+  }
+
+  .hero-message {
+    font-size: 1.3rem;
+  }
+}
+
+.intro-box {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  color: #222;
+}
+
+.intro-box h2 {
+  margin-top: 0;
+  color: #B17C69;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.intro-box .subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.intro-box p {
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+}
+
+.extra-info-text {
+  background: #f9f6f3;
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+@media (max-width: 900px) {
+  .extra-info-text {
+    padding-left: 1.5rem;
+  }
+}
+
+.suggestions {
+  padding-top: 30px;
+  padding-left: 3rem;
+  padding-right: 2rem;
+}
+
+.suggestions h2 {
+  margin-top: 0;
+  color: #B17C69;
+  font-size: 2rem;
+  font-weight: 700;
+}
+.suggestions h3 {
+  margin-top: 0;
+  color: #494848;
+}
+.suggestion {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.suggestion-thumb {
+  width: 65px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+.suggestion h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}

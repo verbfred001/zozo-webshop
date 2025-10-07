@@ -1,0 +1,276 @@
+﻿.detail-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .detail-images {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        /* Limit main product image width on desktop to 350px */
+        .detail-images {
+            max-width: 350px;
+        }
+
+        .detail-images-main {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .detail-thumbs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .detail-thumbs img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .detail-thumbs img.active,
+        .detail-thumbs img:hover {
+            border-color: #1f2937;
+        }
+
+        .detail-info {
+            flex: 1;
+            /* allow the info column to shrink on smaller viewports so selects and form fields
+               can become narrower; previously min-width:400px forced the form wider than the
+               viewport on narrow windows */
+            min-width: 0;
+        }
+
+        .detail-breadcrumb {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .detail-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .detail-kenmerk {
+            color: #666;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .detail-price {
+            font-size: 1.5em;
+            font-weight: bold;
+                    color: #000; /* make current price black to match other pages */
+            margin-bottom: 20px;
+        }
+
+        /* Old price styling matching product card */
+        .detail-price-row {
+            display: flex;
+            align-items: flex-end; /* align baseline with current price; old price will be lifted */
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .detail-oldprice {
+            color: #d97706; /* same darker orange as product cards */
+            font-size: 1.04em;
+            font-weight: 400;
+            position: relative;
+            display: inline-block;
+            white-space: nowrap;
+            transform: translateY(-22px); /* lift old price 22px higher than current price */
+        }
+
+        .detail-oldprice::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            width: calc(100% + 6px);
+            top: 50%;
+            height: 1px;
+            background: #000;
+            transform-origin: center center;
+            transform: translate(-50%, -50%) rotate(-18deg);
+            pointer-events: none;
+        }
+        /* smaller styling for 'op maat' label on detail page only */
+        .detail-price.detail-price--opmaat {
+            font-size: 1.0rem; /* smaller */
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .detail-description {
+            line-height: 1.6;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .detail-option-group {
+            margin-bottom: 20px;
+        }
+
+        .detail-option-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .detail-option-group select,
+        .detail-option-group input[type="text"],
+        .detail-option-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .detail-option-group input[type="radio"],
+        .detail-option-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .detail-radio-group,
+        .detail-checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .detail-radio-label,
+        .detail-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: normal;
+        }
+
+        .voorraad-info {
+            margin: 15px 0;
+            padding: 10px;
+            background: #e3f2fd;
+            border-radius: 4px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .qty-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .qty-section input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .add-to-cart-btn {
+            background: #1f2937;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .add-to-cart-btn:hover:not(:disabled) {
+            background: #1d4ed8;
+        }
+
+        .add-to-cart-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .error-msg {
+            color: #dc3545;
+            margin: 10px 0;
+        }
+
+        .success-msg {
+            color: #28a745;
+            margin: 10px 0;
+        }
+
+        /* Responsive: op smalle schermen stapelen en foto boven opties */
+@media (max-width: 767px) {
+    .detail-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 12px;
+    }
+
+    .detail-images,
+    .detail-info {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Zorg dat de foto full-width en proportioneel is */
+    .detail-images-main {
+        width: 100%;
+        height: auto;
+        max-height: none;
+    }
+
+    /* thumbs onder de hoofdafbeelding in plaats van naast */
+    .detail-thumbs {
+        justify-content: flex-start;
+    }
+
+    /* Form / quantity / button volle breedte */
+    .qty-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .qty-section input {
+        width: 100%;
+    }
+    .add-to-cart-btn {
+        width: 100%;
+    }
+
+    /* kleinere lettergroottes en spacing op mobiel */
+    .detail-title { font-size: 1.25rem; }
+    .detail-price { font-size: 1.1rem; }
+    .detail-description { padding: 12px; }
+}
+
+/* Voor brede schermen: twee kolommen (optioneel, zorgt consistentie) */
+@media (min-width: 768px) {
+    .detail-container {
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+    }
+    /* Keep the image column fixed at max 350px; allow info column to grow */
+    .detail-images { flex: 0 0 auto; max-width: 350px; }
+    .detail-info   { flex: 1 1 auto; max-width: calc(100% - 350px); }
+}

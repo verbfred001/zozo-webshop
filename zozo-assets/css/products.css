@@ -1,0 +1,158 @@
+
+/* CSS voor de productpagina */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5em;
+}
+.product-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  padding: 1.2em;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Zorg dat alle cards even hoog zijn in een grid */
+  align-items: center;
+  transition: box-shadow 0.2s;
+}
+.product-card:hover {
+  box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+}
+.product-image {
+  width: 100%;
+  height: 140px;         /* or any height you prefer */
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+.product-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  align-items: center;
+}
+.product-title {
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-bottom: 0.7em;
+  color: #B17C69;
+  text-align: center;
+}
+.product-bottom {
+  margin-top: auto; /* Duwt prijs & winkelkar naar onder */
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+.product-price {
+  font-size: 1.1em;
+  color: #232323;
+  font-weight: bold;
+}
+.add-to-cart-btn {
+  background: #B17C69;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.add-to-cart-btn:hover {
+  background: #a06a58;
+}
+@media (max-width: 600px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  .product-image {
+    width: 60%;
+    min-width: 90px;
+    max-width: 160px;
+    height: 110px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+  .cart-modal {
+    align-items: flex-start;
+  }
+  .cart-modal-content {
+    margin-top: 24px;
+    margin-bottom: 24px;
+  }
+}
+.cart-modal {
+  display: none;
+  position: fixed;
+  z-index: 1400;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.45);
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto; /* Toevoegen zodat de hele modal meescrolt */
+}
+.cart-modal.open {
+  display: flex;
+}
+.cart-modal-content {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 95vw;
+  width: 100%;
+  max-width: 400px;
+  padding: 2em 1.2em 1.2em 1.2em;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  position: relative;
+  animation: modalIn 0.2s;
+}
+@keyframes modalIn {
+  from { transform: translateY(40px) scale(0.98); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+.cart-modal-close {
+  position: absolute;
+  right: 18px;
+  top: 12px;
+  font-size: 2em;
+  color: #B17C69;
+  cursor: pointer;
+  font-weight: bold;
+}
+#cart-modal-form label {
+  display: block;
+  margin-bottom: 0.7em;
+  font-size: 1em;
+}
+#cart-modal-form input,
+#cart-modal-form select {
+  width: 100%;
+  padding: 0.5em;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-top: 0.2em;
+  font-size: 1em;
+}
+#cart-modal-form input[type="number"] {
+  width: 80px;
+  display: inline-block;
+}
+#cart-modal-form .add-to-cart-btn {
+  margin-top: 1em;
+  width: 100%;
+  justify-content: center;
+  font-size: 1.1em;
+}
+@media (max-width: 500px) {
+  .cart-modal-content {
+    padding: 1em 0.5em;
+    max-width: 98vw;
+  }
+}

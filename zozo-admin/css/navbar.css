@@ -1,0 +1,93 @@
+/* Reset */
+.navbar, .navbar * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background: #2563eb;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar-logo {
+    font-weight: bold;
+    font-size: 1.25rem;
+    letter-spacing: 1px;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Dropdown (Instellingen) styling */
+.navbar-dropdown {
+    background: #2b6ef0; /* match navbar hover */
+}
+
+.navbar-dropdown .navbar-link {
+    color: #fff; /* ensure links are visible */
+    display: block;
+    padding: 0.75rem 1rem;
+}
+
+.navbar-dropdown .navbar-link:hover {
+    /* subtle hover - only slightly lighter than dropdown background */
+    background: #2f77f5;
+}
+
+.navbar-link {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    transition: background 0.2s;
+    font-size: 1rem;
+}
+
+.navbar-link:hover,
+.navbar-link.active {
+    /* slightly lighter than navbar background (#2563eb) for a subtle hover */
+    background: #2b6ef0;
+}
+
+.navbar-link.logout {
+    color: #facc15; /* Geel */
+}
+
+.navbar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .navbar-links {
+        display: none;
+        flex-direction: column;
+        background: #2563eb;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .navbar-links.open {
+        display: flex;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+}

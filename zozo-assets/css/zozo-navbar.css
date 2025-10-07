@@ -1,0 +1,670 @@
+﻿/* Navbar */
+:root {
+    --navbar-bg: #1f2937; /* main navbar background */
+    --navbar-sub-bg: #374151; /* subcategories slightly lighter */
+    --nav-link-color: #ffffff;
+    --nav-link-hover: #bfc6d1;
+    --nav-active-underline: #ffd600; /* accent for active link underline */
+}
+
+.lang-bar {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px 0 16px;
+}
+
+.lang-btn {
+    background: #e5e7eb;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 14px;
+    font-size: 1em;
+    cursor: pointer;
+    color: #22223b;
+    font-weight: 500;
+}
+
+.lang-btn.active {
+    background: #1f2937;
+    color: #fff;
+}
+
+.navbar {
+    background: var(--navbar-bg);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    border-radius: 0;
+    width: 100%; /* volledige breedte */
+    margin: 18px 0 0 0;
+    padding: 10px 0 0 0; /* ruimte boven voor logo dat uitsteekt */
+}
+
+.navbar-container {
+    max-width: 1200px; /* zelfde als breadcrumb */
+    margin: 0 auto; /* centreren */
+    padding: 0 16px; /*zelfde padding als breadcrumb */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* logo en links links uitlijnen */
+    position: relative; /* voor absolute positioning van menu */
+}
+
+/* Kleine schermen: links 3px marge, niet gecentreerd */
+@media (max-width: 799px) {
+    .navbar {
+        margin: 18px 0 0 3px;
+        max-width: calc(100vw - 6px); /* gegarandeerd binnen viewport */
+        width: auto;
+        /* allow the absolute-positioned mobile menu to overflow the navbar
+           so the dropdown isn't clipped when it appears */
+        overflow: visible;
+    }
+    .navbar-container {
+        max-width: 100%; /* gebruik volledige navbar breedte */
+        padding: 0 10px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 1; /* basis z-index voor container */
+    }
+    
+    /* Hamburger menu absoluut links plaatsen */
+    .nav-toggle {
+        position: absolute;
+        left: 10px; /* 10px van links (zelfde als padding) */
+        z-index: 10;
+    }
+    
+    /* Logo centreren */
+    .navbar-logo {
+        order: 2;
+        flex: 0; /* geen flex-grow */
+    }
+    
+    /* Menu onderaan plaatsen (volledige breedte) */
+    .nav-list.depth-0 {
+        order: 4;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        width: 100%;
+        background: var(--navbar-bg);
+        z-index: 1000; /* verhoogd voor zichtbaarheid */
+    }
+}
+
+/* Navbar logo styling */
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    margin-right: 10px; /* kleiner voor nauwer aansluiting bij links */
+    margin-left: -20px; /* 20px naar rechts verschoven (was -40px) */
+    position: relative;
+    z-index: 10;
+}
+
+.navbar-logo a {
+    display: block;
+}
+
+.navbar-logo img {
+    width: 180px; /* vaste breedte van 180px */
+    height: auto; /* proportionele hoogte */
+    max-width: none; /* override default max-width */
+}
+
+/* Mobiel: logo centreren */
+@media (max-width: 799px) {
+    .navbar-logo {
+        margin-right: 0;
+        margin-bottom: 0; /* verwijderd omdat het nu horizontaal is */
+        margin-left: 0; /* reset de negative margin voor mobiel */
+        order: 2; /* midden positie */
+    }
+
+    .navbar-logo img {
+        width: 150px; /* kleinere breedte voor mobiel */
+        max-width: 200px;
+    }
+}
+
+/* Hoofdlinks: wit, subtiel */
+.nav-link,
+.nav-link.active {
+    background: transparent;
+    color: #fff;
+    font-weight: 400;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.15s, color 0.15s;
+}
+
+/* Hover: blauw accent, Focus: geen kleurverandering */
+.nav-link:hover {
+    background-color: transparent;
+    color: #bfc6d1; /* zacht grijs, kies eventueel een andere tint */
+}
+
+.nav-link:focus {
+    background-color: transparent;
+    /* geen kleurverandering bij focus, alleen bij hover */
+}
+
+/* Actieve categorie: geen kleurverandering meer - gebruik een subtiele underline */
+.nav-item.active > .nav-link,
+.nav-link.active {
+    background-color: transparent; /* geen andere achtergrond */
+    font-weight: 400;
+    border-bottom: none;
+}
+
+/* Hover op actieve link */
+.nav-link.active:hover,
+.nav-link.active:focus {
+    background-color: transparent;
+    /* geen kleurverandering op hover voor actieve link; underline blijft zichtbaar */
+}
+
+.nav-toggle {
+    display: inline-block;
+    background: none;
+    border: none;
+    font-size: 2em;
+    margin: 0 10px 0 0;
+    cursor: pointer;
+    color: #fff;
+}
+
+.nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background: var(--navbar-bg); /* zelfde als navbar */
+}
+
+    /* depth-0 default display is controlled per-breakpoint.
+       On desktop (inside @media min-width:800px) we set it to block/inline layout.
+       This avoids conflicts with mobile rules that hide/show via the .show class. */
+
+.nav-item {
+    position: relative;
+    min-width: 120px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 8px;
+    color: #fff; /* <-- NU WIT */
+    text-decoration: none;
+    font-weight: 500;
+     /* Gebruik het pagina-lettertype (erfgenaam van body), zodat nav links
+         hetzelfde 'fijne' lettertype krijgen als voorheen (bv. Roboto). */
+     font-family: inherit;
+    font-size: 0.9em;
+    transition: background 0.15s;
+    background: transparent;
+    position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Extra overrides: ensure link-children volgen hetzelfde lettertype als de link */
+.nav-link, .nav-link * {
+    font-family: inherit;
+}
+
+/* Active underline: use a centered ::after bar of 40px width */
+.nav-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 8px; /* place slightly above the bottom to sit visually centered under text */
+    width: 0;
+    height: 3px; /* subtle thickness */
+    background: var(--nav-active-underline);
+    border-radius: 2px;
+    transition: width 200ms ease, opacity 200ms ease;
+    opacity: 0;
+}
+
+/* When item is active, show a 40px centered underline */
+.nav-item.active > .nav-link::after,
+.nav-link.active::after {
+    width: 40px;
+    opacity: 1;
+}
+
+/* Aanpassing: we willen géén onderlijning bij actieve links en een bold gewicht
+   - verberg de ::after voor actieve links
+   - maak actieve links vet (bold)
+   Plaats onderaan zodat het eerdere rules overschrijft zonder !important. */
+.nav-item.active > .nav-link::after,
+.nav-link.active::after {
+    display: none;
+    width: 0;
+    opacity: 0;
+}
+
+.nav-item.active > .nav-link,
+.nav-link.active {
+    /* Maak actieve link bold zodat deze opvalt */
+    font-weight: 700;
+}
+
+.nav-link:hover {
+    background-color: transparent;
+    color: #bfc6d1; /* zacht grijs, kies eventueel een andere tint */
+}
+
+.nav-link:focus {
+    background-color: transparent;
+    /* geen kleurverandering bij focus */
+}
+
+/* Actieve categorie styling - subtiel */
+.nav-item.active > .nav-link,
+.nav-link.active {
+    background-color: transparent; /* geen andere achtergrond */
+    font-weight: 700;
+    border-bottom: none;
+}
+
+
+/* Hover blijft werken, maar respecteert actieve state */
+.nav-link.active:hover,
+.nav-link.active:focus {
+    background-color: transparent;
+}
+
+/* ▼ pijltje styling (basis) - small, inline and neutral alignment; desktop overrides will position it tight to the label */
+.nav-arrow {
+    font-size: 1em;
+    margin-left: 8px;
+    margin-right: 0;
+    min-width: 0;
+    width: auto;
+    text-align: left;
+    display: inline-block;
+    flex-shrink: 0;
+    position: static;
+    transition: transform 0.2s;
+    vertical-align: middle;
+}
+
+.has-children > .nav-link .nav-arrow {
+    transform: rotate(0deg);
+}
+
+.nav-item.open > .nav-link .nav-arrow {
+    transform: rotate(180deg);
+}
+
+/* Submenu standaard verborgen */
+.nav-item > .nav-list {
+    height: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    overflow: hidden;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition:
+        height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0.5s;
+    background: var(--navbar-sub-bg);
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 0;
+    flex-direction: column;
+    display: block;
+}
+
+.nav-item.open > .nav-list {
+    height: auto;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: scaleY(1);
+    transition:
+        height 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0.6s;
+    display: block;
+}
+
+/* Hamburger */
+.nav-toggle {
+    display: inline-block;
+}
+
+/* Inspringen per diepte (voor tekst en haakje) */
+.nav-list.depth-1 .nav-link { padding-left: 40px; }
+.nav-list.depth-2 .nav-link { padding-left: 56px; }
+.nav-list.depth-3 .nav-link { padding-left: 72px; }
+
+/* Haakje links, mee inspringen */
+.nav-list.depth-1 .nav-link::before {
+    content: "\21B3"; /* Unicode voor ↳ */
+    position: absolute;
+    left: 18px;
+    color: #fff;
+    font-size: 1em;
+}
+.nav-list.depth-2 .nav-link::before {
+    content: "\21B3"; /* Unicode voor ↳ */
+    position: absolute;
+    left: 34px;
+    color: #fff;
+    font-size: 1em;
+}
+.nav-list.depth-3 .nav-link::before {
+    content: "\21B3"; /* Unicode voor ↳ */
+    position: absolute;
+    left: 50px;
+    color: #fff;
+    font-size: 1em;
+}
+
+/* Submenu blokken: op mobiel altijd 100% breed, geen inspringing */
+.nav-list.depth-1,
+.nav-list.depth-2,
+.nav-list.depth-3 {
+    width: 100%;
+    min-width: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Mobile show/hide */
+.nav-list.show {
+    display: flex !important;
+}
+
+/* DESKTOP: layout and white theme for screens >=800px */
+@media (min-width: 800px) {
+    .navbar {
+        /* increase vertical padding on large screens to make navbar taller */
+        padding: 6px 0; /* geen horizontale padding - container regelt dit */
+        /* Make navbar span full width for background color */
+        max-width: none;
+        margin: 0;
+        width: 100%;
+        position: relative;
+    }
+
+    /* Container binnen navbar blijft gecentreerd */
+    .navbar .navbar-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px; /* horizontale padding voor content */
+    }
+    /* Top-level container: keep centered, but render items as inline-blocks
+       so each top-level link has a fixed gap regardless of its text length. */
+    .nav-list.depth-0 {
+        width: auto;
+        background: #22223b; /* maak gelijk aan je navbar */
+        display: block; /* switch to block so inline-block children can flow left */
+        align-items: center;
+        /* verwijder max-width en margin omdat navbar-container dit al doet */
+        padding-left: 0; /* geen extra padding nodig */
+    }
+
+    .nav-list.depth-0 > .nav-item {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 12px; /* vaste gap tussen top-level links */
+        min-width: 0; /* remove any fixed width so item width matches content */
+        width: auto;
+    }
+    .nav-list.depth-0 > .nav-item:last-child {
+        margin-right: 0;
+    }
+    /* removed fixed min-width for .nav-item on large screens so top-level
+       inline-block items can size to content and the fixed margin-right gap
+       behaves consistently. */
+    .nav-link {
+        border-bottom: none;
+    }
+    .nav-link:last-child {
+        border-right: none;
+    }
+    .nav-toggle {
+        display: none;
+    }
+
+    /* On desktop: keep label and arrow close together (arrow immediately after label).
+       Increase horizontal padding so the clickable area aligns nicely with the container. */
+    .nav-link {
+        justify-content: flex-start;
+        gap: 6px;
+        padding: 10px 14px; /* verhoog horizontale padding voor meer ademruimte */
+    }
+
+    .nav-item > .nav-link .nav-arrow {
+        width: auto;
+        min-width: 0;
+        text-align: left;
+        margin-left: 6px;
+        color: #475569;
+    }
+    /* Alleen depth-1 submenu absoluut positioneren */
+    .nav-list.depth-1 {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        min-width: 220px;
+        width: max-content;
+        z-index: 100;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    background: var(--navbar-sub-bg);
+    border-radius: 0;
+        height: 0;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        overflow: hidden;
+        transform: scaleY(0.95);
+        transform-origin: top;
+        transition:
+            height 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+            opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+            transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+            visibility 0.8s;
+        display: flex;
+        flex-direction: column;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    .nav-item.open > .nav-list.depth-1 {
+        height: auto;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: scaleY(1);
+        transition:
+            height 1s cubic-bezier(0.4, 0, 0.2, 1),
+            opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+            transform 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+            visibility 0.9s;
+    }
+    /* Diepere submenu's (depth-2, depth-3, ...) relatief, inspringen */
+    .nav-list.depth-2,
+    .nav-list.depth-3 {
+        position: static;
+        box-shadow: none;
+        min-width: 0;
+        width: 100%;
+        z-index: auto;
+        background: var(--navbar-sub-bg);
+        border-radius: 0;
+        margin-left: 10px;
+        margin-right: 10px;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: scaleY(0.95);
+        transform-origin: top;
+        transition:
+            opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+            transform 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+            visibility 0.9s;
+        display: flex;
+        flex-direction: column;
+    }
+    .nav-item.open > .nav-list.depth-2,
+    .nav-item.open > .nav-list.depth-3 {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: scaleY(1);
+        transition:
+            opacity 1s cubic-bezier(0.4, 0, 0.2, 1),
+            transform 1s cubic-bezier(0.4, 0, 0.2, 1),
+            visibility 1s;
+    }
+
+    /* switch visual theme for navbar only on large screens */
+    .navbar {
+        --navbar-bg: #ffffff;
+        --navbar-sub-bg: #ffffff; /* white for submenus */
+        --nav-link-color: #0f172a; /* dark text for links */
+        --nav-link-hover: #071124; /* darker on hover */
+        background: var(--navbar-bg);
+        color: var(--nav-link-color);
+        box-shadow: 0 2px 10px rgba(16,24,40,0.06);
+    }
+
+    /* top-level container background (center container) */
+    .nav-list.depth-0 {
+        background: var(--navbar-bg);
+        /* desktop: layout handled above in this media query */
+    }
+
+    /* links use the dark color on large screens.
+       Maak top-level links wat fijner (lichter font-weight) op desktop;
+       maar zorg dat actieve links bold blijven om op te vallen. */
+    .nav-link {
+        color: var(--nav-link-color);
+        border-bottom: 1px solid rgba(15,23,42,0.03);
+        font-weight: 400; /* lichter dan op mobiel */
+    }
+
+    .nav-link.active {
+        color: #475569;
+        border-bottom: 1px solid rgba(15,23,42,0.03);
+        font-weight: 700; /* blijf bold voor actieve link */
+    }
+
+    .nav-link:hover {
+        color: var(--nav-link-hover);
+    }
+
+    /* Focus heeft geen speciale kleurverandering op desktop */
+
+    /* keep active accent as underline color for the white navbar variant */
+    :root {
+        --nav-active-underline: #ffd600; /* keep the same accent color */
+    }
+
+    /* Submenu background and link colors: slightly darker text, darker on hover */
+    .nav-list.depth-1,
+    .nav-list.depth-2,
+    .nav-list.depth-3 {
+        background: var(--navbar-sub-bg);
+    }
+
+    .nav-list.depth-1 .nav-link,
+    .nav-list.depth-2 .nav-link,
+    .nav-list.depth-3 .nav-link {
+        color: #475569; /* subtle dark gray */
+    }
+
+    .nav-list.depth-1 .nav-link:hover,
+    .nav-list.depth-2 .nav-link:hover,
+    .nav-list.depth-3 .nav-link:hover {
+        color: #0f172a; /* darker on hover */
+        background-color: rgba(15,23,42,0.02); /* tiny subtle hover background */
+    }
+
+    /* Focus in submenu's heeft geen speciale styling - gebruikt default kleur */
+
+    /* arrows and prefaces should match the dark tone */
+    .nav-list.depth-1 .nav-link::before,
+    .nav-list.depth-2 .nav-link::before,
+    .nav-list.depth-3 .nav-link::before {
+        color: #0f172a; /* dark text color */
+    }
+}
+
+/* MOBILE SPECIFIC STYLES */
+@media (max-width: 799px) {
+    :root {
+        --navbar-bg: #ffffff;
+        --navbar-sub-bg: #ffffff;
+        --nav-link-color: #0f172a;
+        --nav-link-hover: #071124;
+    }
+    .navbar {
+        color: var(--nav-link-color);
+    }
+    .nav-link {
+        color: var(--nav-link-color);
+        font-weight: 400;
+        border-bottom: 1px solid rgba(15,23,42,0.03);
+    }
+    .nav-link.active {
+        font-weight: 700;
+        color: #475569;
+    }
+    .nav-toggle {
+        color: var(--nav-link-color);
+    }
+    .nav-list.depth-0 {
+        display: none !important;
+        flex-direction: column;
+        width: 100%;
+    }
+    .nav-list.depth-0.show {
+        display: flex !important;
+    }
+    .nav-list.depth-1 .nav-link,
+    .nav-list.depth-2 .nav-link,
+    .nav-list.depth-3 .nav-link {
+        color: #475569;
+    }
+    .nav-list.depth-1 .nav-link::before,
+    .nav-list.depth-2 .nav-link::before,
+    .nav-list.depth-3 .nav-link::before {
+        color: #0f172a;
+    }
+}
+
+/* Safety overrides: ensure this navbar uses the theme variables even if other
+   global CSS files (e.g. /zozo-assets/css/navbar.css) also define .navbar.
+   We keep this minimal but use !important to guarantee the background is correct. */
+html .navbar {
+    background: var(--navbar-bg) !important;
+}
+html .nav-list,
+.nav-list.depth-0 {
+    background: var(--navbar-bg) !important;
+}
+html .nav-item > .nav-list,
+.nav-list.depth-1,
+.nav-list.depth-2,
+.nav-list.depth-3 {
+    background: var(--navbar-sub-bg) !important;
+}
+
+

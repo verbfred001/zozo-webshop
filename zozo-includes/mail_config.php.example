@@ -1,0 +1,6 @@
+<?php
+// Copy this file to mail_config.php and fill in with your Azure app credentials
+// $MS_TENANT_ID = 'your-tenant-id';
+// $MS_CLIENT_ID = 'your-client-id';
+// $MS_CLIENT_SECRET = 'your-client-secret';
+// $MS_FROM_EMAIL = 'info@yourdomain.tld';

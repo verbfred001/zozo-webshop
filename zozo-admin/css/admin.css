@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  /* Custom kleuren voor je admin dashboard */
+  --color-admin-primary: #2563eb;
+  --color-admin-secondary: #64748b;
+  --color-admin-success: #10b981;
+  --color-admin-warning: #f59e0b;
+  --color-admin-danger: #ef4444;
+  
+  /* Custom font families */
+  --font-family-admin: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+  
+  /* Custom spacing */
+  --spacing-72: 18rem;
+  --spacing-84: 21rem;
+  --spacing-96: 24rem;
+  
+  /* Custom breakpoints (optioneel) */
+  --breakpoint-xs: 480px;
+  --breakpoint-3xl: 1920px;
+}
+
+/* Je eigen custom CSS kan hier */
+@layer components {
+  .btn-admin {
+    @apply bg-admin-primary hover:bg-admin-secondary text-white px-4 py-2 rounded-lg transition-colors;
+  }
+  
+  .card-admin {
+    @apply bg-white rounded-lg shadow-md border border-gray-200;
+  }
+  
+  .admin-nav {
+    @apply bg-admin-primary text-white flex items-center px-4 relative;
+  }
+}
+
+@layer utilities {
+  .admin-focus {
+    @apply focus:outline-none focus:ring-2 focus:ring-admin-primary focus:border-transparent;
+  }
+}

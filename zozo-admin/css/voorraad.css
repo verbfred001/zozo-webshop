@@ -1,0 +1,387 @@
+/* Extra styles voor layout, voeg deze toe aan main.css indien gewenst */
+        .voorraad-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 24px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+        }
+
+        .voorraad-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 18px;
+            margin-bottom: 24px;
+        }
+
+        .voorraad-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #22223b;
+        }
+
+        .voorraad-sub {
+            color: #6b7280;
+            margin-top: 6px;
+        }
+
+        .voorraad-btn {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .voorraad-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .voorraad-stats {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .voorraad-stat-card {
+            flex: 1;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 18px 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .voorraad-stat-icon {
+            font-size: 2.2rem;
+            margin-right: 14px;
+        }
+
+        .voorraad-stat-label {
+            font-size: 1rem;
+            color: #374151;
+        }
+
+        .voorraad-stat-value {
+            font-size: 1.7rem;
+            font-weight: bold;
+            color: #22223b;
+        }
+
+        .voorraad-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            align-items: flex-end;
+            margin-bottom: 24px;
+        }
+
+        .voorraad-table-wrap {
+            overflow-x: auto;
+        }
+
+        .voorraad-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .voorraad-table th,
+        .voorraad-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        .voorraad-table th {
+            background: #f9fafb;
+            font-size: 0.95rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .voorraad-table tr:hover {
+            background: #f3f4f6;
+        }
+
+        .voorraad-table .voorraad-status {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.9em;
+        }
+
+        .voorraad-status-op {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .voorraad-status-laag {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .voorraad-status-uit {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .voorraad-status-negatief {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .voorraad-table .voorraad-aantal {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .voorraad-aantal-op {
+            color: #059669;
+        }
+
+        .voorraad-aantal-laag {
+            color: #d97706;
+        }
+
+        .voorraad-aantal-uit {
+            color: #dc2626;
+        }
+
+        .voorraad-aantal-negatief {
+            color: #7c3aed;
+        }
+
+        .voorraad-table .voorraad-acties a,
+        .voorraad-table .voorraad-acties button {
+            color: #2563eb;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 1em;
+            margin-right: 8px;
+        }
+
+        .voorraad-table .voorraad-acties a:hover,
+        .voorraad-table .voorraad-acties button:hover {
+            color: #1d4ed8;
+        }
+
+        .voorraad-success {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            color: #065f46;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+        }
+
+        .voorraad-modal-overlay {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .voorraad-modal {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .voorraad-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .voorraad-modal-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #22223b;
+        }
+
+        .voorraad-modal-close {
+            background: none;
+            border: none;
+            color: #6b7280;
+            font-size: 1.7rem;
+            cursor: pointer;
+        }
+
+        .voorraad-modal-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1em;
+        }
+
+        .voorraad-modal-label {
+            font-size: 1rem;
+            color: #374151;
+            margin-bottom: 3px;
+        }
+
+        .voorraad-modal-input,
+        .voorraad-modal-select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .voorraad-modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 1.5em;
+        }
+
+        .voorraad-modal-actions button {
+            flex: 1;
+        }
+
+        .variant-card-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .variant-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 7px;
+            padding: 7px 5px;
+            min-width: 70px;
+            max-width: 13.5%; /* 7 per rij: 100/7 ≈ 14.2 */
+            flex: 1 1 13.5%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            font-size: 0.95em;
+        }
+
+        .variant-card-title {
+            font-size: 0.97em;
+            color: #374151;
+            margin-bottom: 3px;
+            text-align: center;
+            word-break: break-word;
+            line-height: 1.2;
+        }
+
+        .variant-card-optie {
+            margin-bottom: 1px;
+        }
+
+        .variant-card-stock {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 2px;
+        }
+
+        .variant-card-stock.variant-unavailable {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #fff0f0; /* licht rood/wit achtergrond, pas aan indien gewenst */
+          color: #c62828; /* rood icoon */
+          font-weight: 700;
+          border-radius: 4px;
+          padding: 6px 8px;
+          min-width: 54px; /* houdt kolom breed genoeg */
+          min-height: 36px;
+          box-sizing: border-box;
+        }
+
+        .variant-unavailable-icon {
+          font-size: 1.15em;
+          line-height: 1;
+        }
+
+        .variant-card-edit {
+            font-size: 0.93em;
+            color: #2563eb;
+            text-decoration: underline;
+            margin-top: 2px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .variant-accordion-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 6px;
+            padding: 0 4px;
+            vertical-align: middle;
+        }
+
+        .accordion-arrow {
+            display: inline-block;
+            transition: transform 0.2s;
+            font-size: 1.1em;
+        }
+
+        .variant-accordion-toggle.open .accordion-arrow {
+            transform: rotate(180deg);
+        }
+
+        .variant-accordion-row {
+            background: #f8fafc;
+        }
+
+        @media (max-width: 900px) {
+            .voorraad-container {
+                padding: 10px;
+            }
+
+            .voorraad-header,
+            .voorraad-stats,
+            .voorraad-filters {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .variant-card { max-width: 28%; flex-basis: 28%; }
+        }
+
+        @media (max-width: 700px) {
+            .variant-card-grid { gap: 6px; }
+            .variant-card { min-width: 90px; max-width: 100%; padding: 8px 6px; }
+        }
+
+        @media (max-width: 600px) {
+            .variant-card { max-width: 48%; flex-basis: 48%; }
+        }
+
+        /* optioneel: screenreader-only tekst */
+        .visually-hidden { 
+          position: absolute !important; 
+          height: 1px; width: 1px; 
+          overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap;
+        }

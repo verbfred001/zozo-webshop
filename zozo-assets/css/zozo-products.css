@@ -1,0 +1,288 @@
+.products-main {
+            max-width: 1200px;
+            margin: 32px auto 0 auto;
+            padding: 0 12px;
+            min-height: 20vh;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            /* increased row-gap for more vertical spacing while keeping column spacing small */
+            gap: 36px 10px; /* row-gap column-gap */
+        }
+
+        @media (min-width: 500px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 700px) {
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 900px) {
+            .product-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (min-width: 1150px) {
+            .product-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        .product-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            min-width: 0;
+            transition: box-shadow 0.2s;
+            /* ensure children z-index values behave predictably and allow the cart button to sit above text/image */
+            z-index: 0;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 4px 24px rgba(37, 99, 235, 0.13);
+        }
+
+        .product-img-wrap {
+            position: relative;
+            width: 100%;
+            /* make the image taller (portrait) */
+            aspect-ratio: 3/4; /* portrait look */
+            background: #e5e7eb;
+            overflow: hidden;
+        }
+
+        .product-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* show the top of the image first so it looks 'opstaand' */
+            object-position: top center;
+            display: block;
+            transition: transform 0.3s;
+            /* slanted bottom edge via clip-path (modern browsers) */
+            clip-path: polygon(0 0, 100% 0, 100% 82%, 0 100%);
+            /* create a stacking context so we can layer the pseudo-element and overlay predictably */
+            position: relative;
+            z-index: 0;
+        }
+
+        /* Fallback / enhancement: create a slanted white strip at the bottom using a pseudo-element
+           This helps hide slight aliasing from clip-path on some browsers and provides graceful fallback */
+        .product-img-wrap::after {
+            content: '';
+            position: absolute;
+            /* extend further out to fully cover the clipped slanted area on the right */
+            left: -12%;
+            right: -12%;
+            /* make taller and move it slightly lower so the slanted edge always covers the image corner */
+            height: 30%;
+            /* shift the entire pseudo-element 20px further down to fully cover clipping artifacts */
+            bottom: calc(-8% - 20px);
+            background: #fff; /* same as card background */
+            transform-origin: left center;
+            transform: skewY(-8deg);
+            pointer-events: none;
+            box-shadow: 0 -6px 18px rgba(0,0,0,0.04);
+            /* keep the pseudo-element under the overlay elements */
+            z-index: 1;
+        }
+
+        .product-card:hover .product-img-wrap img {
+            transform: scale(1.04);
+        }
+
+        .product-info {
+            padding: 12px 16px 12px 16px; /* reduce bottom padding to save vertical space */
+            /* don't flex-grow so the card height is determined by content */
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+                /* move the block up slightly to overlap the image a bit; reduce overlap to increase row spacing */
+                margin-top: -18px;
+            /* ensure text appears above image pseudo-element which has z-index:1 */
+            position: relative;
+            z-index: 2;
+            background: transparent; /* keep background transparent so the pseudo-element doesn't show through */
+        }
+
+        .product-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #22223b;
+            margin: 0 0 2px 0;
+            line-height: 1.2;
+            text-decoration: none !important;
+            /* lift the title slightly as an additional safety (if needed) */
+            /* if this produces overlap you can remove this and rely on .product-info translate */
+            transform: translateY(-0px);
+            max-width: calc(100% - 42px); /* increased by 40px so titles are less narrow */
+            display: block;
+            word-wrap: break-word; /* allow wrapping so the title doesn't overflow */
+            white-space: normal; /* allow wrapping to multiple lines */
+        }
+
+        .product-feature {
+            color: #64748b;
+            font-size: 0.97em;
+            margin-bottom: 2px;
+            max-width: calc(100% - 60px); /* voorkom overlap met cart button rechts */
+            word-wrap: break-word; /* allow wrapping if needed */
+        }
+
+        .product-oldprice {
+            color: #d97706; /* slightly darker orange for the old price text */
+            font-size: 1.04em; /* slightly larger for readability */
+            margin-bottom: 0;
+            font-weight: 400; /* normal weight */
+            position: relative; /* for pseudo-element */
+            display: inline-block; /* limit width to content */
+            align-self: flex-start; /* don't stretch inside .product-info flex column */
+            white-space: nowrap; /* avoid wrapping which would enlarge the line */
+            text-decoration: none; /* remove default horizontal line */
+        }
+
+        /* diagonal strike limited to the text area */
+            .product-oldprice::after {
+                content: '';
+                position: absolute;
+                /* start a bit beyond the text to create a clean strike-through */
+                left: 50%;
+                width: calc(100% + 6px);
+                top: 50%;
+                height: 1px; /* 1px black line as requested */
+                background: #000; /* solid black line */
+                transform-origin: center center;
+                transform: translate(-50%, -50%) rotate(-18deg);
+                pointer-events: none;
+            }
+
+        /* Overlay prijs en cart */
+        .product-overlay {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            pointer-events: none;
+            padding: 0 0 0 0;
+            /* ensure price/button appear above the slanted pseudo-element */
+            z-index: 3;
+        }
+
+        .product-price {
+            /* no rounded corners, solid dark gray with white text, higher */
+            background: #1f2937; /* solid dark gray */
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.96em;
+            /* remove rounding entirely */
+            border-radius: 0;
+            padding: 6px 10px;
+            padding-left: 18px; /* ensure enough left padding so text (eg. 'op maat') isn't clipped */
+            /* make the price flush against the left card edge (move slightly left to hide border radius) */
+            position: absolute;
+            left: -12px;
+            bottom: 0;
+            margin: 0;
+            pointer-events: auto;
+            box-shadow: 0 2px 8px rgba(16, 24, 40, 0.02); /* very subtle */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+            min-width: 72px; /* ensures small prices and labels like 'op maat' don't collapse */
+            line-height: 1;
+            font-variant-numeric: tabular-nums; /* keeps numbers aligned */
+            /* visually raise it 30px above the overlay bottom */
+            transform: translateY(-30px);
+            padding-right: 28px; /* room for the feature star placed to the right */
+            z-index: 4;
+        }
+
+        /* position the cart button against the bottom-right card corner */
+        .product-card > .product-cart-btn {
+            position: absolute;
+            /* flush to the card's bottom-right corner with no gap */
+            right: 0;
+            bottom: 0;
+            /* match the price badge color */
+            background: #1f2937;
+            color: #ffffff;
+            border: none;
+            /* let the card's rounded corner do the clipping; give the button a matching rounded corner on its bottom-right
+               so it visually aligns with the card */
+            border-radius: 0 0 14px 0;
+            font-size: 1.05em;
+            font-weight: 600;
+            padding: 12px; /* provide a comfortable tap target while still flush to edge */
+            margin: 0;
+            cursor: pointer;
+            box-shadow: none;
+            transition: background 0.16s ease, transform 0.12s ease;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            /* ensure it appears above text, image and pseudo-elements */
+            z-index: 9999;
+        }
+
+        /* hide the small orange plus badge inside the button to keep the icon simple and white */
+        .product-card > .product-cart-btn .cart-plus {
+            display: none;
+        }
+
+        /* svg inside the button should inherit white color */
+        .product-card > .product-cart-btn svg { 
+            color: #fff;
+            stroke: currentColor;
+            fill: none;
+            display: block;
+        }
+
+        .product-card > .product-cart-btn:hover {
+            /* slightly lighter than #1f2937 */
+            background: #374151;
+            color: #fff;
+            transform: translateY(-1px);
+        }
+        
+        .cart-icon-pluswrap {
+    position: relative;
+    display: inline-block;
+}
+.cart-plus {
+    position: absolute;
+    top: -2px;
+    right: -10px;
+    width: 13px;
+    height: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+.cart-plus svg {
+    display: block;
+}
+
+/* Header cart styles moved to zozo-main.css so header/cart appearance is consistent across pages.
+   Product-page specific file keeps product-card controls; global header/cart layout lives in main.css. */

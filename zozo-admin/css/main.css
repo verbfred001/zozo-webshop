@@ -1,0 +1,368 @@
+/* Basis */
+body {
+    background: #f3f4f6;
+    color: #222;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+}
+
+.page-bg {
+    background: #f3f4f6;
+    min-height: 100vh;
+}
+
+.main-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    margin-top: 2rem;
+}
+
+.main-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 2rem;
+}
+
+.main-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+h1, h2, h3 {
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1e293b;
+    margin: 0;
+}
+
+.btn {
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.4rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn--add {
+    background: #22c55e;
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn--add:hover {
+    background: #16a34a;
+}
+
+.btn--sub, .btn--edit {
+    background: #2563eb;
+    color: #fff;
+}
+.btn--sub-80   { background: #5b8df7; color: #fff; }
+.btn--sub-60   { background: #a3bffa; color: #fff; }
+.btn--sub-40   { background: #dbeafe; color: #2563eb; }
+.btn--sub:hover, .btn--edit:hover,
+.btn--sub-80:hover, .btn--sub-60:hover, .btn--sub-40:hover {
+    filter: brightness(0.95);
+}
+
+
+.icon--delete {
+    width: 1.1em;
+    height: 1.1em;
+    vertical-align: middle;
+}
+
+.icon--edit {
+    width: 1.1em;
+    height: 1.1em;
+    vertical-align: middle;
+}
+
+input, select, textarea {
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+    font-size: 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    background: #fff;
+    transition: border 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #2563eb;
+    outline: none;
+}
+
+/* Modal overlay en centering */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-overlay.hidden { display: none; }
+.modal-center {
+    width: 100%;
+    min-height: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-box {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 400px;
+    max-height: 90vh;
+    padding: 2rem;
+    overflow-y: auto; /* <-- Dit maakt de modal scrollbaar */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+}
+.modal-fields { margin-bottom: 1.5rem; }
+.modal-field { margin-bottom: 1rem; }
+.modal-field label { display: block; font-weight: 500; margin-bottom: 0.25rem; color: #374151; }
+.modal-row { display: flex; gap: 0.5rem; }
+.modal-field input[type="text"] {
+    flex: 1;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.modal-btn {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.modal-btn-green { background: #22c55e; color: #fff; }
+.modal-btn-green:hover { background: #16a34a; }
+.modal-btn-gray { background: #6b7280; color: #fff; }
+.modal-btn-gray:hover { background: #374151; }
+.modal-btn-blue { background: #2563eb; color: #fff; }
+.modal-btn-blue:hover { background: #1e40af; }
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.modal-close {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.2rem;
+    transition: color 0.2s;
+}
+.modal-close:hover { color: #374151; }
+
+/* --- Tabs --- */
+.tabs-nav {
+    display: flex;
+    gap: 2rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0 2rem;
+}
+.tab-button {
+    background: none;
+    border: none;
+    border-bottom: 2.5px solid transparent;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #64748b;
+    padding: 1.2rem 0.5rem;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+.tab-button--active {
+    color: #2563eb;
+    border-bottom: 2.5px solid #2563eb;
+}
+.tabs-content {
+    padding: 2rem;
+}
+.tab-content.hidden {
+    display: none;
+}
+
+/* --- Formulier grid en secties --- */
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+@media (max-width: 900px) {
+    .form-grid { grid-template-columns: 1fr; }
+}
+.form-label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+.form-actions--between {
+    justify-content: space-between;
+}
+.form-section-box {
+    /* Use the same light-blue card style as categories / optiegroepen for visual consistency */
+    background: #eff6ff;
+    border: 2px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.form-section-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #1e293b;
+    margin-bottom: 0.7rem;
+}
+.form-section-title--danger {
+    color: #dc2626;
+}
+.form-checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-top: 0.5rem;
+}
+
+/* --- Alerts --- */
+.alert {
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+.alert--success {
+    background: #dcfce7;
+    border: 1px solid #22c55e;
+    color: #166534;
+}
+.alert--warning {
+    background: #fef9c3;
+    border: 1px solid #fde047;
+    color: #a16207;
+}
+.alert--danger {
+    background: #fee2e2;
+    border: 1px solid #dc2626;
+    color: #b91c1c;
+}
+.flex-between-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.form-section-box--mb {
+    margin-bottom: 1.5rem;
+}
+.form-section-box--mb-small {
+    margin-bottom: 0.75rem;
+}
+
+/* Mooie checkboxen */
+input[type="checkbox"] {
+    width: 1.1em;
+    height: 1.1em;
+    accent-color: #2563eb; /* of je eigen hoofdkleur */
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 0.3em;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Settings card: reuse the same visual style as optiegroepen / categorie cards */
+.settings-card {
+    background: #eff6ff;
+    border: 2px solid #bfdbfe;
+    border-radius: 14px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.settings-card .form-section-title {
+    color: #1e40af;
+}
+
+/* Sub-card used inside timeslot day cards for Afhaling / Levering */
+.timeslot-subcard {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+/* Inner-tabs specific styles moved from inline <style> in instellingen-tijdsloten.php */
+#tab-tijdsloten .inner-tab-btn {
+    background: #ffffff;
+    border: 1px solid #ddd;
+    color: #1f2937;
+}
+
+#tab-tijdsloten .inner-tab-btn:hover {
+    background: #f8fbff;
+}
+
+#tab-tijdsloten .inner-tab-btn.active {
+    background: linear-gradient(180deg, #e6f2ff, #d5eaff);
+    border-color: #7fb3ff;
+    color: #0b3d91;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04) inset;
+}
+
+#tab-tijdsloten .inner-tab-panel.hidden {
+    display: none;
+}
+
+/* inner-tab-panel visibility is now controlled server-side; no JS fallback needed */

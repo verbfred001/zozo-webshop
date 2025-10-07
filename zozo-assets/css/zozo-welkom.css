@@ -1,0 +1,285 @@
+﻿        .welkom-main {
+            max-width: 1100px;
+            margin: 24px auto 0 auto;
+            padding: 0 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .welkom-block {
+            background: #fff;
+            border-radius: 12px;
+            overflow: visible; /* allow children to extend to inner edges */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            padding: 24px 18px;
+        }
+
+            /* Make the suggestions block flush: remove rounding so the band color can reach the inner edges while keeping padding */
+            .welkom-block.welkom-suggesties {
+                padding: 24px 18px;
+                /* rounded corners on the bottom so the suggestions block looks finished */
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+                border-bottom-left-radius: 12px;
+                border-bottom-right-radius: 12px;
+                overflow: visible;
+            }
+
+            /* Make the about block visually connect with the suggestions band by removing bottom rounding */
+            .welkom-block.welkom-about-block {
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+        .welkom-block h2 {
+            margin-top: 0;
+            color: #1f2937;
+            font-size: 1.3em;
+        }
+
+        .featured-list {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .photo-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .photo-grid img {
+            width: 100%;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #e5e7eb;
+        }
+
+ 
+
+        @media (min-width: 700px) {
+            .welkom-main {
+                gap: 40px;
+            }
+
+            .photo-grid {
+                flex-direction: row;
+            }
+
+            .photo-grid img {
+                width: 32%;
+            }
+
+        }
+            /* Nieuwe styling voor de welkom twee-koloms sectie */
+            .welkom-about .about-row {
+                display: flex;
+                flex-direction: column;
+                gap: 18px;
+            }
+
+            .welkom-about .about-text {
+                font-size: 0.98rem;
+                line-height: 1.5;
+                color: #111827;
+            }
+
+            .welkom-about .about-image img {
+                width: 100%;
+                height: auto;
+                border-radius: 8px;
+                object-fit: cover;
+                background: #e5e7eb;
+            }
+
+            @media (min-width: 800px) {
+                .welkom-about .about-row {
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 32px;
+                }
+
+                .welkom-about .about-text {
+                    flex: 1 1 55%;
+                }
+
+                .welkom-about .about-image {
+                    flex: 0 0 40%;
+                }
+            }
+
+            /* Gallery binnen de about sectie */
+            .about-gallery {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .about-gallery .about-main img {
+                width: 100%;
+                height: 260px;
+                object-fit: cover;
+                border-radius: 8px;
+            }
+
+            .about-gallery .about-thumbs {
+                display: flex;
+                gap: 8px;
+            }
+
+            .about-gallery .about-thumbs img {
+                width: 23%;
+                height: 72px;
+                object-fit: cover;
+                border-radius: 6px;
+                cursor: pointer;
+                background: #f3f4f6;
+            }
+
+            .about-gallery .about-thumbs img.thumb-active {
+                outline: 3px solid #1f2937;
+                transform: scale(1.02);
+            }
+
+            .prijslijst-link {
+                display: inline-block;
+                margin-top: 6px;
+                color: #1f2937;
+                text-decoration: underline;
+            }
+
+            .handtekening {
+                margin-top: 16px;
+                font-weight: 600;
+            }
+
+            /* Suggesties grid */
+            .suggestion-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin-top: 12px;
+            }
+
+            /* Remove underline from links inside suggestion cards */
+            .suggestion-card .product-link,
+            .suggestion-card .product-link:link,
+            .suggestion-card .product-link:visited {
+                text-decoration: none;
+                color: inherit;
+                display: block;
+            }
+
+            .suggestion-card .product-link:hover,
+            .suggestion-card .product-link:focus {
+                text-decoration: none;
+                outline: none;
+            }
+
+            .suggestion-card .suggestion-title {
+                text-decoration: none;
+            }
+
+            /* Light callout box for small highlighted sections (e.g. Ter plaatse eten) */
+            .callout-box {
+                background: #f8fafc; /* very light blue-gray */
+                border-radius: 10px;
+                padding: 14px 16px;
+                margin: 10px 0 0 0;
+                border: 1px solid rgba(31,41,55,0.04);
+            }
+
+            /* Takeaway variant: use same light gray background and border as the default callout */
+            .callout-box.takeaway {
+                background: #f8fafc; /* same as .callout-box */
+                border-radius: 10px;
+                padding: 14px 16px;
+                margin: 10px 0 0 0;
+                border: 1px solid rgba(31,41,55,0.04);
+            }
+
+            /* Important lines inside any callout — bold and medium gray */
+            .callout-box .callout-important {
+                font-weight: 700;
+                font-size: 1.02rem;
+                color: #6b7280; /* medium gray */
+                margin: 6px 0;
+            }
+
+            /* Ensure the h4 inside callout is visually connected */
+            .callout-box h4 {
+                margin: 0 0 8px 0;
+                font-size: 1.05rem;
+                color: inherit;
+            }
+
+            /* Surrounding container for the suggestions section to visually separate it */
+
+            /* Suggestions band limited to the main container width (matches .welkom-main max-width) */
+            /* Band that reaches to the inner edges of .welkom-block (which has 18px horizontal padding) */
+            .suggestions-bleed {
+                display: block;
+                width: calc(100% + 36px);
+                margin-left: -18px;
+                margin-right: -18px;
+                background: #e9e9ef;
+                color: #000000;
+                padding: 18px 0;
+                border-radius: 0;
+            }
+
+            /* Inner centered container that holds the suggestion cards and matches the main content width */
+            .suggestions-bleed .suggestions-container {
+                max-width: 1100px;
+                margin: 0 auto;
+                /* add horizontal padding matching the negative margins so text doesn't touch the edge */
+                padding: 8px 36px;
+                background: transparent;
+                border: none;
+            }
+
+            /* Fallback/legacy: original suggestions-container when not inside bleed */
+            .suggestions-container {
+                background: #fbfcfe; /* subtle off-white */
+                border-radius: 12px;
+                padding: 16px;
+                margin-top: 12px;
+                border: 1px solid rgba(14,165,233,0.03);
+            }
+
+            .suggestion-card {
+                padding: 12px;
+                border-radius: 8px;
+                background: linear-gradient(180deg, #ffffff, #f8fafc);
+                box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+                border: 1px solid rgba(0,0,0,0.06);
+            }
+
+            /* Ensure headings/text inside the band use the container text color (black) */
+            .suggestions-bleed h3,
+            .suggestions-bleed p {
+                color: inherit;
+                /* shift 40px to the right relative to the inner container padding (36px) */
+                margin-left: calc(36px + 40px);
+            }
+
+            @media (min-width: 700px) {
+                .suggestion-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            @media (min-width: 1100px) {
+                .suggestion-grid {
+                    grid-template-columns: repeat(4, 1fr);
+                }
+            }
+
+        /* (Welcome hero styles removed — hero was moved to footer as decorative image) */

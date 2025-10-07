@@ -1,0 +1,58 @@
+/* Mobile: logo responsive (zoekbalk verwijderd) - logo is naar navbar verplaatst */
+/* @media (max-width: 767px) {
+    .topbar-row-logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 8px 12px;
+    }
+
+    .topbar-logo a,
+    .topbar-logo img {
+        display: block;
+        width: 100%;
+        max-width: 220px;
+        height: auto;
+    }
+
+    @media (max-width: 420px) {
+        .topbar-logo img { max-width: 160px; }
+    }
+} */
+
+/* Desktop: logo links uitlijnen (niet meer van toepassing - logo is naar navbar verplaatst) */
+/* @media (min-width: 768px) {
+    .topbar-row-logo {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 8px 12px;
+    }
+
+    .topbar-logo a,
+    .topbar-logo img {
+        display: block;
+        width: auto;
+        max-width: 280px;
+        height: auto;
+    }
+} */
+
+/* Align language links with main breadcrumb/content container on larger screens */
+@media (min-width: 800px) {
+    /* Make the left language bar take available space and align links to the left */
+    .lang-bar-left {
+        display: flex;
+        align-items: center;
+        flex: 1 1 auto;
+        padding: 0;
+    }
+
+    .lang-links {
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        padding-left: 0; /* rely on the topbar-row padding for content offset */
+        margin: 0;
+    }
+}

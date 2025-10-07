@@ -1,0 +1,464 @@
+﻿*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+footer {
+  background: #f4f4f4;
+  padding: 10px;
+  text-align: center;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col {
+  flex: 1 1 0;
+  padding: 0.5rem;
+}
+
+/* Responsive columns */
+@media (min-width: 750px) {
+  .col-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+
+  /* keep the remove column compact on large screens */
+  .cart-table td:last-child {
+    max-width: 50px;
+    width: 50px;
+    padding-left: 8px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  }
+  .col-4 {
+    flex: 0 0 33.3333%;
+    max-width: 33.3333%;
+  }
+}
+
+.col-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+.col-4 {
+  flex: 0 0 33.3333%;
+  max-width: 33.3333%;
+}
+
+@media (max-width: 750px) {
+  .col-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .col-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+.extra-info-row {
+  margin-top: 40px;
+}
+
+.extra-info-row .col-6 {
+  min-height: 340px;
+}
+@media (max-width: 900px) {
+  .extra-info-row .col-6 {
+    min-height: unset;
+    padding: 1rem 0;
+  }
+}
+
+.modern-footer {
+  background: #232323;
+  padding: 32px 12px 0 12px;
+  margin-top: 40px;
+  font-size: 1rem;
+  color: #f2f2f2;
+}
+.modern-footer a {
+  color: #fff;
+  text-decoration: underline;
+}
+.modern-footer a:visited {
+  color: #fff;
+}
+.footer-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.footer-col {
+  flex: 1 1 220px;
+  min-width: 220px;
+  max-width: 340px;
+  margin-bottom: 24px;
+}
+.footer-col h3 {
+  margin-top: 0;
+  margin-bottom: 0.7em;
+  font-size: 1.15em;
+  color: #ffb98a;
+}
+.footer-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 1em;
+}
+.footer-table td {
+  padding: 2px 8px 2px 0;
+  border: none;
+  color: #f2f2f2;
+}
+.pay-icons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 16px;
+  margin: 0.3em auto 0 auto; /* centers the grid block */
+  max-width: 120px;
+  justify-items: center;      /* centers icons in each grid cell */
+  justify-content: center;    /* centers the whole grid if parent is wider */
+}
+.pay-icons img {
+  height: 30px;
+  width: auto;
+  margin: 0;
+  border-radius: 8px;
+  background: #fff;
+  padding: 2px 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.footer-bottom {
+  text-align: center;
+  color: #aaa;
+  font-size: 0.98em;
+  margin: 32px 0 0 0;
+  padding-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .footer-columns {
+    flex-direction: column;
+    gap: 0;
+    align-items: stretch;
+  }
+  .footer-col {
+    max-width: 100%;
+    margin-bottom: 32px;
+  text-align: center;
+  }
+}
+
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  background: #B17C69;
+  color: #fff !important;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5em 1.2em;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+  cursor: pointer;
+  margin-top: 40px;
+}
+.btn-download:hover {
+  background: #a06a58;
+  text-decoration: none;
+}
+
+.footer-social a {
+  text-decoration: none;
+}
+.footer-social a:hover {
+  text-decoration: none;
+  color: #ffb98a; /* optioneel: highlight kleur bij hover */
+}
+.breadcrumb {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  padding: 0.7em 1.2em;
+  font-size: 1.05em;
+  margin-bottom: 1.5em;
+  color: #232323;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.breadcrumb a {
+  color: #B17C69;
+  text-decoration: underline;
+}
+.product-detail-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #fdfdfd;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.form-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #444;
+}
+
+.product-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #b17c69;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group .optional {
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: #888;
+  margin-left: 4px;
+}
+
+/* Modal option group styling helpers (used by JS via class toggles) */
+.modal-option-required {
+  border: 1px solid #10b981; /* green */
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.06);
+  padding: 6px;
+  border-radius: 6px;
+}
+.modal-option-invalid {
+  border: 1px solid #e74c3c; /* red */
+  box-shadow: 0 0 0 3px rgba(231,76,60,0.08);
+  padding: 6px;
+  border-radius: 6px;
+}
+/* (placeholder removed) */
+
+/* For single inputs/selects inside a group: add class to the control itself */
+.input-required {
+  border: 1px solid #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.06) !important;
+}
+.input-invalid {
+  border: 1px solid #e74c3c !important;
+  box-shadow: 0 0 0 3px rgba(231,76,60,0.08) !important;
+}
+
+.modal-option-group label.invalid-field,
+label.invalid-field {
+  /* scope red text color to labels only so form control text keeps default color */
+  color: #e74c3c !important;
+}
+
+
+.form-group input,
+.form-group select {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #b17c69;
+  box-shadow: 0 0 0 2px rgba(177, 124, 105, 0.2);
+}
+
+.add-to-cart-btn {
+  margin-top: 1.5rem;
+  background-color: #b17c69;
+  color: white;
+  padding: 0.75rem 1.2rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #9e6453;
+}
+
+#welkom-lang-dropdown a {
+    margin-left: 0 !important;
+}
+.cart-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px 0;
+}
+.cart-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 1em;
+}
+.cart-item-name {
+  /* Allow long product names to wrap instead of causing horizontal scroll or being truncated */
+  flex: 1 1 auto;
+  min-width: 0; /* important for flex items to allow wrapping */
+  margin-right: 8px;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.cart-item-qty {
+    flex: 0 0 40px;
+    text-align: right;
+    color: #64748b;
+}
+.cart-item-price {
+    flex: 0 0 80px;
+    text-align: right;
+    font-weight: 500;
+    color: #1f2937;
+}
+.cart-total {
+    text-align: right;
+    font-size: 1.1em;
+    margin-top: 12px;
+}
+.cart-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    font-size: 1em;
+    background: #fff;
+}
+.cart-table th, .cart-table td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: none; /* moved to row level for consistent horizontal lines */
+}
+
+.cart-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+}
+.cart-table th {
+    background: #f4f6fa;
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 1.05em;
+}
+.cart-table td.cart-item-price {
+    color: #1f2937;
+    font-weight: 500;
+    text-align: right;
+}
+.cart-table td.cart-item-qty {
+    text-align: center;
+    color: #64748b;
+}
+.cart-total-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.08em;
+    font-weight: 600;
+    margin-top: 8px;
+}
+.cart-total-label {
+    color: #232323;
+}
+.cart-total-value {
+    color: #1f2937;
+}
+
+/* Modal optiegroepen */
+.modal-option-group {
+    margin-bottom: 18px;
+}
+.modal-option-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #22223b;
+    letter-spacing: 0.2px;
+}
+.modal-option-group input[type="text"],
+.modal-option-group select {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 1em;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    margin-top: 2px;
+    box-sizing: border-box;
+}
+.modal-option-group input[type="radio"] {
+    margin-right: 7px;
+}
+.modal-option-group div {
+    margin-bottom: 5px;
+}
+
+/* Toevoegen-knop */
+.modal-add-btn {
+    width: 100%;
+    background: #1f2937;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 0;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 18px;
+    transition: background 0.15s;
+}
+.modal-add-btn:hover {
+    background: #1d4ed8;
+}

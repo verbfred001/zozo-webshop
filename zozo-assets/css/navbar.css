@@ -1,0 +1,395 @@
+/* Reset */
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+  padding-top: 40px; /* Zorg ervoor dat dit overeenkomt met de hoogte van de navbar */
+}
+
+
+
+/* Topnav styling */
+.topnav {
+  background-color: #333;
+  color: white;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1100;
+  height: 40px;
+  line-height: 40px;
+  padding: 0; /* geen padding rechts */
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.topnav-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding-right: 1.5rem; /* ruimte rechts */
+}
+
+.topnav-container a {
+  color: white;
+  text-decoration: none;
+  margin-left: 1rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.topnav-container a:first-child {
+  margin-left: 0;
+}
+
+.topnav-container a i {
+  margin-right: 0.5rem; /* Ruimte tussen icoon en tekst */
+}
+
+/* Verberg de topnav bij scrollen */
+.topnav.hidden {
+  transform: translateY(-100%);
+}
+
+
+
+
+/* Navbar basis */
+.navbar {
+  background: #23272f;
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  border-bottom: 1px solid #222;
+  position: fixed; /* Maak de navbar vast aan de bovenkant */
+  top: 20px; /* Standaard onder de topnav */
+  width: 100%; /* Zorg dat de navbar de volledige breedte inneemt */
+  z-index: 1000; /* Zorg dat de navbar boven andere elementen blijft */
+  transition: top 0.3s ease; /* Soepele overgang bij scrollen */
+}
+
+.navbar.no-topnav {
+  top: 0; /* Schuif naar boven wanneer de topnav verdwijnt */
+}
+
+.navbar-container {
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+/* Menu links */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link,
+.nav-item > a {
+  color: #fff;
+  background: none;
+  display: block;
+  padding: 0.4em 1.4em;
+  border-radius: 6px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav-link:hover,
+.nav-item > a:hover {
+  background: #B17C69;
+  color: #fff;
+}
+
+
+
+.dropdown {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+
+.dropdown li a:hover {
+  background: #B17C69;
+  color: #fff;
+}
+
+/* Dropdown styling */
+.has-dropdown .dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  background: #23272f;
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+  margin-top: 0.5em;
+  padding: 0.5em 0;
+  z-index: 100;
+  list-style: none;
+}
+
+
+.has-dropdown.active > .dropdown {
+    display: flex;
+    flex-direction: column;
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 0.30s;
+}
+
+.dropdown li a {
+  color: #fff;
+  background: none;
+  border-radius: 6px;
+  padding: 0.7em 1.4em;
+  transition: background 0.2s, color 0.2s;
+}
+
+.dropdown li a:hover {
+  background: #B17C69;
+  color: #fff;
+}
+
+
+
+nav {
+  background: #333;
+  color: white;
+  padding: 10px;
+}
+nav a {
+  color: white;
+  margin-right: 10px;
+  text-decoration: none;
+}
+
+
+/* Submenu's (vanaf tweede niveau) */
+.navbar .dropdown .dropdown {
+  position: static;
+  left: auto;
+  top: auto;
+  margin-left: 0;
+  min-width: 0;
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  display: none;
+}
+.navbar .dropdown .has-dropdown.active > .dropdown {
+  display: flex;
+  flex-direction: column;
+}
+.navbar .dropdown .dropdown .nav-link {
+  padding-left: 2em;
+}
+.navbar .dropdown .dropdown .dropdown .nav-link {
+  padding-left: 3em;
+}
+
+/* Verberg standaard bullets */
+.navbar .dropdown,
+.navbar .dropdown .dropdown {
+  list-style: none;
+}
+
+/* Optioneel: pijltje voor items met submenu */
+.navbar .nav-item.has-dropdown > .nav-link .arrow {
+  margin-left: 0.5em;
+  font-size: 0.8em;
+}
+
+/* Responsive: mobiel eerst */
+@media (max-width: 900px) {
+  .menu-toggle {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    /* eventueel extra styling */
+  }
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 35px;
+    left: 0;
+    right: 0;
+    background-color: #111;
+    z-index: 2000;
+  }
+  .nav-links.active {
+    display: flex;
+  }
+
+ @media (max-width: 900px) {
+  .nav-links {
+    padding-bottom: 25px;
+  }
+  .nav-links li:last-child > a,
+  .nav-links li:last-child > .nav-link {
+    margin-bottom: 0;
+  }
+}
+
+  .nav-links {
+    position: absolute;
+    top: 65px;
+    left: 0;
+    right: 0;
+    background-color: #111;
+    flex-direction: column;
+    display: none;
+    list-style: none;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .has-dropdown {
+    position: relative;
+  }
+
+  .has-dropdown .dropdown {
+    position: absolute;
+    top: 100%;     /* Directly under the parent */
+    left: 0;
+    width: 100%;   /* Same width as parent */
+    background: #222;
+    z-index: 2000;
+    display: none;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+  }
+
+  .has-dropdown.active .dropdown{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .navbar .dropdown .dropdown {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    margin-left: 0 !important;
+    min-width: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    display: none;
+  }
+  .navbar .dropdown .has-dropdown.active > .dropdown {
+    display: flex;
+    flex-direction: column;
+  }
+  .navbar .dropdown .dropdown .nav-link {
+    padding-left: 2em;
+  }
+  .navbar .dropdown .dropdown .dropdown .nav-link {
+    padding-left: 3em;
+  }
+
+  .nav-item {
+    width: 100%;
+  }
+
+
+  .nav-links {
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+  }
+  .nav-link,
+  .dropdown li a {
+    border-radius: 8px;
+    margin-right: 0.3em;
+    margin-left: 0.3em;
+  }
+}
+
+.menu-toggle {
+  display: none; /* Alleen tonen op mobiel */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  z-index: 2100;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 28px;
+  height: 4px;
+  margin: 4px 0;
+  background: #B17C69;
+  height: 5px;
+  border-radius: 3px;
+  margin: 5px 0;
+  transition: all 0.3s;
+}
+
+/* Alleen tonen op mobiel */
+@media (max-width: 900px) {
+  .menu-toggle {
+    display: flex;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1200px) {
+  .logo {
+    font-size: 1.1rem;
+    max-width: 120px;
+  }
+  .logo img {
+    max-height: 32px;
+    width: auto;
+  }
+  .nav-links {
+    gap: 0.3rem; /* Kleiner dan standaard */
+  }
+}
+
+@media (min-width: 900px) {
+  .nav-links {
+    position: relative;
+  }
+  .nav-links > .nav-item:last-child > .dropdown {
+    left: auto;
+    right: 0;
+    min-width: 200px;
+    max-width: calc(100vw - 5px);
+    /* Zorg dat de dropdown niet buiten het scherm valt */
+    box-sizing: border-box;
+    margin-right: 5px;
+  }
+}

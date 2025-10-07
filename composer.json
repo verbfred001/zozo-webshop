@@ -1,0 +1,22 @@
+{
+    "name": "zozo/webshop",
+    "type": "project",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "zozo",
+            "email": "info@zozo.be"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "mollie/mollie-api-php": "^3.4",
+        "microsoft/microsoft-graph": "^2.46"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "tbachert/spi": true
+        }
+    }
+}

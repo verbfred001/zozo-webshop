@@ -1,0 +1,1144 @@
+﻿html, body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f3f4f6fa;
+    color: #22223b;
+    font-size: 16px;
+}
+
+.breadcrumb {
+    max-width: 1200px;      /* zelfde als je container */
+    margin: 16px auto 0 auto; /* centreren, marge bovenaan */
+    padding-left: 0;
+    padding-right: 0;
+    background: #fff;
+    padding: 12px 16px;
+    font-size: 0.9em;
+    margin-top: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Kleine schermen: kleine marge links */
+@media (max-width: 799px) {
+    .breadcrumb {
+        margin-left: 3px;
+        margin-right: 0;
+        max-width: none;
+    }
+}
+
+.breadcrumb ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.breadcrumb li {
+    color: #64748b;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.breadcrumb li:last-child {
+    color: #22223b;
+    font-weight: 500;
+}
+
+.breadcrumb a {
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.breadcrumb a:hover {
+    color: #1f2937;
+}
+
+.zozo-footer {
+    /* use a fixed dark background instead of the navbar variable that changes on mobile */
+    background: #22223b;
+    color: #fff;
+    padding: 32px 0 18px 0;
+    margin-top: 40px;
+    font-size: 1em;
+    box-shadow: 0 -2px 16px rgba(0,0,0,0.07);
+}
+
+.footer-social {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 8px;
+}
+.footer-social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    text-decoration: none;
+    transition: background 0.15s, transform 0.12s;
+}
+.footer-social-link i { font-size: 1rem; }
+.footer-small { font-size: 0.85em; color: #e6eefc; margin-top: 8px; }
+.footer-marketing p { margin: 8px 0; font-size: 0.95em; color: #e5e7eb; }
+
+/* SVG social icons styling */
+.footer-social-icon {
+    width: 26px;
+    height: 26px;
+    fill: #fff;
+    display: block;
+}
+.footer-social-link { padding: 0; }
+
+.footer-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.footer-content > div {
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    padding: 18px 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* Decorative footer image (left column) */
+.footer-deco-wrap {
+    margin-top: 4px;
+    position: relative;
+    overflow: visible;
+}
+.footer-deco-img {
+    display: block;
+    max-width: 320px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.96;
+    pointer-events: none;
+    z-index: 10001; /* below cart (10002) */
+    /* lift image so it protrudes above the footer */
+    transform: translateY(-120px);
+    transition: transform 220ms ease;
+}
+@media (max-width: 879px) {
+    .footer-deco-img { display: none; }
+}
+
+/* Ensure footer stacks on mobile even if other rules try to make columns */
+@media (max-width: 879px) {
+    .footer-content {
+        flex-direction: column !important;
+        align-items: center !important; /* center de smaller divs */
+        gap: 12px !important;
+        padding: 0 12px !important; /* verminderd van 18px naar 12px voor mobiel */
+    }
+    .footer-content > div {
+        min-width: 0 !important;
+        width: 86% !important; /* verminderd van 100% naar 86% om overflow te voorkomen */
+        padding: 12px 12px !important;
+    }
+    .footer-hours { max-width: none !important; flex: 1 1 auto !important; }
+}
+
+/* On large screens, lift the company text so it aligns visually with the image */
+@media (min-width: 880px) {
+    .footer-company-text {
+        transform: translateY(-80px);
+        position: relative;
+        z-index: 10002; /* above image but still below cart (cart is 10002 inline); adjust if needed */
+    }
+}
+
+/* Pull privacy/contact links up so they sit closer to the company text on large screens */
+@media (min-width: 880px) {
+    .footer-links {
+        margin-top: -56px; /* negative margin pulls links up under the lifted text */
+        position: relative;
+        z-index: 10002;
+    }
+}
+
+/* Cap the middle footer column (openingsuren) to 250px on larger screens */
+@media (min-width: 880px) {
+    .footer-hours { max-width: 250px; flex: 0 0 250px; }
+}
+
+.zozo-footer strong {
+    color: #ffffff;
+    font-size: 1.1em;
+    letter-spacing: 0.5px;
+}
+
+.zozo-footer table {
+    border-collapse: collapse;
+    margin-top: 8px;
+    width: 100%;
+    font-size: 0.98em;
+}
+
+.zozo-footer td {
+    padding: 3px 10px 3px 0;
+    color: #e5e7eb;
+    vertical-align: top;
+}
+
+.zozo-footer a {
+    color: #ffffff; /* white links for readability */
+    text-decoration: none;
+    margin: 0 6px;
+    word-break: break-all;
+}
+
+.zozo-footer a:hover {
+    text-decoration: underline;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px; /* verminderd van 28px naar 10px voor kleinere tussenruimte */
+}
+
+@media (min-width: 500px) {
+    .product-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 700px) {
+    .product-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 900px) {
+    .product-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (min-width: 1150px) {
+    .product-grid { grid-template-columns: repeat(5, 1fr); }
+}
+
+@media (min-width: 880px) {
+    .footer-content {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 28px;
+    }
+    .footer-content > div {
+        min-width: 220px;
+        padding: 22px 18px;
+    }
+}
+
+@media (max-width: 879px) {
+    .footer-content > div {
+        margin-bottom: 12px;
+    }
+    .zozo-footer table {
+        font-size: 1em;
+    }
+}
+
+.lang-bar a,
+.lang-btn {
+    text-decoration: none !important;
+}
+
+/* Modal basis */
+.cart-modal {
+    position: fixed;
+    z-index: 10010; /* hoger dan navbar (9999) en cart icoon (10002) */
+    left: 0; top: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.25);
+    overflow-y: auto;
+    display: flex;
+    align-items: center; /* <-- modal altijd verticaal centreren */
+    justify-content: center;
+}
+.cart-modal.hidden {
+    display: none;
+}
+.cart-modal-content {
+    background: #fff;
+    border-radius: 12px;
+    max-width: 95vw;
+    width: 400px;
+    margin: 24px 0; /* minder marge, zodat er altijd ruimte boven is */
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    padding: 24px 18px 18px 18px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* GEEN overflow of max-height meer! */
+}
+.cart-modal-content .modal-close {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 2em;
+    color: #64748b;
+    cursor: pointer;
+    line-height: 1;
+    z-index: 10;
+    padding: 0;
+    transition: color 0.15s;
+}
+.cart-modal-content .modal-close:hover {
+    color: #ef4444;
+}
+/* Make the modal "required fields" hint appear in a slightly darker green for readability */
+#product-options-modal #modal-required-hint span {
+    color: #0f9d58 !important; /* darker green for improved contrast */
+    font-size: 0.85em;
+}
+
+/* detail page required hint styling (match modal) */
+#detail-required-hint span {
+    color: #0f9d58 !important;
+    font-size: 0.85em;
+}
+.cart-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 2em;
+    color: #64748b;
+    cursor: pointer;
+}
+.lang-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.lang-bar-left {
+    display: flex;
+    gap: 8px;
+}
+.lang-bar-right {
+    display: flex;
+    align-items: center;
+}
+.topnav-link {
+    margin-right: 16px;
+    color: #22223b !important;
+    text-decoration: none;
+    font-size: 0.97em;
+    transition: color 0.15s;
+}
+.topnav-link:last-child {
+    margin-right: 8px;
+}
+.topnav-link:hover,
+.topnav-link:focus {
+    color: #1f2937; /* optioneel: blauw bij hover */
+}
+.topnav-lang {
+    margin: 0 2px;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.97em;
+    padding: 2px 6px;
+    border-radius: 3px;
+    transition: background 0.15s;
+}
+.topnav-lang.active {
+    background: rgba(37,99,235,0.08);
+    color: #1f2937;
+}
+.topnav-lang:hover {
+    background: rgba(37,99,235,0.12);
+    color: #1d4ed8;
+}
+
+.topbar-row {
+    display: flex;
+    align-items: center;
+    max-width: 1200px; /* of jouw containerbreedte */
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 24px;
+    box-sizing: border-box;
+}
+.topbar-row-logo {
+    margin-top: 12px;
+    margin-bottom: 6px;
+}
+.topbar-logo img {
+    height: 65px;
+    max-width: 120px;
+    display: block;
+}
+.topbar-search {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    margin-left: 24px;
+    background: #f1f5f9;
+    border-radius: 6px;
+    padding: 2px 6px;
+    max-width: 700px;
+}
+.topbar-search input {
+    border: none;
+    background: transparent;
+    padding: 7px 8px;
+    font-size: 1em;
+    outline: none;
+    width: 100%;
+}
+.topbar-search button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #64748b;
+    padding: 0 4px;
+}
+.topbar-row-nav {
+    justify-content: space-between;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+.lang-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.lang-bar-right {
+    display: flex;
+    align-items: center;
+}
+
+.modal-qty-row {
+    margin: 18px 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+#modal-qty {
+    width: 60px;
+    padding: 4px 8px;
+    font-size: 1em;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+}
+
+.cart-icon-pluswrap {
+    position: relative;
+    display: inline-block;
+}
+.cart-plus {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 13px;
+    height: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+.cart-plus svg {
+    display: block;
+}
+
+/* Modal optiegroepen */
+.modal-option-group {
+    margin-bottom: 18px;
+}
+.modal-option-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #22223b;
+    letter-spacing: 0.2px;
+}
+.modal-option-group input[type="text"],
+.modal-option-group select,
+.modal-option-group input[type="text"] {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 1em;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    margin-top: 2px;
+    box-sizing: border-box;
+
+    /* allow long option labels to wrap when the browser supports it */
+    white-space: normal;
+    word-break: break-word;
+    word-wrap: break-word;
+}
+
+/* Some browsers render option elements using the UA widget and ignore many styles,
+   but this gives them the best chance to wrap when soft-breaks are present in the text. */
+.modal-option-group select option {
+    white-space: normal;
+    word-break: break-word;
+    /* allow wrapping across lines inside option in engines that support it */
+    white-space: pre-wrap;
+    line-height: 1.25;
+}
+
+/* Custom dropdown used only in modals to allow multi-line option labels
+   and constrain the popup width. We keep the original <select> hidden so
+   existing JS/form submission continues to work. */
+.custom-select-wrapper {
+    position: relative;
+    display: block;
+    margin-top: 4px;
+}
+.custom-select-display {
+    padding: 8px 10px;
+    font-size: 1em;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+.custom-select-display:after {
+    content: '\25BC';
+    float: right;
+    margin-left: 8px;
+    color: #6b7280;
+}
+.custom-select-list {
+    position: absolute;
+    z-index: 16000;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+    margin-top: 6px;
+    max-height: 320px;
+    overflow: auto;
+    width: max-content; /* allow shrink-to-fit then limit by max-width */
+    max-width: 400px; /* constrain dropdown width so it doesn't overflow */
+    box-sizing: border-box;
+}
+.custom-select-list .custom-select-item {
+    padding: 8px 10px;
+    font-size: 0.95em;
+    cursor: pointer;
+    white-space: normal;
+    line-height: 1.25;
+    word-break: break-word;
+}
+.custom-select-list .custom-select-item:hover {
+    background: #f3f4f6;
+}
+.custom-select-list .custom-select-item.selected {
+    background: #eef2ff;
+}
+.modal-option-group input[type="radio"] {
+    margin-right: 8px;
+    accent-color: #1f2937;
+}
+.modal-option-group div {
+    margin-bottom: 5px;
+}
+.modal-option-group textarea {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 1em;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    margin-top: 2px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+/* Toevoegen-knop */
+.modal-add-btn {
+    width: 100%;
+    background: #00b900; /* requested green */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 0;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 18px;
+    transition: background 0.15s, transform 0.06s;
+}
+.modal-add-btn:hover {
+    background: #008500; /* hover green */
+    transform: translateY(-1px);
+}
+
+.modal-add-btn .modal-add-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+    width: 22px; /* match product-card svg size */
+    height: 22px; /* match product-card svg size */
+}
+
+/* Ensure the SVG paths/circles use the button color and don't get filled unexpectedly */
+.modal-add-btn .modal-add-icon * {
+    stroke: currentColor;
+    fill: none;
+}
+
+/* Detail page: make the inline add button match modal colors and icon sizing */
+.detail-main .add-to-cart-btn,
+.detail-main .add-to-cart-btn:enabled {
+    background: #00b900; /* same green as modal */
+    color: #fff;
+    border: none;
+}
+.detail-main .add-to-cart-btn:hover:not(:disabled) {
+    background: #008500;
+}
+.detail-main .detail-add-icon,
+.detail-main .detail-add-icon * {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    fill: none;
+    vertical-align: middle;
+}
+
+/* Reusable form controls used across the site */
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    box-sizing: border-box;
+    background: #fff;
+    color: #0b1220;
+}
+.form-control:focus {
+    outline: none;
+    border-color: #1f2937;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.06);
+}
+
+/* Primary button used on forms */
+.btn-primary {
+    display: inline-block;
+    width: 100%;
+    background: #00b900; /* match modal-add-btn */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 1.02rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.btn-primary:hover {
+    background: #008500; /* modal hover green */
+}
+
+/* Simple tabs for checkout (Particulier / Zakelijk) */
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+.tabs button {
+    background: transparent;
+    border: 1px solid #e5e7eb;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.tabs button.active {
+    background: #1f2937;
+    color: #fff;
+    border-color: #1f2937;
+    
+    /* Make 'op maat' smaller in modals on mobile devices */
+    #modal-final-price.modal-price--opmaat {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+}
+
+
+/* Stronger rule for checkout form inputs to override local page styles */
+#checkout-form input.form-control,
+#checkout-form select.form-control,
+#checkout-form textarea.form-control,
+#checkout-form input.form-control[type="datetime-local"] {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    color: #0b1220;
+}
+
+/* Make checkout submit buttons use the same green as modal-add-btn */
+#checkout-form button[type="submit"],
+#checkout-form .btn-primary,
+#checkout-form button.btn-primary,
+#step-email-continue {
+    background: #00b900; /* same green as modal */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#checkout-form button[type="submit"]:hover,
+#checkout-form .btn-primary:hover,
+#step-email-continue:hover {
+    background: #008500; /* modal hover green */
+}
+
+/* Zakelijk container: gray background to indicate extra fields for business customers */
+#checkout-form .zakelijk-container {
+    background: #f3f4f6; /* subtle gray */
+    border: 1px solid #e6e9ee;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+/* Two-column inline rows used for compact layout */
+#checkout-form .form-row {
+    display: flex;
+    gap: 12px;
+}
+#checkout-form .form-row .form-col {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* Keep stacked layout on small screens */
+@media (max-width: 700px) {
+    #checkout-form .form-row { flex-direction: column; }
+}
+
+/* Visual treatment for readonly fields so users know they can't edit (but value is submitted) */
+#checkout-form input[readonly],
+#checkout-form input[readonly].form-control {
+    background: #f8fafc;
+    color: #374151;
+    cursor: not-allowed;
+}
+
+
+@media (max-width: 500px) {
+    .cart-modal-content {
+        width: 99vw;
+        min-width: 0;
+        max-width: 99vw;
+        margin: 8px 0; /* nog minder marge op mobiel */
+        padding: 14px 6px 12px 6px;
+    }
+}
+
+@media (max-width: 600px) {
+    .cart-modal {
+        align-items: flex-start !important;
+    }
+    .cart-modal-content {
+        margin-top: 20px !important;
+        margin-bottom: 8px !important;
+    }
+}
+
+/* Responsive topbar tweaks (search removed) */
+@media (max-width: 767px) {
+    /* no search UI in header; logo handled in zozo-topbar.css */
+}
+
+@media (max-width: 420px) {
+    .topbar-logo img { max-width: 160px; }
+}
+
+
+/* Scroll to top knop */
+.scroll-to-top {
+    position: fixed;
+    right: 16px;
+    bottom: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #1f2937;
+    color: #fff;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    line-height: 1;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+    cursor: pointer;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: opacity .18s ease, transform .18s ease;
+}
+
+/* zichtbaar wanneer gescrolled */
+.scroll-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* indien je wilt minder storend op kleine schermen, pas hier aan */
+@media (max-width: 420px) {
+    .scroll-to-top { right: 10px; bottom: 14px; width:44px; height:44px; font-size:18px; }
+}
+
+/* respecteer reduced motion voorkeur */
+@media (prefers-reduced-motion: reduce) {
+    .scroll-to-top { transition: none; }
+}
+
+/* Cart badge: iets meer naar rechts, winkelwagen-icoon iets naar links */
+.topbar-row-nav  {
+    position: relative !important; /* inline already aanwezig, ensure */
+    padding: 6px 16px 6px 6px;     /* extra ruimte rechts voor badge */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* schuif het SVG-icoon een beetje naar links zodat badge vrij staat */
+.topbar-row-nav  svg {
+    display: block;
+    width: 24px;
+    height: 24px;
+    transform: translateX(-4px);
+}
+
+/* ========== TOPBAR + CART (consolidated) ========== */
+
+/* reserveer ruimte voor fixed cart zodat topbar-content niet overlapt */
+@media (min-width: 768px) {
+    .topbar-row { padding-right: 88px; }
+}
+
+/* Basis cart knop: klein cirkel, icon gecentreerd - use same color as product-card cart btn */
+.cart-btn {
+    position: fixed !important;
+    top: calc(env(safe-area-inset-top, 0px) + 14px) !important;
+    right: 20px !important;
+    width: 44px !important;
+    height: 44px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    /* match product-card cart button background */
+    background: #1f2937 !important;
+    color: #fff !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: none !important;
+    z-index: 9999;
+    transition: transform .12s ease, opacity .12s ease, background .12s ease;
+}
+
+/* Hover: slightly lighter like product-card */
+.cart-btn:hover {
+    background: #374151 !important;
+}
+
+/* mobile tweak: slightly different offsets */
+@media (max-width: 767px) {
+    .cart-btn {
+        top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
+        right: 12px !important;
+        width: 48px !important;
+        height: 48px !important;
+    }
+}
+
+/* SVG icon sizing and perfect centering inside circle */
+.cart-btn svg {
+    width: 20px !important;
+    height: 20px !important;
+    display: block !important;
+    margin: 0 !important;
+    transform: none !important;
+}
+
+/* Ensure svg/icon uses white color to match product-card styling */
+.cart-btn svg {
+    color: #fff !important;
+    stroke: currentColor !important;
+    fill: none !important;
+}
+
+/* Badge: compacte capsule, meer naar rechts buiten de circle */
+.cart-badge {
+    position: absolute;
+    /* moved 15px lower than previous 6px */
+    top: 21px !important;
+    right: -4px !important; /* verminderd van -8px naar -4px om binnen viewport te blijven */
+    left: auto !important;
+
+    /* default: white badge with dark text to match cart button contrast */
+    background: #ffffff !important;
+    color: #1f2937 !important;
+    height: 20px;
+    min-width: 20px;
+    padding: 0;                     /* padding alleen bij multi (via class) */
+    font-size: 11px;
+    line-height: 1;
+    border-radius: 50%;             /* rond voor single digit */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    pointer-events: none;
+    transition: background .18s ease, transform .18s cubic-bezier(.2,.8,.2,1), box-shadow .18s;
+    white-space: nowrap;
+}
+
+/* wanneer meerdere cijfers: maak pill (iets breder) */
+.cart-badge--multi {
+    border-radius: 999px !important;
+    padding: 0 6px !important;
+    min-width: 26px !important;
+    height: 20px !important;
+}
+
+/* pulsing groene state bij toevoegen */
+.cart-badge--added {
+    background: #22c55e !important;
+    transform: scale(1.18);
+    box-shadow: 0 8px 18px rgba(34,197,94,0.18);
+    color: #fff !important;
+}
+
+/* wanneer fixed variant heeft andere small offset */
+.cart-btn--fixed .cart-badge {
+    right: -2px !important; /* verminderd van -6px naar -2px voor mobiel */
+    top: 21px !important; /* keep same lowered offset for fixed variant */
+}
+
+/* fallback: zorg dat topbar-navigatie niet per ongeluk de fixed cart verbergt */
+.topbar-row-nav .cart-btn { display: inline-flex; }
+
+/* kleine schermen: compacte badge/padding */
+@media (max-width: 767px) {
+    .cart-badge { 
+        min-width: 16px; 
+        height: 16px; 
+        font-size: 11px; 
+        padding: 0; /* verwijder padding om rond te blijven */
+        right: -2px !important; /* verminderd van -6px naar -2px voor mobiel */
+        border-radius: 50% !important; /* zorg dat het rond blijft */
+    }
+    
+    /* voor meerdere cijfers op mobiel: pill vorm */
+    .cart-badge--multi {
+        padding: 0 4px !important;
+        min-width: 20px !important;
+        border-radius: 8px !important; /* pill vorm voor multi */
+    }
+}
+
+/* reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+    .cart-btn, .cart-badge { transition: none !important; }
+}
+
+/* ========== end consolidated cart block ========== */
+
+/* Cart page: responsive item cards for small screens */
+.cart-table-wrap { max-width: 100%; }
+.cart-item-card {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    margin-bottom: 10px;
+}
+
+/* Hide mobile cards on desktop to avoid duplicates: cards are intended for small screens only */
+@media (min-width: 700px) {
+    .cart-item-card { display: none; }
+}
+.cart-item-thumb {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex: 0 0 72px;
+    background: #f3f4f6;
+}
+.cart-item-main {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.cart-item-first-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+.cart-item-name {
+    display: block;
+    color: #111827;
+    font-weight: 400;
+    /* Allow wrapping so long product names don't cause horizontal scroll or get truncated */
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+}
+.cart-item-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: #475569;
+    font-size: 0.95em;
+}
+.cart-item-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Desktop: keep table layout but show thumb column */
+@media (min-width: 700px) {
+    .cart-table td.cart-item-thumb-cell img { width: 64px; height: 64px; object-fit: cover; border-radius: 6px; }
+}
+
+/* Improve table wrapping behavior to avoid horizontal scrollbar when names are long */
+.cart-table {
+    table-layout: fixed; /* distribute column widths according to specified widths */
+}
+.cart-table th,
+.cart-table td {
+    /* Allow cells to wrap text when needed */
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    border-bottom: none; /* moved to row level */
+}
+.cart-table tbody tr { border-bottom: 1px solid #e5e7eb; }
+/* Fix the thumbnail column and keep qty/price columns compact so name column gets the remaining space */
+.cart-table td.cart-item-thumb-cell,
+.cart-table th:first-child { width: 80px; }
+.cart-table td.cart-item-qty,
+.cart-table td.cart-item-price,
+.cart-table th:nth-last-child(2),
+.cart-table th:last-child { width: 96px; white-space: nowrap; }
+
+/* Desktop: ensure price and remove button are flush right */
+@media (min-width: 700px) {
+    .cart-table td.cart-item-price,
+    .cart-table td:last-child {
+        text-align: right;
+        vertical-align: middle;
+    }
+    /* make sure remove button doesn't wrap and is visually compact */
+    .cart-remove-btn {
+        display: inline-block;
+        line-height: 1;
+        padding: 4px 6px;
+    }
+    /* constrain the remove column so it doesn't push the price too far left */
+    .cart-table td:last-child {
+        max-width: 50px;
+        width: 50px;
+        padding-left: 8px;
+        box-sizing: border-box;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    /* ensure price cell has room and stays right-aligned */
+    .cart-table td.cart-item-price {
+        padding-right: 12px;
+    }
+}
+
+/* Mobile: hide table, show stacked cards */
+@media (max-width: 699px) {
+    .cart-table { display: none; }
+    .cart-table-wrap { padding: 0; }
+}
+
+/* hide inline unit-price in name on smaller screens */
+@media (max-width: 699px) {
+    .cart-item-unit-inline { display: none; }
+}
+
+/* Small phones layout: two-line card (photo + name) then (unit price left, qty right) */
+@media (max-width: 700px) {
+    .cart-item-card { padding: 8px; gap: 10px; }
+    .cart-item-thumb { width: 64px; height: 64px; flex: 0 0 64px; }
+    .cart-item-main { display: flex; flex-direction: column; gap: 8px; }
+    .cart-item-first-row { display: flex; align-items: center; }
+    .cart-item-second-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .cart-item-meta { color: #475569; font-size: 0.95em; }
+    .cart-item-actions { display: flex; gap: 8px; align-items: center; }
+}
+
+/* Modal option group styling helpers (used by JS via class toggles) */
+.modal-option-required {
+  border: 1px solid #10b981; /* green */
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.06);
+  padding: 6px;
+  border-radius: 6px;
+}
+.modal-option-invalid {
+  border: 1px solid #e74c3c; /* red */
+  box-shadow: 0 0 0 3px rgba(231,76,60,0.08);
+  padding: 6px;
+  border-radius: 6px;
+}
+/* For single inputs/selects inside a group: add class to the control itself */
+.input-required {
+  border: 1px solid #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.06) !important;
+}
+.input-invalid {
+  border: 1px solid #e74c3c !important;
+  box-shadow: 0 0 0 3px rgba(231,76,60,0.08) !important;
+}
+
+/* .invalid-field left intentionally without direct control styling; labels using .invalid-field are styled below */
+.modal-option-group label.invalid-field,
+label.invalid-field {
+    color: #e74c3c !important;
+}
+
+.modal-option-group.modal-option-required {
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+
+
+

@@ -1,0 +1,100 @@
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+}
+
+.orders-table th, .orders-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+.orders-table th {
+    background: #f1f5f9;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.orders-table tr:hover {
+    background: #f3f4f6;
+}
+
+@media (max-width: 800px) {
+    /* Turn table rows into compact 2-column cards */
+    .orders-table tbody tr {
+        display: grid;
+        grid-template-columns: 1fr 120px;
+        gap: 8px;
+        align-items: start;
+        padding: 10px 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        background: #ffffff;
+    }
+
+    /* Hide original table header row on small screens */
+    .orders-table thead {
+        display: none;
+    }
+
+    .orders-table td {
+        display: block;
+        padding: 0;
+        border: none;
+        background: transparent;
+    }
+
+    /* Left column: key order info stacked */
+    .orders-table td:first-child {
+        grid-column: 1 / 2;
+    }
+
+    /* Right column: amount / status / actions stacked compactly */
+    .orders-table td:last-child {
+        grid-column: 2 / 3;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-end;
+    }
+
+    /* Small utility styles inside cells to keep things compact */
+    .orders-table .text-sm { font-size: 13px; }
+    .orders-table .text-xs { font-size: 12px; }
+    .orders-table .inline-flex { display:inline-flex; }
+
+    /* Ensure actions are easy to tap */
+    .orders-table button { padding: 6px 8px; font-size: 13px; }
+
+    /* When there's a middle column (amount/status/payment), keep them in the left column stacked */
+    .orders-table td:nth-child(2),
+    .orders-table td:nth-child(3),
+    .orders-table td:nth-child(4),
+    .orders-table td:nth-child(5),
+    .orders-table td:nth-child(6) {
+        grid-column: 1 / 2;
+    }
+
+    /* Reduce row hover noise on mobile */
+    .orders-table tr:hover { background: transparent; }
+}
+
+/* Header action buttons wrap on narrow screens */
+@media (max-width: 640px) {
+    .header-actions { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
+    .header-actions button { padding:6px 8px; font-size:13px; }
+    .header-actions svg { width:18px; height:18px; }
+}
+
+/* Stack header and put buttons under title on small screens */
+@media (max-width: 640px) {
+    .orders-header .flex.justify-between.items-center {
+        display:block;
+    }
+    .orders-header h1, .orders-header p { margin-bottom: 8px; }
+    /* place actions below title, side-by-side */
+    .orders-header .header-actions { justify-content:flex-start; margin-top:6px; }
+    .orders-header .header-actions { display:flex; gap:8px; }
+}
