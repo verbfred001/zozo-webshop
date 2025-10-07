@@ -2,7 +2,7 @@
 // Database credentials
 $DB_HOST = 'localhost';
 $DB_USER = 'zozo-user';
-$DB_NAME = 'u44232p148476_webshop';
+$DB_NAME = 'u44232p148476_maxice';
 $DB_PASS = 'PN_10Gev@ngenis';
 
 // Create a global $mysqli connection
