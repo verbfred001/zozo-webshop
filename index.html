@@ -1,50 +1,273 @@
 <!DOCTYPE html>
 <html lang="nl">
   <head>
-    <meta charset="UTF-8" />
-    <title>Website in opbouw</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>testje.be — tijdelijke landingspagina</title>
     <style>
+      :root {
+        --bg-1: #0f172a;
+        --bg-2: #07132a;
+        --accent: #16a34a;
+        --muted: #94a3b8;
+      }
+      html,
       body {
-        background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
-        color: #333;
-        font-family: "Segoe UI", Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
+        height: 100%;
         margin: 0;
       }
-      .container {
-        background: #fff;
-        padding: 2.5rem 2rem;
-        border-radius: 1rem;
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
-        text-align: center;
+      body {
+        font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+        color: #e6eef9;
+        background: radial-gradient(
+            1200px 600px at 10% 10%,
+            rgba(22, 163, 74, 0.06),
+            transparent 10%
+          ),
+          linear-gradient(180deg, var(--bg-1), var(--bg-2));
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
-      h1 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        color: #2d6cdf;
+
+      /* full-bleed banner container */
+      .banner {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 20px 0;
       }
-      p {
-        font-size: 1.2rem;
-        margin-bottom: 0.5rem;
+
+      .card {
+        width: min(980px, 92%);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.02)
+        );
+        border-radius: 16px;
+        padding: 36px 40px;
+        box-shadow: 0 10px 40px rgba(2, 6, 23, 0.6),
+          inset 0 1px 0 rgba(255, 255, 255, 0.02);
+        display: flex;
+        align-items: center;
       }
-      .emoji {
-        font-size: 3rem;
-        margin-bottom: 1rem;
+      .main {
+        flex: 1;
+      }
+
+      .title {
+        font-size: clamp(36px, 6vw, 96px);
+        line-height: 0.9;
+        letter-spacing: 6px;
+        font-weight: 800;
+        margin: 0 0 12px 0;
+        display: flex;
+        gap: 8px;
+        align-items: baseline;
+      }
+      .title .letter {
+        display: inline-block;
+        color: transparent;
+        -webkit-text-stroke: 1.5px rgba(230, 238, 249, 0.95);
+        filter: drop-shadow(0 6px 18px rgba(12, 24, 48, 0.6));
+        transform-origin: center bottom;
+      }
+      .title .letter.animate {
+        animation: popIn 900ms cubic-bezier(0.15, 0.8, 0.25, 1) both;
+      }
+      .title .letter.fill {
+        color: var(--accent);
+        -webkit-text-stroke: 0;
+        filter: drop-shadow(0 12px 36px rgba(22, 163, 74, 0.26));
+      }
+
+      @keyframes popIn {
+        0% {
+          transform: translateY(28px) scale(0.86);
+          opacity: 0;
+        }
+        60% {
+          transform: translateY(-6px) scale(1.03);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .subtitle {
+        font-size: 18px;
+        color: var(--muted);
+        margin: 0 0 18px;
+      }
+      .btn {
+        background: linear-gradient(180deg, var(--accent), #0f7f37);
+        color: #072018;
+        padding: 10px 14px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 700;
+      }
+      .muted {
+        color: var(--muted);
+        margin-left: 12px;
+      }
+
+      footer {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      /* fixed logo bottom-right */
+      .logo-fixed {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        width: 220px;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        z-index: 9999;
+      }
+      @media (max-width: 720px) {
+        .card {
+          padding: 28px;
+        }
+        .logo-fixed {
+          width: 140px;
+          right: 12px;
+          bottom: 12px;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="emoji">🚧</div>
-      <h1>Website in opbouw</h1>
-      <p>
-        We werken hard aan een nieuwe ervaring.<br />
-        Kom binnenkort terug!
-      </p>
+    <div class="banner">
+      <div class="card" role="main">
+        <div class="main">
+          <h1 class="title" aria-hidden="true">
+            <span class="letter animate">T</span>
+            <span class="letter animate">E</span>
+            <span class="letter animate">S</span>
+            <span class="letter animate">T</span>
+            <span class="letter animate">J</span>
+            <span class="letter animate">E</span>
+            <span class="letter animate">.</span>
+            <span class="letter animate">b</span>
+            <span class="letter animate">e</span>
+          </h1>
+          <p class="subtitle">
+            dit is een testomgeving van <strong>ZoZo</strong>
+          </p>
+          <div style="display: flex; align-items: center">
+            <a
+              class="btn"
+              href="https://zozo.be"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Bezoek zozo.be</a
+            >
+            <div class="muted">We werken aan iets moois — kom later terug</div>
+          </div>
+          <footer>
+            Logo en pagina gemaakt voor testdoeleinden. &middot; &copy;
+            <?= date('Y') ?>
+          </footer>
+        </div>
+      </div>
     </div>
+
+    <a
+      class="logo-fixed"
+      href="https://zozo.be"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src="/logo_zozo.jpg"
+        alt="Zozo"
+        style="width: 100%; height: auto; border-radius: 10px; display: block"
+      />
+    </a>
+
+    <script>
+      (function () {
+        const letters = Array.from(document.querySelectorAll(".title .letter"));
+        // initially hide from screen readers
+        letters.forEach((l) => l.setAttribute("aria-hidden", "true"));
+
+        const n = letters.length;
+
+        // Build a single cycle sequence: forward to last, then back to first (without duplicating the last)
+        const forward = Array.from({ length: n }, (_, i) => i);
+        const backward = Array.from(
+          { length: Math.max(0, n - 1) },
+          (_, i) => n - 2 - i
+        );
+        const oneCycle = forward.concat(backward);
+
+        // find index of letter 'J' to keep highlighted at the end; fallback to index 4
+        let jIndex = letters.findIndex(
+          (el) => el.textContent.trim().toUpperCase() === "J"
+        );
+        if (jIndex === -1) jIndex = 4;
+
+        function runSweep(cycles, stepDelay) {
+          let run = 0;
+
+          function doCycle() {
+            // iterate through the sequence and schedule highlights
+            oneCycle.forEach((idx, i) => {
+              setTimeout(() => {
+                letters.forEach((l) => l.classList.remove("fill"));
+                const el = letters[idx];
+                if (el) el.classList.add("fill");
+              }, i * stepDelay);
+            });
+
+            const cycleDuration = oneCycle.length * stepDelay;
+
+            // after the cycle finishes
+            setTimeout(() => {
+              run++;
+              if (run < cycles) {
+                // small pause then next cycle
+                letters.forEach((l) => l.classList.remove("fill"));
+                setTimeout(doCycle, 300);
+              } else {
+                // final state: clear others and keep the 'J' letter filled
+                letters.forEach((l) => l.classList.remove("fill"));
+                const finalEl = letters[jIndex];
+                if (finalEl) finalEl.classList.add("fill");
+
+                // reveal for screen readers
+                letters.forEach((el) =>
+                  el.setAttribute("aria-hidden", "false")
+                );
+                const sr = document.createElement("div");
+                sr.style.position = "absolute";
+                sr.style.left = "-9999px";
+                sr.style.width = "1px";
+                sr.style.height = "1px";
+                sr.style.overflow = "hidden";
+                sr.innerText = "TESTJE.be";
+                document.body.appendChild(sr);
+              }
+            }, cycleDuration + 120);
+          }
+
+          doCycle();
+        }
+
+        // Stagger the popIn animation slightly to give a pleasing entrance.
+        letters.forEach((el, i) => (el.style.animationDelay = i * 80 + "ms"));
+
+        // Run one cycle (forward->back), with 240ms step between letters for a slightly slower feel
+        runSweep(1, 240);
+      })();
+    </script>
   </body>
 </html>
