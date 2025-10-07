@@ -90,13 +90,13 @@ $inst = $res ? $res->fetch_assoc() : null;
             <p class="footer-small" style="margin-top:8px;">Voor vragen mbt allergenen kan je ons contacteren via mail of via telefoon.</p>
 
             <div class="footer-social" style="margin-top:8px;">
-                <a href="#" aria-label="Facebook" class="footer-social-link" target="_blank" rel="noopener">
+                <a href="https://www.facebook.com/people/Maxice/100063613179216/" aria-label="Facebook" class="footer-social-link" target="_blank" rel="noopener">
                     <!-- Facebook SVG -->
                     <svg class="footer-social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M22 12.07C22 6.48 17.52 2 11.93 2S1.86 6.48 1.86 12.07c0 4.99 3.66 9.13 8.44 9.92v-7.03H8.08v-2.9h2.22V9.41c0-2.2 1.31-3.41 3.32-3.41.96 0 1.96.17 1.96.17v2.15h-1.09c-1.07 0-1.4.66-1.4 1.34v1.6h2.38l-.38 2.9h-2v7.03c4.78-.79 8.44-4.93 8.44-9.92z" />
                     </svg>
                 </a>
-                <a href="#" aria-label="Instagram" class="footer-social-link" target="_blank" rel="noopener">
+                <a href="https://www.instagram.com/maxiceroeselare/" aria-label="Instagram" class="footer-social-link" target="_blank" rel="noopener">
                     <!-- Instagram SVG -->
                     <svg class="footer-social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zM18.5 6a1 1 0 1 1-1 1 1 1 0 0 1 1-1z" />

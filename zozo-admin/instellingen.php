@@ -574,7 +574,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_tijdsloten'])) {
                     <a class="tab-button <?= $active_tab === 'melding' ? 'tab-button--active' : '' ?>" data-tab="melding" href="/admin/instellingen/tijdelijke-melding">Tijdelijke melding</a>
                     <?php /*a class="tab-button <?= $active_tab === 'talen' ? 'tab-button--active' : '' ?>" data-tab="talen" href="/admin/instellingen/talen">Talen</a>*/ ?>
                     <a class="tab-button <?= $active_tab === 'tijdsloten' ? 'tab-button--active' : '' ?>" data-tab="tijdsloten" href="/admin/instellingen/tijdsloten-instellen">Tijdsloten</a>
-                    <a class="tab-button <?= $active_tab === 'shop' ? 'tab-button--active' : '' ?>" data-tab="shop" href="/admin/instellingen/webshop">TEST - tijdoverride</a>
+                    <?php if (!empty($instellingen['form_timeoverride']) && (int)$instellingen['form_timeoverride'] === 1): ?>
+                        <a class="tab-button <?= $active_tab === 'shop' ? 'tab-button--active' : '' ?>" data-tab="shop" href="/admin/instellingen/webshop">TEST - tijdoverride</a>
+                    <?php endif; ?>
                 </nav>
             </div>
             <div class="tabs-content">

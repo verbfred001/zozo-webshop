@@ -205,11 +205,11 @@
                 border: 1px solid rgba(31,41,55,0.04);
             }
 
-            /* Important lines inside any callout — bold and medium gray */
+            /* Important lines inside any callout — bold and green */
             .callout-box .callout-important {
                 font-weight: 700;
                 font-size: 1.02rem;
-                color: #6b7280; /* medium gray */
+                color: #16a34a; /* green */
                 margin: 6px 0;
             }
 
