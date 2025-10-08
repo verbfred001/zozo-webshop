@@ -62,13 +62,93 @@ $last_graph_error = $_SESSION['last_graph_error'] ?? null;
         $ms_from_email = $krow2['waarde'] ?? null;
     }
 
-    // Email sending removed from this page per developer request.
-    // Instead of attempting to send mails here we show a simple placeholder message in the UI.
-    // Ensure $mail_status_message is a string so later htmlspecialchars() calls don't error.
+    // Prepare mail sending state. We attempt to send a confirmation mail via Graph
+    // to the customer (order email) and to the shop inbox ($MS_FROM_EMAIL). A
+    // session flag prevents duplicate sends when the user refreshes the page.
     $mail_status_message = '';
     $mail_placeholder = '';
-    if ($order && $order_row) {
-        $mail_placeholder = 'mail functionality here';
+    $mail_sent_success = false;
+    $mail_sent_email = null;
+
+    if ($order && $order_row && !empty($order_row['email'])) {
+        // session already started above; guard against duplicate sends
+        $sent_flag = 'bedankt_mail_sent_' . $order;
+        if (empty($_SESSION[$sent_flag])) {
+            // try to include the Graph mail helper
+            $mg = __DIR__ . '/../zozo-includes/mail_graph.php';
+            if (file_exists($mg)) {
+                require_once $mg;
+                // build a confirmation email using the shared template
+                $custEmail = $order_row['email'];
+                $mail_subject = 'Bevestiging bestelling #' . $order;
+                // render template to $html
+                $tpl = __DIR__ . '/../zozo-templates/email/order_confirmation.php';
+                // build a robust base URL for absolute image links
+                $scheme = 'http';
+                if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] === 'https')) {
+                    $scheme = 'https';
+                }
+                $host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '';
+                $baseUrl = $host ? ($scheme . '://' . $host) : '';
+                $order_id = $order;
+                // ensure $order_row is available to template
+                if (file_exists($tpl)) {
+                    ob_start();
+                    // variables available inside template: $order_id, $order_row, $baseUrl
+                    include $tpl;
+                    $html = ob_get_clean();
+                } else {
+                    // fallback minimal HTML
+                    $total = isset($order_row['bestelling_tebetalen']) ? 'Totaal: ' . $order_row['bestelling_tebetalen'] : '';
+                    $html = '<p>Bedankt voor je bestelling #' . htmlspecialchars($order) . '.</p>';
+                    if (!empty($order_row['inhoud_bestelling'])) {
+                        $html .= '<p>Bestelling:</p><pre style="white-space:pre-wrap;">' . htmlspecialchars($order_row['inhoud_bestelling']) . '</pre>';
+                    }
+                    if ($total) $html .= '<p>' . htmlspecialchars($total) . '</p>';
+                }
+
+                // send to customer first
+                try {
+                    $sent1 = send_mail_graph($custEmail, $mail_subject, $html, null, null);
+                } catch (Throwable $e) {
+                    $sent1 = false;
+                    error_log('send_mail_graph threw: ' . $e->getMessage());
+                    $_SESSION['last_graph_error'] = 'Graph send error: ' . substr($e->getMessage(), 0, 400);
+                }
+
+                // send a copy to the shop inbox (if known)
+                $shopInbox = $ms_from_email ?? ($MS_FROM_EMAIL ?? null);
+                $sent2 = true;
+                if (!empty($shopInbox)) {
+                    $shop_subject = 'Kopie bestelling #' . $order . ' - klant: ' . $custEmail;
+                    // do not prepend the "Nieuwe bestelling..." line; send same confirmation HTML
+                    $shop_html = $html;
+                    try {
+                        $sent2 = send_mail_graph($shopInbox, $shop_subject, $shop_html, null, null);
+                    } catch (Throwable $e) {
+                        $sent2 = false;
+                        error_log('send_mail_graph threw for shop inbox: ' . $e->getMessage());
+                        $_SESSION['last_graph_error'] = 'Graph send error: ' . substr($e->getMessage(), 0, 400);
+                    }
+                }
+
+                if ($sent1 && $sent2) {
+                    // mark sent in session so refresh won't resend
+                    $_SESSION[$sent_flag] = true;
+                    $mail_sent_success = true;
+                    $mail_sent_email = $custEmail;
+                } else {
+                    $mail_sent_success = false;
+                    $mail_status_message = 'Bevestigingsmail kon niet worden verzonden.';
+                }
+            } else {
+                $mail_status_message = 'Mailer niet gevonden.';
+            }
+        } else {
+            // already sent earlier in this session
+            $mail_sent_success = true;
+            $mail_sent_email = $order_row['email'];
+        }
     }
     ?>
 
@@ -188,9 +268,19 @@ $last_graph_error = $_SESSION['last_graph_error'] ?? null;
             var msFrom = <?= json_encode($ms_from_email ?: null) ?>;
             if (msFrom) fromInfo = msFrom;
 
-            // Email functionality has been removed from this page. Show a neutral placeholder text.
-            var mailPlaceholder = <?= json_encode($mail_placeholder) ?>;
-            var mailText = mailPlaceholder ? ('<strong>' + (custEmail || 'je e‑mail') + ':</strong> ' + mailPlaceholder) : ('Er werd geprobeerd een bevestigingsmail te versturen naar <strong>' + (custEmail || 'je e‑mail') + '</strong>');
+            // Use server-side result (mail sent?) to display an appropriate message.
+            var mailSentSuccess = <?= json_encode(!empty($mail_sent_success) ? true : false) ?>;
+            var mailSentEmail = <?= json_encode($mail_sent_email ?? '') ?>;
+            var mailStatusMessage = <?= json_encode($mail_status_message ?? '') ?>;
+            var mailText = '';
+            if (mailSentSuccess && mailSentEmail) {
+                mailText = 'Bevestigingsmail gestuurd naar ' + mailSentEmail;
+            } else if (mailStatusMessage) {
+                mailText = mailStatusMessage + ' (' + (custEmail || 'je e‑mail') + ')';
+            } else {
+                // fallback neutral text
+                mailText = 'Er werd geprobeerd een bevestigingsmail te versturen naar <strong>' + (custEmail || 'je e‑mail') + '</strong>';
+            }
 
             var pickupText = '';
             if (orderRow) {
