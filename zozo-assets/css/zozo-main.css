@@ -539,6 +539,34 @@
     line-height: 1.25;
     word-break: break-word;
 }
+
+/* Make visible custom select reflect validation that is applied to the original (hidden) select
+     The detail page often applies inline styles to the original <select> (e.g. border: 1px solid #10b981)
+     so we mirror those visual cues on the .custom-select-display using attribute selectors and
+     sibling selectors. We also handle label.invalid-field cases. */
+/* Green (required) when original select has inline green border */
+select[style*="#10b981"] + .custom-select-wrapper .custom-select-display,
+select[style*="border: 1px solid #10b981"] + .custom-select-wrapper .custom-select-display,
+.detail-option-group.modal-option-required .custom-select-display,
+.modal-option-required .custom-select-display {
+    border: 1px solid #10b981 !important;
+    box-shadow: 0 0 0 3px rgba(16,185,129,0.06) !important;
+}
+/* Red (invalid) when original select has inline red border */
+select[style*="#e74c3c"] + .custom-select-wrapper .custom-select-display,
+select[style*="border: 1px solid #e74c3c"] + .custom-select-wrapper .custom-select-display,
+.detail-option-group.modal-option-invalid .custom-select-display,
+.modal-option-invalid .custom-select-display {
+    border: 1px solid #e74c3c !important;
+    box-shadow: 0 0 0 3px rgba(231,76,60,0.08) !important;
+}
+/* When the label is marked invalid (label.invalid-field), mirror a red text color on the display */
+.detail-option-group label.invalid-field ~ .custom-select-wrapper .custom-select-display,
+.modal-option-group label.invalid-field ~ .custom-select-wrapper .custom-select-display,
+.custom-select-wrapper .custom-select-display.invalid-field,
+label.invalid-field + .custom-select-wrapper .custom-select-display {
+    color: #e74c3c !important;
+}
 .custom-select-list .custom-select-item:hover {
     background: #f3f4f6;
 }
@@ -1137,6 +1165,40 @@ label.invalid-field {
   border: none;
   box-shadow: none;
   padding: 0;
+}
+
+/* Zorg dat custom select display hetzelfde validation-visual geeft als de originele select / groep */
+
+/* Als de groep gemarkeerd is als required/invalid */
+.modal-option-required .custom-select-display,
+.detail-option-group.modal-option-required .custom-select-display {
+  border: 1px solid #10b981;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.06);
+}
+.modal-option-invalid .custom-select-display,
+.detail-option-group.modal-option-invalid .custom-select-display {
+    border: 1px solid #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231,76,60,0.08);
+    color: #e74c3c; /* make visible select text red when invalid (match detail behaviour) */
+}
+
+/* Wanneer de originele <select> zelf de class krijgt (select is offscreen but sibling) */
+select.input-required + .custom-select-wrapper .custom-select-display,
+select.input-required ~ .custom-select-wrapper .custom-select-display {
+  border: 1px solid #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.06) !important;
+}
+select.input-invalid + .custom-select-wrapper .custom-select-display,
+select.input-invalid ~ .custom-select-wrapper .custom-select-display {
+    border: 1px solid #e74c3c !important;
+    box-shadow: 0 0 0 3px rgba(231,76,60,0.08) !important;
+    color: #e74c3c !important; /* ensure text color matches invalid state */
+}
+
+/* labels in custom select: maak tekst rood als label invalid is gebruikt */
+.custom-select-wrapper .custom-select-display.invalid-field,
+label.invalid-field + .custom-select-wrapper .custom-select-display {
+  color: #e74c3c;
 }
 
 

@@ -460,47 +460,83 @@ function closeProductModal() {
 var modalOptionsForm = document.getElementById('modal-options-form');
             if (modalOptionsForm) {
     modalOptionsForm.addEventListener('change', function(e) {
-    // clear inline error styles for this group when user changes something
-    try {
-        const modal = document.getElementById('product-options-modal');
-        if (modal) {
-            // If the change target is inside a .modal-option-group, clear styles for that group only
+        try {
+            const modal = document.getElementById('product-options-modal');
+            if (!modal) return;
             const group = e.target.closest('.modal-option-group');
-            if (group) {
-                // determine if this group is required
-                const gid = group.getAttribute('data-group-id');
-                const optDef = (modalProductData && modalProductData.options) ? modalProductData.options.find(o => String(o.group_id) === String(gid)) : null;
-                    if (optDef && optDef.is_required == 1) {
-                    // restore required green styling until submission verifies
-                        // ensure the wrapper shows required border
-                        try { group.classList.add('modal-option-required'); } catch(e){}
-                        if (optDef.type === 'radio') {
-                            // style labels for radio groups
-                            group.querySelectorAll('label').forEach(lbl => {
-                                try { lbl.classList.add('modal-option-required'); lbl.classList.remove('invalid-field'); } catch(e){}
-                            });
-                        } else {
-                            group.querySelectorAll('input,select,textarea').forEach(el => {
-                                try { el.classList.add('input-required'); el.classList.remove('invalid-field'); } catch(e){}
-                            });
+            if (!group) return;
+
+            const gid = group.getAttribute('data-group-id');
+            const optDef = (modalProductData && modalProductData.options) ? modalProductData.options.find(o => String(o.group_id) === String(gid)) : null;
+
+            // If the group is required, restore only the changed control
+            if (optDef && optDef.is_required == 1) {
+                try { group.classList.add('modal-option-required'); } catch(e){}
+                if (optDef.type === 'radio') {
+                    try {
+                        // clear invalid markers from labels and mark checked label required
+                        group.querySelectorAll('label').forEach(lbl => { try { lbl.classList.remove('modal-option-invalid','invalid-field'); } catch(e){} });
+                        const checked = group.querySelector('input[type="radio"]:checked');
+                        if (checked) {
+                            const lbl = checked.closest('label');
+                            if (lbl) try { lbl.classList.add('modal-option-required'); } catch(e){}
                         }
+                    } catch(e){}
                 } else {
-                    // non-required: clear any classes
-                    group.classList.remove('modal-option-required', 'modal-option-invalid');
-                    group.querySelectorAll('input,select,textarea').forEach(el => el.classList.remove('input-required', 'input-invalid'));
-                    group.querySelectorAll('label').forEach(lbl => {
-                        try { lbl.classList.remove('modal-option-required', 'modal-option-invalid', 'invalid-field'); lbl.style.padding = ''; lbl.style.borderRadius = ''; } catch(e){}
-                    });
+                    const ctrl = e.target && e.target.closest ? e.target.closest('input,select,textarea') : null;
+                    const targetCtrl = ctrl || group.querySelector('input,select,textarea');
+                    if (targetCtrl) {
+                        try {
+                            targetCtrl.classList.add('input-required');
+                            targetCtrl.classList.remove('input-invalid','invalid-field');
+                        } catch(e){}
+                        try {
+                            if (targetCtrl.tagName && targetCtrl.tagName.toLowerCase() === 'select') {
+                                const wrapper = targetCtrl.nextElementSibling && targetCtrl.nextElementSibling.classList && targetCtrl.nextElementSibling.classList.contains('custom-select-wrapper') ? targetCtrl.nextElementSibling : null;
+                                if (wrapper) {
+                                    const disp = wrapper.querySelector('.custom-select-display');
+                                    if (disp) {
+                                        disp.classList.remove('input-invalid','invalid-field');
+                                        disp.classList.add('input-required');
+                                        disp.style.border = '1px solid #10b981';
+                                        disp.style.boxShadow = '0 0 0 3px rgba(16,185,129,0.06)';
+                                        disp.style.color = '';
+                                    }
+                                }
+                            }
+                        } catch(e){}
+                    }
+                }
+            } else {
+                // non-required: clear only the changed control
+                const ctrl = e.target && e.target.closest ? e.target.closest('input,select,textarea') : null;
+                if (ctrl) {
+                    try {
+                        ctrl.classList.remove('input-required','input-invalid','invalid-field');
+                        if (ctrl.tagName && ctrl.tagName.toLowerCase() === 'select') {
+                            const wrapper = ctrl.nextElementSibling && ctrl.nextElementSibling.classList && ctrl.nextElementSibling.classList.contains('custom-select-wrapper') ? ctrl.nextElementSibling : null;
+                            if (wrapper) {
+                                const disp = wrapper.querySelector('.custom-select-display');
+                                if (disp) {
+                                    disp.style.border = '';
+                                    disp.style.boxShadow = '';
+                                    disp.style.color = '';
+                                    disp.classList.remove('input-required','input-invalid','invalid-field');
+                                }
+                            }
+                        }
+                    } catch(e){}
+                } else {
+                    // fallback: clear group-level classes
+                    group.classList.remove('modal-option-required','modal-option-invalid');
+                    group.querySelectorAll('input,select,textarea').forEach(el => el.classList.remove('input-required','input-invalid'));
+                    group.querySelectorAll('label').forEach(lbl => { try { lbl.classList.remove('modal-option-required','modal-option-invalid','invalid-field'); lbl.style.padding=''; lbl.style.borderRadius=''; } catch(e){} });
                 }
             }
-        }
-    } catch(e) {}
-    if (e.target.id === 'modal-qty') {
-        updateModalPrice(currentBasePrice);
-        return;
-    }
+        } catch(e) {}
 
-    updateModalPrice(currentBasePrice);
+        if (e.target.id === 'modal-qty') { updateModalPrice(currentBasePrice); return; }
+        updateModalPrice(currentBasePrice);
 
     // Bouw actuele selectedOptions op en tel required voorraad-opties
     let selectedOptions = [];

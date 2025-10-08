@@ -141,6 +141,21 @@ function renderProductOptions(options) {
                         try {
                             el.style.border = '1px solid #10b981';
                             el.style.boxShadow = '0 0 0 3px rgba(16,185,129,0.06)';
+                            el.classList && el.classList.add('input-required');
+                            // Mirror to custom display if select is replaced
+                            try {
+                                if (el.tagName && el.tagName.toLowerCase() === 'select') {
+                                    const wrapper = el.nextElementSibling && el.nextElementSibling.classList && el.nextElementSibling.classList.contains('custom-select-wrapper') ? el.nextElementSibling : null;
+                                    if (wrapper) {
+                                        const disp = wrapper.querySelector('.custom-select-display');
+                                        if (disp) {
+                                            disp.style.border = '1px solid #10b981';
+                                            disp.style.boxShadow = '0 0 0 3px rgba(16,185,129,0.06)';
+                                            disp.classList && disp.classList.add('input-required');
+                                        }
+                                    }
+                                }
+                            } catch(e){}
                         } catch(e){}
                     });
                 }
@@ -228,31 +243,52 @@ function renderProductOptions(options) {
 
     const debouncedUpdate = debounce(updateDetailPrice, 150);
     container.addEventListener('change', function(e) {
-        // clear or restore styles for this group when user interacts
         try {
             const group = e.target.closest('.detail-option-group');
-            if (group) {
-                const gid = group.getAttribute('data-group-id');
-                const optDef = (currentOptions || []).find(o => String(o.group_id) === String(gid));
-                if (optDef && optDef.is_required == 1) {
-                    // restore required green styling until submission verifies
-                    group.querySelectorAll('input,select,textarea,label').forEach(el => {
-                        try {
-                            if (el.tagName && (el.tagName.toLowerCase() === 'label')) {
-                                el.style.color = '';
-                            } else {
-                                el.style.border = '1px solid #10b981';
-                                el.style.boxShadow = '0 0 0 3px rgba(16,185,129,0.06)';
+            if (!group) { debouncedUpdate(); return; }
+            const gid = group.getAttribute('data-group-id');
+            const optDef = (currentOptions || []).find(o => String(o.group_id) === String(gid));
+
+            // Restore only the changed control
+            const ctrl = e.target && e.target.closest ? e.target.closest('input,select,textarea') : null;
+            const target = ctrl || group.querySelector('input,select,textarea');
+            if (!target) { debouncedUpdate(); return; }
+
+            if (optDef && optDef.is_required == 1) {
+                try {
+                    target.classList.remove('input-invalid','invalid-field');
+                    target.classList.add('input-required');
+                    // mirror to display if select
+                    if (target.tagName && target.tagName.toLowerCase() === 'select') {
+                        const wrapper = target.nextElementSibling && target.nextElementSibling.classList && target.nextElementSibling.classList.contains('custom-select-wrapper') ? target.nextElementSibling : null;
+                        if (wrapper) {
+                            const disp = wrapper.querySelector('.custom-select-display');
+                            if (disp) {
+                                disp.classList.remove('input-invalid','invalid-field');
+                                disp.classList.add('input-required');
+                                disp.style.border = '1px solid #10b981';
+                                disp.style.boxShadow = '0 0 0 3px rgba(16,185,129,0.06)';
+                                disp.style.color = '';
                             }
-                            el.classList && el.classList.remove('invalid-field');
-                        } catch(e){}
-                    });
-                } else {
-                    // non-required: clear any inline styles
-                    group.querySelectorAll('input,select,textarea,label').forEach(el => {
-                        try { el.style.border = ''; el.style.boxShadow = ''; el.style.color = ''; el.classList && el.classList.remove('invalid-field'); } catch(e){}
-                    });
-                }
+                        }
+                    }
+                } catch(e){}
+            } else {
+                try {
+                    target.classList.remove('input-required','input-invalid','invalid-field');
+                    if (target.tagName && target.tagName.toLowerCase() === 'select') {
+                        const wrapper = target.nextElementSibling && target.nextElementSibling.classList && target.nextElementSibling.classList.contains('custom-select-wrapper') ? target.nextElementSibling : null;
+                        if (wrapper) {
+                            const disp = wrapper.querySelector('.custom-select-display');
+                            if (disp) {
+                                disp.style.border = '';
+                                disp.style.boxShadow = '';
+                                disp.style.color = '';
+                                disp.classList.remove('input-required','input-invalid','invalid-field');
+                            }
+                        }
+                    }
+                } catch(e){}
             }
         } catch(e){}
         debouncedUpdate();
@@ -566,7 +602,26 @@ function setupDetailForm() {
                                 try {
                                     el.style.border = '1px solid #e74c3c';
                                     el.style.boxShadow = '0 0 0 3px rgba(231,76,60,0.08)';
+                                    // remove green marker and add invalid class so CSS rules with !important apply
+                                    try { el.classList && el.classList.remove('input-required'); } catch(e){}
+                                    try { el.classList && el.classList.add('input-invalid'); } catch(e){}
                                     el.classList && el.classList.add('invalid-field');
+                                    // if this is a replaced <select>, mirror the style on the visible display
+                                    try {
+                                        if (el.tagName && el.tagName.toLowerCase() === 'select') {
+                                            const wrapper = el.nextElementSibling && el.nextElementSibling.classList && el.nextElementSibling.classList.contains('custom-select-wrapper') ? el.nextElementSibling : null;
+                                            if (wrapper) {
+                                                const disp = wrapper.querySelector('.custom-select-display');
+                                                    if (disp) {
+                                                        disp.style.border = '1px solid #e74c3c';
+                                                        disp.style.boxShadow = '0 0 0 3px rgba(231,76,60,0.08)';
+                                                        try { disp.classList && disp.classList.remove('input-required'); } catch(e){}
+                                                        try { disp.classList && disp.classList.add('input-invalid'); } catch(e){}
+                                                        disp.classList && disp.classList.add('invalid-field');
+                                                    }
+                                            }
+                                        }
+                                    } catch(e){}
                                 } catch(e){}
                             });
                         }
