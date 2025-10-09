@@ -190,11 +190,68 @@ if (!empty($product)) {
         } else {
             $slug = $product['art_naam'];
         }
-        // Maak een nette slug (optioneel)
-        $slug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $slug), '-'));
-        $new_paths[$taal_code] = "product/{$product['art_id']}/{$slug}";
+        // Voeg variant/kenmerk toe aan de slug wanneer aanwezig (meertaligheid)
+        $variant = '';
+        if ($taal_code === 'fr' && !empty($product['art_kenmerk_fr'])) {
+            $variant = $product['art_kenmerk_fr'];
+        } elseif ($taal_code === 'en' && !empty($product['art_kenmerk_en'])) {
+            $variant = $product['art_kenmerk_en'];
+        } else {
+            $variant = $product['art_kenmerk'] ?? '';
+        }
+
+        $slug_base = $slug . (!empty($variant) ? ' ' . $variant : '');
+
+        // small slugify helper: transliterate (iconv) then remove non-alphanum and hyphens
+        $slugified = (function ($s) {
+            if (!is_string($s)) return '';
+            $s = trim($s);
+            // lower-case utf8
+            $s = mb_strtolower($s, 'UTF-8');
+            // Transliterate to ASCII when possible
+            if (function_exists('iconv')) {
+                $s = iconv('UTF-8', 'ASCII//TRANSLIT', $s);
+            }
+            // Replace non alnum with hyphen
+            $s = preg_replace('/[^a-z0-9]+/i', '-', $s);
+            $s = trim($s, '-');
+            $s = strtolower($s);
+            return $s;
+        })($slug_base);
+
+        $new_paths[$taal_code] = "product/{$product['art_id']}/{$slugified}";
     }
 }
+
+// SEO: bouw paginatitel (productnaam - categorie - host) en canonical URL
+// category last segment from $cat_pad (which uses ' > ' separator)
+$category_last = '';
+if (!empty($cat_pad)) {
+    $parts = array_map('trim', explode(' > ', $cat_pad));
+    $category_last = end($parts) ?: '';
+}
+$host = isset($_SERVER['HTTP_HOST']) ? preg_replace('/^www\./', '', $_SERVER['HTTP_HOST']) : '';
+$components = [];
+$components[] = $naam;
+// Voeg variant/kenmerk altijd toe wanneer aanwezig (vermijdt identieke titles)
+if (!empty($kenmerk)) {
+    $components[] = $kenmerk;
+}
+// Voeg categorie als extra context toe wanneer beschikbaar
+if (!empty($category_last)) {
+    $components[] = $category_last;
+}
+// Host toevoegen als laatste element
+if (!empty($host)) {
+    $components[] = $host;
+}
+$page_title = implode(' - ', $components);
+
+// canonical: scheme + host + path (remove query string)
+$scheme = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) ? 'https' : 'http';
+$path = strtok($_SERVER['REQUEST_URI'], '?');
+$canonical_url = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? '') . $path;
+
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>">
@@ -202,7 +259,13 @@ if (!empty($product)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($naam) ?> - <?= htmlspecialchars($translations['Detailpagina'][$lang] ?? 'Detail') ?></title>
+    <title><?= htmlspecialchars($page_title) ?></title>
+    <link rel="canonical" href="<?= htmlspecialchars($canonical_url) ?>">
+    <?php if (!empty($omschrijving)): ?>
+        <meta name="description" content="<?= htmlspecialchars(mb_substr(strip_tags($omschrijving), 0, 160)) ?>">
+    <?php else: ?>
+        <meta name="description" content="<?= htmlspecialchars($naam . ($category_last ? ' - ' . $category_last : '')) ?>">
+    <?php endif; ?>
 
     <link rel="stylesheet" href="/zozo-assets/css/zozo-main.css">
     <link rel="stylesheet" href="/zozo-assets/css/zozo-navbar.css">

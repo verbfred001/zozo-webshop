@@ -82,13 +82,42 @@ function get_category_path($cat_id, $all_cats, $lang = 'nl')
     return implode(' > ', $pad);
 }
 ?>
+<?php
+// Build SEO-friendly page title and canonical URL early so we can use them in <head>.
+$page_title = $translations['Onze producten'][$lang] ?? 'Onze producten';
+$category_breadcrumb = '';
+if (!empty($ids)) {
+    $last_cat_id = end($ids);
+    if (!empty($all_cats[$last_cat_id])) {
+        // get_category_path returns a string like "Parent > Child"
+        $category_breadcrumb = get_category_path($last_cat_id, $all_cats, $lang);
+    }
+}
+if (!empty($category_breadcrumb)) {
+    // Convert breadcrumb separator to a SEO-friendly dash and append host (without www.)
+    $seo_title = str_replace(' > ', ' - ', $category_breadcrumb);
+    $host = isset($_SERVER['HTTP_HOST']) ? preg_replace('/^www\./', '', $_SERVER['HTTP_HOST']) : '';
+    $page_title = trim($seo_title) . ($host ? ' - ' . $host : '');
+}
+
+// Canonical URL: scheme + host + path (strip query params)
+$scheme = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) ? 'https' : 'http';
+$path = strtok($_SERVER['REQUEST_URI'], '?');
+$canonical_url = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? '') . $path;
+?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Producten</title>
+    <title><?= htmlspecialchars($page_title) ?></title>
+    <link rel="canonical" href="<?= htmlspecialchars($canonical_url) ?>">
+    <?php if (!empty($category_breadcrumb)): ?>
+        <meta name="description" content="<?= htmlspecialchars(str_replace(' > ', ' - ', $category_breadcrumb)) ?> - <?= htmlspecialchars(isset($translations['Onze producten'][$lang]) ? $translations['Onze producten'][$lang] : 'Producten') ?>">
+    <?php else: ?>
+        <meta name="description" content="<?= htmlspecialchars($translations['Onze producten'][$lang] ?? 'Onze producten') ?> - <?= htmlspecialchars(isset($_SERVER['HTTP_HOST']) ? preg_replace('/^www\./', '', $_SERVER['HTTP_HOST']) : '') ?>">
+    <?php endif; ?>
     <link rel="stylesheet" href="/zozo-assets/css/zozo-main.css">
     <link rel="stylesheet" href="/zozo-assets/css/zozo-navbar.css">
     <link rel="stylesheet" href="/zozo-assets/css/zozo-topbar.css">
@@ -147,26 +176,7 @@ function get_category_path($cat_id, $all_cats, $lang = 'nl')
 
     <!-- Database producten -->
     <main class="products-main">
-        <?php
-        // Bepaal paginatitel: gebruik de meest specifieke categorie-naam in de actieve taal wanneer beschikbaar
-        $page_title = $translations['Onze producten'][$lang] ?? 'Onze producten';
-        if (!empty($ids)) {
-            $last_cat_id = end($ids);
-            if (!empty($all_cats[$last_cat_id])) {
-                $cat = $all_cats[$last_cat_id];
-                if ($lang === 'fr' && !empty($cat['cat_naam_fr'])) {
-                    $page_title = $cat['cat_naam_fr'];
-                } elseif ($lang === 'en' && !empty($cat['cat_naam_en'])) {
-                    $page_title = $cat['cat_naam_en'];
-                } elseif (!empty($cat['naam'])) {
-                    $page_title = $cat['naam'];
-                } elseif (!empty($cat['cat_naam'])) {
-                    $page_title = $cat['cat_naam'];
-                } elseif (!empty($cat['cat_naam_nl'])) {
-                    $page_title = $cat['cat_naam_nl'];
-                }
-            }
-        }
+        <?php // page title already computed above for SEO and canonical 
         ?>
         <h1 style="margin-bottom:24px;color:#1f2937;font-size:1.5em;"><?= htmlspecialchars($page_title) ?></h1>
         <div class="product-grid">
