@@ -176,8 +176,8 @@
             <div style="margin-top:12px;font-size:0.95rem;color:#333;border-top:1px solid #eee;padding-top:8px;">
                 <?php if (!empty($shop_info['bedrijfsnaam'])): ?><strong><?= htmlspecialchars($shop_info['bedrijfsnaam']) ?></strong><br><?php endif; ?>
                 <?php if (!empty($shop_info['adres'])): ?><?= nl2br(htmlspecialchars($shop_info['adres'])) ?><br><?php endif; ?>
-                <?php if (!empty($shop_info['telefoon'])): ?>Tel: <?= htmlspecialchars($shop_info['telefoon']) ?><br><?php endif; ?>
-                <?php if (!empty($shop_info['email'])): ?><a href="mailto:<?= htmlspecialchars($shop_info['email']) ?>"><?= htmlspecialchars($shop_info['email']) ?></a><?php endif; ?>
+            <?php if (!empty($shop_info['telefoon'])): ?>Tel: <?= htmlspecialchars($shop_info['telefoon']) ?><br><?php endif; ?>
+        <?php if (!empty($shop_info['email'])): ?><a href="mailto:<?= htmlspecialchars($shop_info['email']) ?>"><?= htmlspecialchars($shop_info['email']) ?></a><?php endif; ?>
             </div>
         <?php else: ?>
             <p>Met vriendelijke groet,<br>Het team</p>
