@@ -19,6 +19,7 @@ $last_graph_error = $_SESSION['last_graph_error'] ?? null;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
     <title>Bedankt voor je bestelling</title>
     <link rel="stylesheet" href="/zozo-assets/css/zozo-main.css">
     <link rel="stylesheet" href="/zozo-assets/css/zozo-navbar.css">

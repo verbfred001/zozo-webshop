@@ -35,6 +35,11 @@ include $_SERVER['DOCUMENT_ROOT'] . "/zozo-includes/zozo-categories.php";
     <link rel="stylesheet" href="/zozo-assets/css/zozo-topbar.css">
     <link rel="stylesheet" href="/zozo-assets/css/zozo-welkom.css">
     <script src="/zozo-assets/js/zozo-product-shared.js" defer></script>
+    <?php
+    $host = isset($_SERVER['HTTP_HOST']) ? preg_replace('/^www\./', '', $_SERVER['HTTP_HOST']) : 'example.com';
+    $pref = 'https://' . $host . '/broodjeszaak-take-away-eethuis-roeselare';
+    ?>
+    <link rel="canonical" href="<?= htmlspecialchars($pref) ?>">
 </head>
 
 <body>

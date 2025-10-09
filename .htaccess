@@ -15,7 +15,12 @@
 
 RewriteEngine On
 
-# --- HTTPS redirect ---
+# --- Redirect exact root directly to branded landing page (single-hop) ---
+# This will redirect both http and https requests for the exact root to the branded URL
+RewriteCond %{REQUEST_URI} ^/$
+#RewriteRule ^$ https://%{HTTP_HOST}/broodjeszaak-take-away-eethuis-roeselare [R=301,L]
+
+# --- HTTPS redirect (for all other requests) ---
 RewriteCond %{HTTP:X-Forwarded-Proto} !https
 SetEnvIf X-Forwarded-Proto "https" HTTPS=on
 RewriteCond %{HTTPS} !=on
@@ -41,6 +46,7 @@ RewriteRule ^bienvenue$ /zozo-pages/zozo-welkom.php?l=fr [L,QSA]
 RewriteRule ^welcome$ /zozo-pages/zozo-welkom.php?l=en [L,QSA]
 
 RewriteRule ^nieuwste$ /zozo-pages/zozo-welkom.php [L,QSA]
+RewriteRule ^broodjeszaak-take-away-eethuis-roeselare$ /zozo-pages/zozo-welkom.php?l=nl [L,QSA]
 RewriteRule ^winkelwagen$ /zozo-pages/cart.php [L,QSA]
 RewriteRule ^contact$ /zozo-pages/contact.php?l=nl [L,QSA]
 RewriteRule ^contact-fr$ /zozo-pages/contact.php?l=fr [L,QSA]

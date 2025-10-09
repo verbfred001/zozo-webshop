@@ -915,6 +915,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
     <title><?= htmlspecialchars(($fake_time_label ?? '') . ($translations['Afrekenen'][$lang] ?? 'Afrekenen')) ?></title>
     <link rel="stylesheet" href="/zozo-assets/css/zozo-main.css">
     <link rel="stylesheet" href="/zozo-assets/css/zozo-navbar.css">
