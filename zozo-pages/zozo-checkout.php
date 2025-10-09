@@ -1126,7 +1126,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div id="delivery-address" class="hide">
                     <label><?= htmlspecialchars($translations['Straat'][$lang] ?? 'Straat') ?> <input class="form-control" name="straat"></label>
                     <label><?= htmlspecialchars($translations['Postcode'][$lang] ?? 'Postcode') ?> <input class="form-control" name="postcode"></label>
-                    <label><?= htmlspecialchars($translations['Plaats'][$lang] ?? 'Plaats') ?> <input class="form-control" name="plaats"></label>
+                    <label><?= htmlspecialchars($translations['Plaats'][$lang] ?? 'Plaats') ?>
+                        <select class="form-control" name="plaats">
+                            <option value="Roeselare">Roeselare</option>
+                            <option value="Beveren">Beveren</option>
+                            <option value="Oekene">Oekene</option>
+                            <option value="Rumbeke">Rumbeke</option>
+                        </select>
+                    </label>
                     <label><?= htmlspecialchars($translations['Land'][$lang] ?? 'Land') ?> <input class="form-control" name="land" value="Belgie"></label>
                 </div>
 
