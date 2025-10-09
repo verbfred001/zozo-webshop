@@ -41,7 +41,7 @@ $last_graph_error = $_SESSION['last_graph_error'] ?? null;
     if ($order) {
         // also fetch inhoud_bestelling (JSON) and bestelling_tebetalen so we can render the email here
         // include Mollie_betaal_id so we can optionally verify payment status synchronously
-        $selectSql = 'SELECT b.bestelling_id, b.levernaam, b.leverplaats, b.leverstraat, b.UNIX_bezorgmoment, b.verzendmethode, b.inhoud_bestelling, b.bestelling_tebetalen, b.reeds_betaald, b.VOLDAAN, b.Mollie_betaal_id, k.email FROM bestellingen b LEFT JOIN klanten k ON b.klant_id = k.klant_id WHERE b.bestelling_id = ? LIMIT 1';
+        $selectSql = 'SELECT b.bestelling_id, b.leverbedrijfsnaam, b.levernaam, b.leverstraat, b.leverpostcode, b.leverplaats, b.UNIX_bezorgmoment, b.verzendmethode, b.inhoud_bestelling, b.bestelling_tebetalen, b.reeds_betaald, b.VOLDAAN, b.Mollie_betaal_id, k.email FROM bestellingen b LEFT JOIN klanten k ON b.klant_id = k.klant_id WHERE b.bestelling_id = ? LIMIT 1';
         $q = $mysqli->prepare($selectSql);
         if ($q) {
             $q->bind_param('i', $order);

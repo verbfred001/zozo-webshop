@@ -137,6 +137,8 @@
             <p>Er werden geen artikels gevonden in de bestelling.</p>
         <?php endif; ?>
 
+        <?php // Show delivery address for deliveries (verzendmethode == 'levering') - moved below levermelding 
+        ?>
         <?php if (!empty($order_row['bestelling_tebetalen'])):
             // sanitize and format total to 2 decimals (Dutch style)
             $totalRaw = $order_row['bestelling_tebetalen'];
@@ -188,6 +190,17 @@
         }
         ?>
         <p><?= htmlspecialchars($levermelding) ?></p>
+        <?php if (!empty($order_row['verzendmethode']) && stripos($order_row['verzendmethode'], 'lever') !== false): ?>
+            <h4 style="margin-top:12px;margin-bottom:6px;">Leveringsadres</h4>
+            <div style="background:#f9f9fb;border:1px solid #eee;padding:10px;border-radius:6px;max-width:420px;margin-bottom:12px;">
+                <?php if (!empty($order_row['leverbedrijfsnaam'])): ?>
+                    <div><?= htmlspecialchars($order_row['leverbedrijfsnaam']) ?></div>
+                <?php endif; ?>
+                <div><?= htmlspecialchars($order_row['levernaam'] ?? '') ?></div>
+                <div><?= htmlspecialchars($order_row['leverstraat'] ?? '') ?> <?= htmlspecialchars($order_row['leverpostcode'] ?? '') ?></div>
+                <div><?= htmlspecialchars($order_row['leverplaats'] ?? '') ?></div>
+            </div>
+        <?php endif; ?>
         <?php if ($betaalbevestiging): ?>
             <p style="font-weight:bold; color:green; margin-top:0; margin-bottom:18px;">&#10003; <?= htmlspecialchars($betaalbevestiging) ?></p>
         <?php endif; ?>
