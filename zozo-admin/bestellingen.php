@@ -60,213 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
 
 ?>
 <?php
-// Build combined list of today's scheduled items (orders + reservations) grouped by hour
-// Ensure DB connection exists
-if (!isset($mysqli)) {
-    require_once($_SERVER['DOCUMENT_ROOT'] . '/zozo-includes/DB_connectie.php');
-}
-$orders_by_hour = [];
-
-// 1) Today's orders (use delivery/pickup moment if available)
-$today_orders_sql = "SELECT b.*, COALESCE(b.UNIX_bezorgmoment, UNIX_TIMESTAMP(b.bestelling_datum)) AS display_unix, HOUR(FROM_UNIXTIME(COALESCE(b.UNIX_bezorgmoment, UNIX_TIMESTAMP(b.bestelling_datum)))) AS order_hour, COALESCE(k.voornaam, '') as klant_voornaam, COALESCE(k.achternaam, '') as klant_achternaam
-FROM bestellingen b
-LEFT JOIN klanten k ON b.klant_id = k.klant_id
-WHERE DATE(FROM_UNIXTIME(COALESCE(b.UNIX_bezorgmoment, UNIX_TIMESTAMP(b.bestelling_datum)))) = CURDATE()
-ORDER BY display_unix ASC";
-$today_orders_res = $mysqli->query($today_orders_sql);
-if ($today_orders_res) {
-    while ($order = $today_orders_res->fetch_assoc()) {
-        $hour = (int)$order['order_hour'];
-        if (!isset($orders_by_hour[$hour])) $orders_by_hour[$hour] = [];
-        // determine mode: delivery vs pickup
-        $verzend = strtolower(trim($order['verzendmethode'] ?? 'afhalen'));
-        $mode = (in_array($verzend, ['levering', 'delivery'])) ? 'levering' : 'afhalen';
-        $order['mode'] = $mode;
-        $order['item_type'] = 'order';
-        $orders_by_hour[$hour][] = $order;
-    }
-}
-
-// 2) Today's reservations from timeslot_reservations (include reserved and confirmed)
-$res_sql = "SELECT r.*, COALESCE(r.reserved_unix, UNIX_TIMESTAMP(r.reserved_at)) AS display_unix, HOUR(FROM_UNIXTIME(COALESCE(r.reserved_unix, UNIX_TIMESTAMP(r.reserved_at)))) AS order_hour, t.type AS slot_type
-FROM timeslot_reservations r
-LEFT JOIN timeslot_fixed_ranges t ON t.id = r.timeslot_id
-WHERE DATE(FROM_UNIXTIME(COALESCE(r.reserved_unix, UNIX_TIMESTAMP(r.reserved_at)))) = CURDATE()
-AND r.status IN ('reserved','confirmed')
-ORDER BY display_unix ASC";
-$res_res = $mysqli->query($res_sql);
-if ($res_res) {
-    while ($r = $res_res->fetch_assoc()) {
-        $hour = (int)$r['order_hour'];
-        if (!isset($orders_by_hour[$hour])) $orders_by_hour[$hour] = [];
-        // slot_type is 'pickup' or 'delivery' (or similar)
-        $stype = strtolower(trim($r['slot_type'] ?? 'pickup'));
-        $mode = ($stype === 'delivery' || $stype === 'levering') ? 'levering' : 'afhalen';
-        $r['mode'] = $mode;
-        $r['item_type'] = 'reservation';
-        $orders_by_hour[$hour][] = $r;
-    }
-}
-
-// sort hours ascending to ensure display order
-ksort($orders_by_hour);
-?>
-<!-- Today's Timeline - modal OR inline view -->
-<?php if (isset($_GET['timeline']) && $_GET['timeline'] == '1'): ?>
-    <div class="p-6">
-        <div class="mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Bestellingen van vandaag per uur</h2>
-            <div class="text-sm text-gray-500 mt-1">
-                <a href="?timeline=1&filter=all" class="timeline-filter text-blue-600 font-medium" data-filter="all" onclick="filterTimeline(event,'all')">Alle</a>
-                &nbsp;·&nbsp;
-                <a href="?timeline=1&filter=afhalen" class="timeline-filter text-gray-700" data-filter="afhalen" onclick="filterTimeline(event,'afhalen')">Afhaling</a>
-                &nbsp;·&nbsp;
-                <a href="?timeline=1&filter=levering" class="timeline-filter text-gray-700" data-filter="levering" onclick="filterTimeline(event,'levering')">Levering</a>
-            </div>
-        </div>
-        <div class="space-y-4">
-            <?php for ($hour = 0; $hour < 24; $hour++): ?>
-                <?php if (isset($orders_by_hour[$hour])): ?>
-                    <div class="border border-gray-200 rounded-lg p-4">
-                        <div class="flex items-center mb-3">
-                            <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                                <?= sprintf('%02d:00 - %02d:59', $hour, $hour) ?>
-                            </div>
-                            <div class="ml-3 text-gray-600">
-                                <?= count($orders_by_hour[$hour]) ?> bestelling(en)
-                            </div>
-                        </div>
-                        <div class="space-y-2">
-                            <?php foreach ($orders_by_hour[$hour] as $order): ?>
-                                <?php
-                                $mode = $order['mode'] ?? ($order['verzendmethode'] ?? 'afhalen');
-                                $mode = (in_array(strtolower($mode), ['levering', 'delivery'])) ? 'levering' : 'afhalen';
-                                $type = $order['item_type'] ?? 'order';
-                                ?>
-                                <div class="bg-gray-50 rounded p-3 flex justify-between items-center timeline-item" data-mode="<?= $mode ?>" data-type="<?= $type ?>">
-                                    <div>
-                                        <div class="font-medium">
-                                            <?php if ($type === 'reservation'): ?>
-                                                Reservering #<?= htmlspecialchars($order['id'] ?? '') ?>
-                                            <?php else: ?>
-                                                #<?= htmlspecialchars($order['factuurnummer'] ?: $order['bestelling_id']) ?>
-                                            <?php endif; ?>
-                                        </div>
-                                        <div class="text-sm text-gray-600">
-                                            <?= htmlspecialchars($order['levernaam'] ?? ($order['klant_voornaam'] . ' ' . $order['klant_achternaam'] ?? '')) ?>
-                                        </div>
-                                        <?php if ($type === 'reservation'): ?>
-                                            <div class="text-xs text-gray-500">Status: <?= htmlspecialchars($order['status'] ?? $order['status'] ?? '') ?> (reservering)</div>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="text-right">
-                                        <div class="font-medium">
-                                            €<?= number_format($order['bestelling_tebetalen'] ?? 0, 2, ',', '.') ?>
-                                        </div>
-                                        <div class="text-sm text-gray-500">
-                                            <?= date('H:i', isset($order['display_unix']) ? $order['display_unix'] : strtotime($order['bestelling_datum'] ?? 'now')) ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            <?php endfor; ?>
-
-            <?php if (empty($orders_by_hour)): ?>
-                <div class="text-center py-8 text-gray-500">
-                    Geen bestellingen vandaag
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-<?php else: ?>
-    <div id="timeline-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-screen overflow-y-auto">
-                <div class="p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <div>
-                            <h2 class="text-2xl font-bold text-gray-800">Bestellingen van vandaag per uur</h2>
-                            <div class="text-sm text-gray-500 mt-1">
-                                <a href="#" class="timeline-filter text-blue-600 font-medium" data-filter="all" onclick="filterTimeline(event,'all')">Alle</a>
-                                &nbsp;·&nbsp;
-                                <a href="#" class="timeline-filter text-gray-700" data-filter="afhalen" onclick="filterTimeline(event,'afhalen')">Afhaling</a>
-                                &nbsp;·&nbsp;
-                                <a href="#" class="timeline-filter text-gray-700" data-filter="levering" onclick="filterTimeline(event,'levering')">Levering</a>
-                            </div>
-                        </div>
-                        <button onclick="closeTodayTimeline()"
-                            class="text-gray-400 hover:text-gray-600 transition-colors">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div class="space-y-4">
-                        <?php for ($hour = 0; $hour < 24; $hour++): ?>
-                            <?php if (isset($orders_by_hour[$hour])): ?>
-                                <div class="border border-gray-200 rounded-lg p-4">
-                                    <div class="flex items-center mb-3">
-                                        <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                                            <?= sprintf('%02d:00 - %02d:59', $hour, $hour) ?>
-                                        </div>
-                                        <div class="ml-3 text-gray-600">
-                                            <?= count($orders_by_hour[$hour]) ?> bestelling(en)
-                                        </div>
-                                    </div>
-                                    <div class="space-y-2">
-                                        <?php foreach ($orders_by_hour[$hour] as $order): ?>
-                                            <?php
-                                            $mode = $order['mode'] ?? ($order['verzendmethode'] ?? 'afhalen');
-                                            $mode = (in_array(strtolower($mode), ['levering', 'delivery'])) ? 'levering' : 'afhalen';
-                                            $type = $order['item_type'] ?? 'order';
-                                            ?>
-                                            <div class="bg-gray-50 rounded p-3 flex justify-between items-center timeline-item" data-mode="<?= $mode ?>" data-type="<?= $type ?>">
-                                                <div>
-                                                    <div class="font-medium">
-                                                        <?php if ($type === 'reservation'): ?>
-                                                            Reservering #<?= htmlspecialchars($order['id'] ?? '') ?>
-                                                        <?php else: ?>
-                                                            #<?= htmlspecialchars($order['factuurnummer'] ?: $order['bestelling_id']) ?>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                    <div class="text-sm text-gray-600">
-                                                        <?= htmlspecialchars($order['levernaam'] ?? ($order['klant_voornaam'] . ' ' . $order['klant_achternaam'] ?? '')) ?>
-                                                    </div>
-                                                    <?php if ($type === 'reservation'): ?>
-                                                        <div class="text-xs text-gray-500">Status: <?= htmlspecialchars($order['status'] ?? $order['status'] ?? '') ?> (reservering)</div>
-                                                    <?php endif; ?>
-                                                </div>
-                                                <div class="text-right">
-                                                    <div class="font-medium">
-                                                        €<?= number_format($order['bestelling_tebetalen'] ?? 0, 2, ',', '.') ?>
-                                                    </div>
-                                                    <div class="text-sm text-gray-500">
-                                                        <?= date('H:i', isset($order['display_unix']) ? $order['display_unix'] : strtotime($order['bestelling_datum'] ?? 'now')) ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                        <?php endfor; ?>
-
-                        <?php if (empty($orders_by_hour)): ?>
-                            <div class="text-center py-8 text-gray-500">
-                                Geen bestellingen vandaag
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-<?php endif; ?>
-<?php
+// Timeline view removed per request ("Vandaag per uur") - no timeline SQL or modal output anymore.
+// If timeline functionality is re-added later, keep in mind this file previously built
+// $orders_by_hour from today's orders and timeslot_reservations and rendered a modal/inline view.
 // Prepare basic filter variables (may come from GET)
 $filter = $_GET['filter'] ?? 'all';
 $search = trim($_GET['search'] ?? '');
@@ -408,9 +204,7 @@ $stats = $stats_result->fetch_assoc();
                             </svg>
                             <span>Vernieuwen</span>
                         </button>
-                        <a href="/admin/bestellingen?timeline=1" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors inline-block text-center">
-                            Vandaag per uur
-                        </a>
+                        <!-- 'Vandaag per uur' button removed -->
                     </div>
                 </div>
             </div>
@@ -716,91 +510,7 @@ $stats = $stats_result->fetch_assoc();
             </div>
         </div>
 
-        <!-- Today's Timeline Modal -->
-        <div id="timeline-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
-            <div class="flex items-center justify-center min-h-screen p-4">
-                <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-screen overflow-y-auto">
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <div>
-                                <h2 class="text-2xl font-bold text-gray-800">Bestellingen van vandaag per uur</h2>
-                                <div class="text-sm text-gray-500 mt-1">
-                                    <a href="#" class="timeline-filter text-blue-600 font-medium" data-filter="all" onclick="filterTimeline(event,'all')">Alle</a>
-                                    &nbsp;·&nbsp;
-                                    <a href="#" class="timeline-filter text-gray-700" data-filter="afhalen" onclick="filterTimeline(event,'afhalen')">Afhaling</a>
-                                    &nbsp;·&nbsp;
-                                    <a href="#" class="timeline-filter text-gray-700" data-filter="levering" onclick="filterTimeline(event,'levering')">Levering</a>
-                                </div>
-                            </div>
-                            <button onclick="closeTodayTimeline()"
-                                class="text-gray-400 hover:text-gray-600 transition-colors">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </button>
-                        </div>
-
-                        <div class="space-y-4">
-                            <?php for ($hour = 0; $hour < 24; $hour++): ?>
-                                <?php if (isset($orders_by_hour[$hour])): ?>
-                                    <div class="border border-gray-200 rounded-lg p-4">
-                                        <div class="flex items-center mb-3">
-                                            <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                                                <?= sprintf('%02d:00 - %02d:59', $hour, $hour) ?>
-                                            </div>
-                                            <div class="ml-3 text-gray-600">
-                                                <?= count($orders_by_hour[$hour]) ?> bestelling(en)
-                                            </div>
-                                        </div>
-                                        <div class="space-y-2">
-                                            <?php foreach ($orders_by_hour[$hour] as $order): ?>
-                                                <?php
-                                                // render differently for reservations vs orders
-                                                $mode = $order['mode'] ?? ($order['verzendmethode'] ?? 'afhalen');
-                                                $mode = (in_array(strtolower($mode), ['levering', 'delivery'])) ? 'levering' : 'afhalen';
-                                                $type = $order['item_type'] ?? 'order';
-                                                ?>
-                                                <div class="bg-gray-50 rounded p-3 flex justify-between items-center timeline-item" data-mode="<?= $mode ?>" data-type="<?= $type ?>">
-                                                    <div>
-                                                        <div class="font-medium">
-                                                            <?php if ($type === 'reservation'): ?>
-                                                                Reservering #<?= htmlspecialchars($order['id'] ?? '') ?>
-                                                            <?php else: ?>
-                                                                #<?= htmlspecialchars($order['factuurnummer'] ?: $order['bestelling_id']) ?>
-                                                            <?php endif; ?>
-                                                        </div>
-                                                        <div class="text-sm text-gray-600">
-                                                            <?= htmlspecialchars($order['levernaam'] ?? ($order['klant_voornaam'] . ' ' . $order['klant_achternaam'] ?? '')) ?>
-                                                        </div>
-                                                        <?php if ($type === 'reservation'): ?>
-                                                            <div class="text-xs text-gray-500">Status: <?= htmlspecialchars($order['status'] ?? $order['status'] ?? '') ?> (reservering)</div>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                    <div class="text-right">
-                                                        <div class="font-medium">
-                                                            €<?= number_format($order['bestelling_tebetalen'] ?? 0, 2, ',', '.') ?>
-                                                        </div>
-                                                        <div class="text-sm text-gray-500">
-                                                            <?= date('H:i', isset($order['display_unix']) ? $order['display_unix'] : strtotime($order['bestelling_datum'] ?? 'now')) ?>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
-                            <?php endfor; ?>
-
-                            <?php if (empty($orders_by_hour)): ?>
-                                <div class="text-center py-8 text-gray-500">
-                                    Geen bestellingen vandaag
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Timeline removed -->
 
         <!-- Status Update Modal -->
         <div id="status-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
@@ -1284,26 +994,36 @@ $stats = $stats_result->fetch_assoc();
         }
 
         // Close order detail modal
-        document.getElementById('order-detail-close').addEventListener('click', function() {
-            document.getElementById('order-detail-modal').classList.add('hidden');
-        });
+        var orderDetailCloseBtn = document.getElementById('order-detail-close');
+        if (orderDetailCloseBtn) {
+            orderDetailCloseBtn.addEventListener('click', function() {
+                var odm = document.getElementById('order-detail-modal');
+                if (odm) odm.classList.add('hidden');
+            });
+        }
 
         function refreshOrders() {
             location.reload();
         }
 
-        // Click outside modal to close
-        document.getElementById('timeline-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeTodayTimeline();
-            }
-        });
+        // Click outside modal to close (only wire handlers if the elements exist)
+        var timelineModalEl = document.getElementById('timeline-modal');
+        if (timelineModalEl) {
+            timelineModalEl.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    if (typeof closeTodayTimeline === 'function') closeTodayTimeline();
+                }
+            });
+        }
 
-        document.getElementById('status-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeStatusModal();
-            }
-        });
+        var statusModalEl = document.getElementById('status-modal');
+        if (statusModalEl) {
+            statusModalEl.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    if (typeof closeStatusModal === 'function') closeStatusModal();
+                }
+            });
+        }
     </script>
 </body>
 
