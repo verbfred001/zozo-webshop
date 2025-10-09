@@ -1071,7 +1071,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div id="code-status" style="margin-top:8px;color:#064e3b"></div>
                 </div>
 
+                <!--
                 <div style="margin-top:8px;text-align:center;"><a href="#" id="auth-guest-link"><?= htmlspecialchars($translations['> doorgaan zonder inloggen'][$lang] ?? '&gt; doorgaan zonder inloggen') ?></a></div>
+                -->
             </div>
             <div id="auth-status" style="margin-top:8px;color:#064e3b"></div>
         </div>
@@ -1450,12 +1452,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
 
             // Guest link: mark as guest, skip auth and show checkout
-            document.getElementById('auth-guest-link').addEventListener('click', function(ev) {
-                ev.preventDefault();
-                checkout_is_guest = true;
-                stepAuth.classList.add('hide');
-                checkoutForm.classList.remove('hide');
-            });
+            // The guest link may be commented out in the HTML. Guard the call so
+            // we don't call addEventListener on null (which throws a TypeError).
+            const guestLink = document.getElementById('auth-guest-link');
+            if (guestLink) {
+                guestLink.addEventListener('click', function(ev) {
+                    ev.preventDefault();
+                    checkout_is_guest = true;
+                    stepAuth.classList.add('hide');
+                    checkoutForm.classList.remove('hide');
+                });
+            }
 
             // Tabs: Particulier / Zakelijk
             document.getElementById('tab-particulier').addEventListener('click', function() {
