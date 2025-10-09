@@ -94,10 +94,9 @@ if (!empty($ids)) {
     }
 }
 if (!empty($category_breadcrumb)) {
-    // Convert breadcrumb separator to a SEO-friendly dash and append host (without www.)
+    // Convert breadcrumb separator to a SEO-friendly dash. Do NOT append the host; it is not user-friendly.
     $seo_title = str_replace(' > ', ' - ', $category_breadcrumb);
-    $host = isset($_SERVER['HTTP_HOST']) ? preg_replace('/^www\./', '', $_SERVER['HTTP_HOST']) : '';
-    $page_title = trim($seo_title) . ($host ? ' - ' . $host : '');
+    $page_title = trim($seo_title);
 }
 
 // Canonical URL: scheme + host + path (strip query params)
@@ -116,7 +115,7 @@ $canonical_url = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? '') . $path;
     <?php if (!empty($category_breadcrumb)): ?>
         <meta name="description" content="<?= htmlspecialchars(str_replace(' > ', ' - ', $category_breadcrumb)) ?> - <?= htmlspecialchars(isset($translations['Onze producten'][$lang]) ? $translations['Onze producten'][$lang] : 'Producten') ?>">
     <?php else: ?>
-        <meta name="description" content="<?= htmlspecialchars($translations['Onze producten'][$lang] ?? 'Onze producten') ?> - <?= htmlspecialchars(isset($_SERVER['HTTP_HOST']) ? preg_replace('/^www\./', '', $_SERVER['HTTP_HOST']) : '') ?>">
+        <meta name="description" content="<?= htmlspecialchars($translations['Onze producten'][$lang] ?? 'Onze producten') ?>">
     <?php endif; ?>
     <link rel="stylesheet" href="/zozo-assets/css/zozo-main.css">
     <link rel="stylesheet" href="/zozo-assets/css/zozo-navbar.css">
