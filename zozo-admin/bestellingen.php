@@ -68,6 +68,11 @@ $filter = $_GET['filter'] ?? 'all';
 $search = trim($_GET['search'] ?? '');
 $date_filter = $_GET['date'] ?? '';
 
+// Ensure DB connection exists before building filters
+if (!isset($mysqli)) {
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/zozo-includes/DB_connectie.php');
+}
+
 // Ensure where_conditions array exists
 if (!isset($where_conditions) || !is_array($where_conditions)) {
     $where_conditions = [];
@@ -78,14 +83,50 @@ switch ($filter) {
     case 'today':
         $where_conditions[] = "DATE(b.bestelling_datum) = CURDATE()";
         break;
+    case 'geannuleerd':
+        $where_conditions[] = "b.STATUS_BESTELLING IN ('geannuleerd', 'cancelled')";
+        break;
+    case 'afgehaald':
+        $where_conditions[] = "b.STATUS_BESTELLING = 'delivered' AND LOWER(COALESCE(b.verzendmethode,'')) NOT IN ('levering','delivery')";
+        break;
+    case 'geleverd':
+        $where_conditions[] = "b.STATUS_BESTELLING = 'delivered' AND LOWER(COALESCE(b.verzendmethode,'')) IN ('levering','delivery')";
+        break;
+    case 'af_te_halen':
+        $where_conditions[] = "b.STATUS_BESTELLING NOT IN ('delivered','geannuleerd','cancelled') AND LOWER(COALESCE(b.verzendmethode,'')) NOT IN ('levering','delivery')";
+        break;
+    case 'te_leveren':
+        $where_conditions[] = "b.STATUS_BESTELLING NOT IN ('delivered','geannuleerd','cancelled') AND LOWER(COALESCE(b.verzendmethode,'')) IN ('levering','delivery')";
+        break;
+    case 'onbetaald':
+        $where_conditions[] = "(b.reeds_betaald LIKE 'nee%' OR (b.reeds_betaald IS NULL AND b.VOLDAAN = 'nee'))";
+        break;
+    case 'betaald':
+        $where_conditions[] = "(b.reeds_betaald LIKE 'ja%' OR (b.reeds_betaald IS NULL AND b.VOLDAAN = 'ja'))";
+        break;
+    case 'betaald_online':
+        $where_conditions[] = "b.reeds_betaald = 'ja-online'";
+        break;
+}
+
+$bezorg_date = $_GET['bezorg_date'] ?? '';
+
+if (!empty($search)) {
+    $search_term = $mysqli->real_escape_string($search);
+    $where_conditions[] = "(b.factuurnummer LIKE '%$search_term%' OR CONCAT_WS(' ', k.voornaam, k.achternaam) LIKE '%$search_term%' OR b.levernaam LIKE '%$search_term%' OR b.leverplaats LIKE '%$search_term%')";
+}
+
+if (!empty($date_filter)) {
+    $date_esc = $mysqli->real_escape_string($date_filter);
+    $where_conditions[] = "DATE(b.bestelling_datum) = '$date_esc'";
+}
+
+if (!empty($bezorg_date)) {
+    $bezorg_esc = $mysqli->real_escape_string($bezorg_date);
+    $where_conditions[] = "DATE(FROM_UNIXTIME(b.UNIX_bezorgmoment)) = '$bezorg_esc'";
 }
 
 $where_sql = $where_conditions ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
-
-// Ensure DB connection exists before running queries
-if (!isset($mysqli)) {
-    require_once($_SERVER['DOCUMENT_ROOT'] . '/zozo-includes/DB_connectie.php');
-}
 
 // Get orders with customer info (assuming there's a klanten table)
 $sql = "SELECT b.*,
@@ -273,7 +314,7 @@ $stats = $stats_result->fetch_assoc();
                         <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors">
                             Filteren
                         </button>
-                        <?php if ($search || $filter !== 'all' || $date_filter): ?>
+                        <?php if ($search || $filter !== 'all' || $date_filter || $bezorg_date): ?>
                             <a href="/admin/bestellingen" class="ml-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition-colors">
                                 Reset
                             </a>

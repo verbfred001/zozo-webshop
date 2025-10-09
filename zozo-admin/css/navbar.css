@@ -5,6 +5,24 @@
     padding: 0;
 }
 
+.navbar-container {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo-wrapper {
+    position: absolute;
+    top: 0;
+    left: 1.25rem;
+    z-index: 101;
+}
+
+.navbar-logo-img {
+    max-height: 64px;
+    width: auto;
+}
+
 .navbar {
     background: #2563eb;
     color: #fff;
@@ -13,9 +31,7 @@
     justify-content: space-between;
     padding: 0.75rem 1.25rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position: relative;
 }
 
 .navbar-logo {

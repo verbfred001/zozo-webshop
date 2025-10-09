@@ -70,7 +70,7 @@ RewriteRule ^suggesties$ /zozo-pages/products.php?page=products&cat=suggesties [
 RewriteRule ^prod/([^/]+)$ /zozo-pages/product.php?art_afkorting=$1 [L,QSA]
 
 # --- Admin rewrites ---
-RewriteRule ^admin/dashboard$ /zozo-admin/dashboard.php [L,QSA]
+RewriteRule ^admin$ /zozo-admin/index.php [L,QSA]
 RewriteRule ^admin/bestellingen$ /zozo-admin/bestellingen.php [L,QSA]
 RewriteRule ^admin/artikelen$ /zozo-admin/artikelen.php [L,QSA]
 RewriteRule ^admin/detail$ /zozo-admin/artikel_bewerk.php [L,QSA]
