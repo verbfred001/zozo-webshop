@@ -146,9 +146,42 @@
             <p style="text-align:right;font-weight:700;margin-top:10px;">Totaal: <?= htmlspecialchars($totalFormatted) ?></p>
         <?php endif; ?>
 
-        <p>Als je vragen hebt, reageer op deze e-mail of stuur een bericht naar <a href="mailto:info@zozo.be">info@zozo.be</a>.</p>
+        <?php
+        // Minimal change: use configurable from-email and show shop contact from instellingen
+        $contactEmail = $MS_FROM_EMAIL ?? ($ms_from_email ?? null);
+        // attempt to read instellingen email if not available
+        if (empty($contactEmail) && isset($mysqli) && $mysqli instanceof mysqli) {
+            $kq = $mysqli->query("SELECT waarde FROM instellingen WHERE naam = 'email' LIMIT 1");
+            $krow = $kq ? $kq->fetch_assoc() : null;
+            $contactEmail = $krow['waarde'] ?? $contactEmail;
+        }
+        if (empty($contactEmail)) $contactEmail = 'info@zozo.be';
+        ?>
 
-        <p>Met vriendelijke groet,<br>Het team</p>
+        <p>Als je vragen hebt, reageer op deze e-mail of stuur een bericht naar <a href="mailto:<?= htmlspecialchars($contactEmail) ?>"><?= htmlspecialchars($contactEmail) ?></a>.</p>
+
+        <?php
+        // show bedrijfsgegevens from instellingen if available
+        $shop_info = [];
+        if (isset($mysqli) && $mysqli instanceof mysqli) {
+            $sres = $mysqli->query("SELECT naam, waarde FROM instellingen WHERE naam IN ('bedrijfsnaam','adres','telefoon','email')");
+            if ($sres) {
+                while ($sr = $sres->fetch_assoc()) {
+                    $shop_info[$sr['naam']] = $sr['waarde'];
+                }
+            }
+        }
+        if (!empty($shop_info)):
+        ?>
+            <div style="margin-top:12px;font-size:0.95rem;color:#333;border-top:1px solid #eee;padding-top:8px;">
+                <?php if (!empty($shop_info['bedrijfsnaam'])): ?><strong><?= htmlspecialchars($shop_info['bedrijfsnaam']) ?></strong><br><?php endif; ?>
+                <?php if (!empty($shop_info['adres'])): ?><?= nl2br(htmlspecialchars($shop_info['adres'])) ?><br><?php endif; ?>
+                <?php if (!empty($shop_info['telefoon'])): ?>Tel: <?= htmlspecialchars($shop_info['telefoon']) ?><br><?php endif; ?>
+                <?php if (!empty($shop_info['email'])): ?><a href="mailto:<?= htmlspecialchars($shop_info['email']) ?>"><?= htmlspecialchars($shop_info['email']) ?></a><?php endif; ?>
+            </div>
+        <?php else: ?>
+            <p>Met vriendelijke groet,<br>Het team</p>
+        <?php endif; ?>
 
         <?php // thumbnails are shown inline in the items table above 
         ?>
