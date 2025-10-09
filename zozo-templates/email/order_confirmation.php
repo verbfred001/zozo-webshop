@@ -146,9 +146,22 @@
             <p style="text-align:right;font-weight:700;margin-top:10px;">Totaal: <?= htmlspecialchars($totalFormatted) ?></p>
         <?php endif; ?>
 
-        <p>Als je vragen hebt, reageer op deze e-mail of stuur een bericht naar <a href="mailto:info@zozo.be">info@zozo.be</a>.</p>
+        <p>Als je vragen hebt, reageer op deze e-mail of stuur een bericht naar <a href="mailto:<?= htmlspecialchars($from_email ?? 'info@zozo.be') ?>"><?= htmlspecialchars($from_email ?? 'info@zozo.be') ?></a>.</p>
 
-        <p>Met vriendelijke groet,<br>Het team</p>
+        <p>Met vriendelijke groet,<br>
+            <?php if (!empty($bedrijf_naam)): ?>
+                <?= htmlspecialchars($bedrijf_naam) ?><br>
+            <?php endif; ?>
+            <?php if (!empty($bedrijf_adres)): ?>
+                <?= nl2br(htmlspecialchars($bedrijf_adres)) ?><br>
+            <?php endif; ?>
+            <?php if (!empty($bedrijf_tel)): ?>
+                Tel: <?= htmlspecialchars($bedrijf_tel) ?><br>
+            <?php endif; ?>
+            <?php if (!empty($bedrijf_email)): ?>
+                Email: <a href="mailto:<?= htmlspecialchars($bedrijf_email) ?>"><?= htmlspecialchars($bedrijf_email) ?></a>
+            <?php endif; ?>
+        </p>
 
         <?php // thumbnails are shown inline in the items table above 
         ?>

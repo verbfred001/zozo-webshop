@@ -93,8 +93,21 @@ $last_graph_error = $_SESSION['last_graph_error'] ?? null;
                 $order_id = $order;
                 // ensure $order_row is available to template
                 if (file_exists($tpl)) {
+                    $from_email = $ms_from_email;
+                    // Bedrijfsgegevens ophalen uit de kolommen van de instellingen-tabel (één rij, meerdere kolommen)
+                    $bedrijf_naam = '';
+                    $bedrijf_adres = '';
+                    $bedrijf_tel = '';
+                    $bedrijf_email = '';
+                    $res = $mysqli->query("SELECT * FROM instellingen LIMIT 1");
+                    if ($res && ($row = $res->fetch_assoc())) {
+                        $bedrijf_naam = $row['bedrijfsnaam'] ?? '';
+                        $bedrijf_adres = $row['adres'] ?? '';
+                        $bedrijf_tel = $row['telefoon'] ?? '';
+                        $bedrijf_email = $row['email'] ?? '';
+                    }
                     ob_start();
-                    // variables available inside template: $order_id, $order_row, $baseUrl
+                    // variables available inside template: $order_id, $order_row, $baseUrl, $from_email, $bedrijf_naam, $bedrijf_adres, $bedrijf_tel, $bedrijf_email
                     include $tpl;
                     $html = ob_get_clean();
                 } else {
@@ -172,7 +185,7 @@ $last_graph_error = $_SESSION['last_graph_error'] ?? null;
             <div style="height:14px;"></div>
             <div style="height:14px;"></div>
             <div style="margin-top:18px;">
-                <a id="back-link" href="/" style="font-weight:700;color:#0b3d91;text-decoration:none;">&lt; Terug naar de winkel</a>
+                <a id="back-link" href="/" style="font-weight:700;color:#0b3d91;text-decoration:none;">&lt; Terug naar webshop</a>
             </div>
             <?php
             // Only show the server-side mail status if it indicates a failure; hide positive test/success messages
