@@ -40,12 +40,55 @@ $last_graph_error = $_SESSION['last_graph_error'] ?? null;
     $order_row = null;
     if ($order) {
         // also fetch inhoud_bestelling (JSON) and bestelling_tebetalen so we can render the email here
-        $q = $mysqli->prepare('SELECT b.bestelling_id, b.levernaam, b.leverplaats, b.leverstraat, b.UNIX_bezorgmoment, b.verzendmethode, b.inhoud_bestelling, b.bestelling_tebetalen, k.email FROM bestellingen b LEFT JOIN klanten k ON b.klant_id = k.klant_id WHERE b.bestelling_id = ? LIMIT 1');
+        // include Mollie_betaal_id so we can optionally verify payment status synchronously
+        $selectSql = 'SELECT b.bestelling_id, b.levernaam, b.leverplaats, b.leverstraat, b.UNIX_bezorgmoment, b.verzendmethode, b.inhoud_bestelling, b.bestelling_tebetalen, b.reeds_betaald, b.VOLDAAN, b.Mollie_betaal_id, k.email FROM bestellingen b LEFT JOIN klanten k ON b.klant_id = k.klant_id WHERE b.bestelling_id = ? LIMIT 1';
+        $q = $mysqli->prepare($selectSql);
         if ($q) {
             $q->bind_param('i', $order);
             $q->execute();
             $res = $q->get_result();
             $order_row = $res ? $res->fetch_assoc() : null;
+        }
+
+        // Attempt a synchronous Mollie status verification if the order appears unpaid but has a Mollie id.
+        // This reduces the race between the browser redirect and the Mollie webhook: when possible we
+        // query Mollie directly and update the DB so the page shows the correct paid state immediately.
+        if (!empty($order_row) && (!isset($order_row['reeds_betaald']) || stripos($order_row['reeds_betaald'], 'ja-online') !== 0) && !empty($order_row['Mollie_betaal_id'])) {
+            try {
+                // fetch Mollie API key from instellingen (same pattern as elsewhere)
+                $kq = $mysqli->query("SELECT Mollie_API_key FROM instellingen LIMIT 1");
+                $krow = $kq ? $kq->fetch_assoc() : null;
+                $mollieKey = $krow['Mollie_API_key'] ?? '';
+                if (!empty($mollieKey) && file_exists(__DIR__ . '/../vendor/autoload.php')) {
+                    require_once __DIR__ . '/../vendor/autoload.php';
+                    $mollie = new \Mollie\Api\MollieApiClient();
+                    $mollie->setApiKey($mollieKey);
+                    $payment = $mollie->payments->get($order_row['Mollie_betaal_id']);
+                    $status = isset($payment->status) ? (string)$payment->status : null;
+                    if ($status === 'paid' || $status === 'paidout' || $status === 'paid_out') {
+                        $u = $mysqli->prepare("UPDATE bestellingen SET STATUS_BESTELLING = ?, VOLDAAN = ?, reeds_betaald = ? WHERE bestelling_id = ?");
+                        if ($u) {
+                            $s = 'betaald';
+                            $v = 'ja';
+                            $rb = 'ja-online';
+                            $bid = (int)$order_row['bestelling_id'];
+                            $u->bind_param('sssi', $s, $v, $rb, $bid);
+                            $u->execute();
+                            // refresh the order_row from DB so the rest of the page uses updated values
+                            $q2 = $mysqli->prepare($selectSql);
+                            if ($q2) {
+                                $q2->bind_param('i', $order);
+                                $q2->execute();
+                                $r2 = $q2->get_result();
+                                $order_row = $r2 ? $r2->fetch_assoc() : $order_row;
+                            }
+                        }
+                    }
+                }
+            } catch (Throwable $e) {
+                error_log('bedankt: Mollie sync check failed: ' . $e->getMessage());
+                // Do not break page rendering on Mollie errors; webhook should still arrive later.
+            }
         }
     }
 
@@ -159,8 +202,9 @@ $last_graph_error = $_SESSION['last_graph_error'] ?? null;
             }
         } else {
             // already sent earlier in this session
-            $mail_sent_success = true;
+            $mail_sent_success = false;
             $mail_sent_email = $order_row['email'];
+            $mail_status_message = 'Je hebt deze pagina al bezocht, de bevestigingsmail is reeds verzonden.';
         }
     }
     ?>
@@ -289,14 +333,17 @@ $last_graph_error = $_SESSION['last_graph_error'] ?? null;
             if (mailSentSuccess && mailSentEmail) {
                 mailText = 'Bevestigingsmail gestuurd naar ' + mailSentEmail;
             } else if (mailStatusMessage) {
-                mailText = mailStatusMessage + ' (' + (custEmail || 'je e‑mail') + ')';
+                mailText = mailStatusMessage;
             } else {
                 // fallback neutral text
                 mailText = 'Er werd geprobeerd een bevestigingsmail te versturen naar <strong>' + (custEmail || 'je e‑mail') + '</strong>';
             }
 
+
             var pickupText = '';
+            var betaalText = '';
             if (orderRow) {
+                var reedsBetaald = orderRow.reeds_betaald || '';
                 if (orderRow.verzendmethode && orderRow.verzendmethode.indexOf('af') !== -1) {
                     // Afhaling
                     var d = orderRow.UNIX_bezorgmoment ? new Date(orderRow.UNIX_bezorgmoment * 1000) : null;
@@ -321,15 +368,30 @@ $last_graph_error = $_SESSION['last_graph_error'] ?? null;
                     }
                 } else {
                     var d2 = orderRow.UNIX_bezorgmoment ? new Date(orderRow.UNIX_bezorgmoment * 1000) : null;
-                    var when2 = d2 ? d2.toLocaleString('nl-NL', {
-                        weekday: 'long',
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    }) : '';
-                    pickupText = 'Je bestelling wordt geleverd op ' + when2;
+                    var when2 = '';
+                    if (d2) {
+                        var datePart2 = d2.toLocaleDateString('nl-NL', {
+                            weekday: 'long',
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        });
+                        var timePart2 = d2.toLocaleTimeString('nl-NL', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                        when2 = datePart2 + ' vanaf ' + timePart2;
+                    }
+                    if (when2) {
+                        pickupText = 'Je bestelling wordt geleverd op ' + when2;
+                    } else {
+                        pickupText = 'Je bestelling wordt binnenkort klaargemaakt.';
+                    }
+                }
+                // Betaalstatus tonen
+                if (reedsBetaald && reedsBetaald.indexOf('ja-online') === 0) {
+                    // Render the paid confirmation as a staged message with the same check layout
+                    betaalText = '<div style="margin-top:8px;text-align:left;"><span class="check">✔</span><strong style="color:green;">Deze bestelling is reeds online betaald</strong></div>';
                 }
             } else {
                 pickupText = 'Je bestelling wordt binnenkort klaargemaakt.';
@@ -344,7 +406,7 @@ $last_graph_error = $_SESSION['last_graph_error'] ?? null;
                     showMessage(msgMail, '<span class="check">✔</span>' + mailText);
                 }, 1000);
                 setTimeout(function() {
-                    showMessage(msgPickup, '<span class="check">✔</span>' + pickupText);
+                    showMessage(msgPickup, '<span class="check">✔</span>' + pickupText + betaalText);
                 }, 2000);
             }, 5000);
             // Server-side checks: the PHP below will inject console logs that report
@@ -356,9 +418,42 @@ $last_graph_error = $_SESSION['last_graph_error'] ?? null;
             <?php
             // server-side diagnostics removed for production
             ?>
+            // Debug: print the server-side $order_row as received by the page
+            // `orderRow` is already defined earlier via json_encode($order_row)
+            console.log('DEBUG $order_row:', orderRow);
+
             <?php if (!empty($last_graph_error)): ?>
                 console.warn('GRAPH_SESSION_ERROR: ', <?= json_encode($last_graph_error, JSON_UNESCAPED_UNICODE) ?>);
             <?php endif; ?>
+
+                // If debug=1 is present in the URL, fetch the live DB row to compare
+                (function() {
+                    try {
+                        var params = new URLSearchParams(window.location.search);
+                        if (params.get('debug') === '1' && orderId) {
+                            fetch('/zozo-pages/order_status.php?order=' + encodeURIComponent(orderId), {
+                                    credentials: 'same-origin'
+                                })
+                                .then(function(resp) {
+                                    return resp.json();
+                                })
+                                .then(function(js) {
+                                    if (js && js.ok && js.order) {
+                                        console.log('LIVE DB order.reeds_betaald:', js.order.reeds_betaald);
+                                        console.log('PAGE-INJECTED orderRow.reeds_betaald:', orderRow ? orderRow.reeds_betaald : null);
+                                        console.log('Full live row:', js.order);
+                                    } else {
+                                        console.warn('order_status fetch returned:', js);
+                                    }
+                                })
+                                .catch(function(err) {
+                                    console.warn('order_status fetch failed', err);
+                                });
+                        }
+                    } catch (e) {
+                        console.warn('debug fetch error', e);
+                    }
+                })();
         })();
     </script>
     <?php include $_SERVER['DOCUMENT_ROOT'] . "/zozo-templates/zozo-footer.php"; ?>

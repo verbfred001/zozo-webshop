@@ -146,7 +146,51 @@
             <p style="text-align:right;font-weight:700;margin-top:10px;">Totaal: <?= htmlspecialchars($totalFormatted) ?></p>
         <?php endif; ?>
 
-        <p>Als je vragen hebt, reageer op deze e-mail of stuur een bericht naar <a href="mailto:<?= htmlspecialchars($from_email ?? 'info@zozo.be') ?>"><?= htmlspecialchars($from_email ?? 'info@zozo.be') ?></a>.</p>
+
+
+        <?php
+        // Levering/afhaalmelding voor in de mail (NL dagnaam, juiste tijdzone, altijd correct)
+        $levermelding = '';
+        if (!empty($order_row['verzendmethode']) && !empty($order_row['UNIX_bezorgmoment'])) {
+            $dagen = [
+                'Sunday' => 'zondag',
+                'Monday' => 'maandag',
+                'Tuesday' => 'dinsdag',
+                'Wednesday' => 'woensdag',
+                'Thursday' => 'donderdag',
+                'Friday' => 'vrijdag',
+                'Saturday' => 'zaterdag'
+            ];
+            $dt = new DateTime('@' . $order_row['UNIX_bezorgmoment']);
+            $dt->setTimezone(new DateTimeZone('Europe/Brussels'));
+            $enDay = $dt->format('l');
+            $nlDay = $dagen[$enDay] ?? $enDay;
+            $datum = $nlDay . $dt->format(' d-m-Y');
+            $tijd = $dt->format('H:i');
+            if (stripos($order_row['verzendmethode'], 'af') !== false) {
+                $levermelding = 'Je bestelling kan afgehaald worden op ' . $datum . ' vanaf ' . $tijd;
+            } else {
+                $levermelding = 'Je bestelling wordt geleverd op ' . $datum . ' vanaf ' . $tijd;
+            }
+        } else {
+            $levermelding = 'Je bestelling wordt binnenkort klaargemaakt.';
+        }
+
+        // Betaalbevestiging tonen indien online betaald
+        $betaalbevestiging = '';
+        $reeds_betaald = $order_row['reeds_betaald'] ?? '';
+        if (!$reeds_betaald && isset($order_row['VOLDAAN'])) {
+            // fallback: cash
+            $reeds_betaald = ($order_row['VOLDAAN'] === 'ja') ? 'ja-cash' : 'nee-cash';
+        }
+        if (stripos($reeds_betaald, 'ja-online') === 0) {
+            $betaalbevestiging = 'Deze bestelling is reeds online betaald';
+        }
+        ?>
+        <p><?= htmlspecialchars($levermelding) ?></p>
+        <?php if ($betaalbevestiging): ?>
+            <p style="font-weight:bold; color:green; margin-top:0; margin-bottom:18px;">&#10003; <?= htmlspecialchars($betaalbevestiging) ?></p>
+        <?php endif; ?>
 
         <p>Met vriendelijke groet,<br>
             <?php if (!empty($bedrijf_naam)): ?>
