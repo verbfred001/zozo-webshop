@@ -11,7 +11,8 @@
     "minimum-stability": "stable",
     "require": {
         "mollie/mollie-api-php": "^3.4",
-        "microsoft/microsoft-graph": "^2.46"
+        "microsoft/microsoft-graph": "^2.46",
+        "endroid/qr-code": "^4.8"
     },
     "config": {
         "allow-plugins": {

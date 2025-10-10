@@ -928,6 +928,59 @@ function getSlotStartTime($order, $mysqli)
 
             // Add icons to container
             iconContainer.innerHTML = deliveryIconHtml + paymentIconHtml;
+
+            // Check if order is now fully completed (delivered AND paid)
+            var isFullyCompleted = (isDelivered && isPaid);
+
+            // Update card background and opacity
+            if (isFullyCompleted) {
+                orderCard.style.background = '#f9fafb';
+                orderCard.style.opacity = '0.7';
+            } else {
+                orderCard.style.background = 'white';
+                orderCard.style.opacity = '1';
+            }
+
+            // Update text colors for time and price
+            var timeElement = orderCard.querySelector('div[style*="font-size: 1.125rem"][style*="font-weight: 600"]');
+            var priceElement = orderCard.querySelector('div[style*="font-size: 1.125rem"][style*="font-weight: bold"]');
+            var textColor = isFullyCompleted ? '#9ca3af' : '#111827';
+            if (timeElement) {
+                timeElement.style.color = textColor;
+            }
+            if (priceElement) {
+                priceElement.style.color = textColor;
+            }
+
+            // Update button color if present
+            var viewButton = orderCard.querySelector('button[onclick*="viewOrder"]');
+            if (viewButton) {
+                if (isFullyCompleted) {
+                    viewButton.style.backgroundColor = '#d1d5db';
+                    viewButton.style.color = '#6b7280';
+                } else {
+                    viewButton.style.backgroundColor = '#3b82f6';
+                    viewButton.style.color = 'white';
+                }
+            }
+
+            // Update move to bottom button visibility
+            var gridContainer = orderCard.querySelector('.order-card div[style*="display: grid"][style*="grid-template-columns: auto 1fr auto"]');
+            if (gridContainer) {
+                var lastChild = gridContainer.lastElementChild;
+                if (isFullyCompleted) {
+                    // Replace empty div with move to bottom button
+                    if (lastChild && lastChild.tagName !== 'BUTTON') {
+                        var buttonHtml = '<button onclick="moveToBottom(' + orderId + ')" style="background-color: #d1d5db; color: white; width: 2rem; height: 2rem; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 0.2s; justify-self: end;" title="Verplaats naar onderaan" onmouseover="this.style.backgroundColor=\'#9ca3af\'" onmouseout="this.style.backgroundColor=\'#d1d5db\'"><svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg></button>';
+                        lastChild.outerHTML = buttonHtml;
+                    }
+                } else {
+                    // Replace button with empty div if it exists
+                    if (lastChild && lastChild.tagName === 'BUTTON' && lastChild.onclick && lastChild.onclick.toString().includes('moveToBottom')) {
+                        lastChild.outerHTML = '<div></div>';
+                    }
+                }
+            }
         }
 
         function filterOrders(filterType) {

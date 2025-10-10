@@ -45,6 +45,11 @@ RewriteRule ^welkom$ /zozo-pages/zozo-welkom.php?l=nl [L,QSA]
 RewriteRule ^bienvenue$ /zozo-pages/zozo-welkom.php?l=fr [L,QSA]
 RewriteRule ^welcome$ /zozo-pages/zozo-welkom.php?l=en [L,QSA]
 
+
+
+RewriteRule ^QR$ /qr_generator.php [L,QSA]
+
+
 RewriteRule ^nieuwste$ /zozo-pages/zozo-welkom.php [L,QSA]
 RewriteRule ^broodjeszaak-take-away-eethuis-roeselare$ /zozo-pages/zozo-welkom.php?l=nl [L,QSA]
 RewriteRule ^winkelwagen$ /zozo-pages/cart.php [L,QSA]
