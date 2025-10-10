@@ -233,7 +233,24 @@ function getSlotStartTime($order, $mysqli)
                                     </div>
                                     <div style="margin-top: 0.25rem; display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem;">
                                         <?php
-                                        // Payment status
+                                        // Delivery status (moved to left)
+                                        $status = $order['STATUS_BESTELLING'] ?? '';
+                                        $is_delivered = ($status === 'delivered');
+                                        if ($is_delivered) {
+                                            echo '<div title="Afgehaald/Geleverd">';
+                                            echo '<svg style="width: 1.5rem; height: 1.5rem; color: #10b981;" fill="currentColor" viewBox="0 0 20 20">';
+                                            echo '<path fill-rule="evenodd" d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" clip-rule="evenodd"></path>';
+                                            echo '</svg>';
+                                            echo '</div>';
+                                        } else {
+                                            echo '<div title="Niet afgehaald/geleverd">';
+                                            echo '<svg style="width: 1.5rem; height: 1.5rem; color: #ef4444;" fill="currentColor" viewBox="0 0 20 20">';
+                                            echo '<path fill-rule="evenodd" d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" clip-rule="evenodd"></path>';
+                                            echo '</svg>';
+                                            echo '</div>';
+                                        }
+
+                                        // Payment status (moved to right, changed to coin icon)
                                         $reeds_betaald = $order['reeds_betaald'] ?? null;
                                         $voldaan = $order['VOLDAAN'] ?? null;
                                         $is_paid = false;
@@ -244,33 +261,15 @@ function getSlotStartTime($order, $mysqli)
                                         }
                                         if ($is_paid) {
                                             echo '<div title="Betaald">';
-                                            echo '<svg style="width: 1.25rem; height: 1.25rem; color: #10b981;" fill="currentColor" viewBox="0 0 20 20">';
-                                            echo '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>';
+                                            echo '<svg style="width: 1.5rem; height: 1.5rem; color: #10b981;" fill="currentColor" viewBox="0 0 20 20">';
+                                            echo '<path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path>';
+                                            echo '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"></path>';
                                             echo '</svg>';
                                             echo '</div>';
                                         } else {
                                             echo '<div title="Niet betaald">';
-                                            echo '<svg style="width: 1.25rem; height: 1.25rem; color: #ef4444;" fill="currentColor" viewBox="0 0 20 20">';
+                                            echo '<svg style="width: 1.5rem; height: 1.5rem; color: #ef4444;" fill="currentColor" viewBox="0 0 20 20">';
                                             echo '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>';
-                                            echo '</svg>';
-                                            echo '</div>';
-                                        }
-
-                                        // Delivery status
-                                        $status = $order['STATUS_BESTELLING'] ?? '';
-                                        $is_delivered = ($status === 'delivered');
-                                        if ($is_delivered) {
-                                            echo '<div title="Afgehaald/Geleverd">';
-                                            echo '<svg style="width: 1.25rem; height: 1.25rem; color: #3b82f6;" fill="currentColor" viewBox="0 0 20 20">';
-                                            echo '<path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path>';
-                                            echo '<path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1V8a1 1 0 00-1-1h-3z"></path>';
-                                            echo '</svg>';
-                                            echo '</div>';
-                                        } else {
-                                            echo '<div title="Niet afgehaald/geleverd">';
-                                            echo '<svg style="width: 1.25rem; height: 1.25rem; color: #ef4444;" fill="currentColor" viewBox="0 0 20 20">';
-                                            echo '<path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path>';
-                                            echo '<path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1V8a1 1 0 00-1-1h-3z"></path>';
                                             echo '</svg>';
                                             echo '</div>';
                                         }
@@ -607,21 +606,229 @@ function getSlotStartTime($order, $mysqli)
                         html += '<div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">Geen artikeldetails beschikbaar.</div>';
                     }
 
-                    // Status and payment info
-                    var statusLabels = {
-                        'pending': 'In behandeling',
-                        'processing': 'Wordt verwerkt',
-                        'shipped': 'Verzonden',
-                        'delivered': 'Geleverd',
-                        'cancelled': 'Geannuleerd'
-                    };
-                    var statusText = statusLabels[o.STATUS_BESTELLING] || o.STATUS_BESTELLING || '';
+                    // Status and payment info - simplified based on verzendmethode
+                    var verzendmethode = (o.verzendmethode || '').toString().toLowerCase();
+                    var statusText = '';
+
+                    if (verzendmethode === 'afhalen' || verzendmethode === 'pickup') {
+                        statusText = (o.STATUS_BESTELLING === 'delivered') ? 'afgehaald' : 'wordt afgehaald';
+                    } else if (verzendmethode === 'levering' || verzendmethode === 'delivery') {
+                        statusText = (o.STATUS_BESTELLING === 'delivered') ? 'geleverd' : 'te leveren';
+                    } else {
+                        // Fallback for other verzendmethodes
+                        var statusLabels = {
+                            'pending': 'In behandeling',
+                            'processing': 'Wordt verwerkt',
+                            'shipped': 'Verzonden',
+                            'delivered': 'Geleverd',
+                            'cancelled': 'Geannuleerd'
+                        };
+                        statusText = statusLabels[o.STATUS_BESTELLING] || o.STATUS_BESTELLING || '';
+                    }
+
                     html += '<div style="display: flex; align-items: center; justify-content: space-between;">';
-                    html += '<div><strong>Status:</strong> ' + escapeHtml(statusText) + '</div>';
-                    html += '<div><strong>Betaald:</strong> ' + ((o.VOLDAAN === 'ja') ? 'Ja' : 'Nee') + '</div>';
+                    // Check if status is completed (afgehaald or geleverd)
+                    var isCompleted = (statusText === 'afgehaald' || statusText === 'geleverd');
+                    // Check if status is pending (wordt afgehaald or te leveren)
+                    var isPending = (statusText === 'wordt afgehaald' || statusText === 'te leveren');
+
+                    if (isCompleted) {
+                        html += '<div style="display: flex; align-items: center; color: #10b981; font-weight: 500;">';
+                        html += '<svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+                        html += '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>';
+                        html += '</svg>';
+                        html += escapeHtml(statusText);
+                        html += '</div>';
+                    } else if (isPending) {
+                        html += '<div style="font-weight: 600; color: #ef4444;">' + escapeHtml(statusText) + '</div>';
+                    } else {
+                        html += '<div>' + escapeHtml(statusText) + '</div>';
+                    }
+
+                    // Payment status with same styling as delivery status
+                    var isPaid = (o.VOLDAAN === 'ja');
+                    if (isPaid) {
+                        html += '<div style="display: flex; align-items: center; color: #10b981; font-weight: 500;">';
+                        html += '<svg style="width: 1rem; height: 1rem; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+                        html += '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>';
+                        html += '</svg>';
+                        html += 'Betaald';
+                        html += '</div>';
+                    } else {
+                        html += '<div style="color: #ef4444; font-weight: 600;">niet betaald</div>';
+                    }
                     html += '</div>';
 
+                    // Add "Mark as paid" button if not paid
+                    if (o.VOLDAAN !== 'ja') {
+                        html += '<div style="margin-top: 1rem; text-align: center;">';
+                        html += '<button id="mark-paid-btn" data-order-id="' + escapeHtml(o.bestelling_id) + '" style="background-color: #10b981; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">Markeer als betaald</button>';
+                        html += '</div>';
+                    }
+
+                    // Add delivery status button if not delivered
+                    if (o.STATUS_BESTELLING !== 'delivered') {
+                        var buttonText = '';
+                        var verzendmethode = (o.verzendmethode || '').toString().toLowerCase();
+                        if (verzendmethode === 'afhalen' || verzendmethode === 'pickup') {
+                            buttonText = 'Markeer als afgehaald';
+                        } else if (verzendmethode === 'levering' || verzendmethode === 'delivery') {
+                            buttonText = 'Markeer als geleverd';
+                        } else {
+                            buttonText = 'Markeer als voltooid';
+                        }
+
+                        html += '<div style="margin-top: 1rem; text-align: center;">';
+                        html += '<button id="mark-delivered-btn" data-order-id="' + escapeHtml(o.bestelling_id) + '" style="background-color: #3b82f6; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">' + escapeHtml(buttonText) + '</button>';
+                        html += '</div>';
+                    }
+
                     content.innerHTML = html;
+
+                    // Add event listener for mark as paid button
+                    var markPaidBtn = document.getElementById('mark-paid-btn');
+                    if (markPaidBtn) {
+                        markPaidBtn.addEventListener('click', function() {
+                            var orderId = this.getAttribute('data-order-id');
+                            var button = this;
+
+                            // Disable button and show loading state
+                            button.disabled = true;
+                            button.textContent = 'Bezig...';
+                            button.style.backgroundColor = '#6b7280';
+
+                            fetch(window.location.protocol + '//' + window.location.host + '/zozo-admin/update_payment_status.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded',
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    },
+                                    body: 'id=' + encodeURIComponent(orderId),
+                                    redirect: 'follow' // Follow redirects
+                                })
+                                .then(function(resp) {
+                                    console.log('Response status:', resp.status);
+                                    console.log('Response headers:', resp.headers);
+                                    if (!resp.ok) {
+                                        throw new Error('HTTP error! status: ' + resp.status);
+                                    }
+                                    return resp.text(); // Get text first to debug
+                                })
+                                .then(function(text) {
+                                    console.log('Raw response:', text);
+
+                                    // Try to parse as JSON, but don't fail if it's not valid
+                                    var data = null;
+                                    try {
+                                        if (text.trim() && text.trim() !== '') {
+                                            data = JSON.parse(text);
+                                        }
+                                    } catch (e) {
+                                        console.log('Response is not valid JSON, but update might have succeeded');
+                                        data = null;
+                                    }
+
+                                    // If we got valid JSON and it's ok, or if parsing failed (assume success)
+                                    if ((data && data.ok) || !data) {
+                                        // Reload the order details
+                                        viewOrder(orderId);
+                                        // Update the order card icons
+                                        var orderCard = document.querySelector('.order-card[data-order-id="' + orderId + '"]');
+                                        var verzendmethode = orderCard ? orderCard.getAttribute('data-delivery-type') : '';
+                                        // Get current delivery status from the card (we only updated payment)
+                                        var currentDeliveryStatus = orderCard && orderCard.querySelector('div[title*="Afgehaald"]') ? 'delivered' : null;
+                                        updateOrderCardIcons(orderId, 'ja', currentDeliveryStatus);
+                                    } else if (data && !data.ok) {
+                                        alert('Fout bij updaten: ' + (data.error || 'Onbekende fout'));
+                                        // Re-enable button
+                                        button.disabled = false;
+                                        button.textContent = 'Markeer als betaald';
+                                        button.style.backgroundColor = '#10b981';
+                                    }
+                                })
+                                .catch(function(err) {
+                                    console.error('Fetch error:', err);
+                                    alert('Fout bij updaten van betalingsstatus: ' + err.message);
+                                    // Re-enable button
+                                    button.disabled = false;
+                                    button.textContent = 'Markeer als betaald';
+                                    button.style.backgroundColor = '#10b981';
+                                });
+                        });
+                    }
+
+                    // Add event listener for mark as delivered button
+                    var markDeliveredBtn = document.getElementById('mark-delivered-btn');
+                    if (markDeliveredBtn) {
+                        markDeliveredBtn.addEventListener('click', function() {
+                            var orderId = this.getAttribute('data-order-id');
+                            var button = this;
+
+                            // Disable button and show loading state
+                            button.disabled = true;
+                            var originalText = button.textContent;
+                            button.textContent = 'Bezig...';
+                            button.style.backgroundColor = '#6b7280';
+
+                            fetch(window.location.protocol + '//' + window.location.host + '/zozo-admin/update_order_status.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded',
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    },
+                                    body: 'id=' + encodeURIComponent(orderId),
+                                    redirect: 'follow' // Follow redirects
+                                })
+                                .then(function(resp) {
+                                    console.log('Response status:', resp.status);
+                                    console.log('Response headers:', resp.headers);
+                                    if (!resp.ok) {
+                                        throw new Error('HTTP error! status: ' + resp.status);
+                                    }
+                                    return resp.text(); // Get text first to debug
+                                })
+                                .then(function(text) {
+                                    console.log('Raw response:', text);
+
+                                    // Try to parse as JSON, but don't fail if it's not valid
+                                    var data = null;
+                                    try {
+                                        if (text.trim() && text.trim() !== '') {
+                                            data = JSON.parse(text);
+                                        }
+                                    } catch (e) {
+                                        console.log('Response is not valid JSON, but update might have succeeded');
+                                        data = null;
+                                    }
+
+                                    // If we got valid JSON and it's ok, or if parsing failed (assume success)
+                                    if ((data && data.ok) || !data) {
+                                        // Reload the order details
+                                        viewOrder(orderId);
+                                        // Update the order card icons
+                                        var orderCard = document.querySelector('.order-card[data-order-id="' + orderId + '"]');
+                                        var verzendmethode = orderCard ? orderCard.getAttribute('data-delivery-type') : '';
+                                        // Get current payment status from the card (we only updated delivery)
+                                        var currentPaymentStatus = orderCard && orderCard.querySelector('div[title="Betaald"]') ? 'ja' : null;
+                                        updateOrderCardIcons(orderId, currentPaymentStatus, 'delivered');
+                                    } else if (data && !data.ok) {
+                                        alert('Fout bij updaten: ' + (data.error || 'Onbekende fout'));
+                                        // Re-enable button
+                                        button.disabled = false;
+                                        button.textContent = originalText;
+                                        button.style.backgroundColor = '#3b82f6';
+                                    }
+                                })
+                                .catch(function(err) {
+                                    console.error('Fetch error:', err);
+                                    alert('Fout bij updaten van order status: ' + err.message);
+                                    // Re-enable button
+                                    button.disabled = false;
+                                    button.textContent = originalText;
+                                    button.style.backgroundColor = '#3b82f6';
+                                });
+                        });
+                    }
                 })
                 .catch(function(err) {
                     if (err && err.message === 'Unauthorized') return; // already handled
@@ -651,6 +858,39 @@ function getSlotStartTime($order, $mysqli)
 
         // Filter functionality
         var currentFilter = 'all'; // 'all', 'afhaling', 'levering'
+
+        // Helper function to update order card icons after status changes
+        function updateOrderCardIcons(orderId, paymentStatus, deliveryStatus) {
+            var orderCard = document.querySelector('.order-card[data-order-id="' + orderId + '"]');
+            if (!orderCard) return;
+
+            var iconContainer = orderCard.querySelector('.order-card div[style*="display: flex"][style*="justify-content: flex-end"]');
+            if (!iconContainer) return;
+
+            // Clear existing icons
+            iconContainer.innerHTML = '';
+
+            // Add delivery status icon
+            var deliveryIconHtml = '';
+            var isDelivered = (deliveryStatus === 'delivered');
+            if (isDelivered) {
+                deliveryIconHtml = '<div title="Afgehaald/Geleverd"><svg style="width: 1.5rem; height: 1.5rem; color: #10b981;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" clip-rule="evenodd"></path></svg></div>';
+            } else {
+                deliveryIconHtml = '<div title="Niet afgehaald/geleverd"><svg style="width: 1.5rem; height: 1.5rem; color: #ef4444;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" clip-rule="evenodd"></path></svg></div>';
+            }
+
+            // Add payment status icon
+            var paymentIconHtml = '';
+            var isPaid = (paymentStatus === 'ja');
+            if (isPaid) {
+                paymentIconHtml = '<div title="Betaald"><svg style="width: 1.5rem; height: 1.5rem; color: #10b981;" fill="currentColor" viewBox="0 0 20 20"><path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"></path></svg></div>';
+            } else {
+                paymentIconHtml = '<div title="Niet betaald"><svg style="width: 1.5rem; height: 1.5rem; color: #ef4444;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg></div>';
+            }
+
+            // Add icons to container
+            iconContainer.innerHTML = deliveryIconHtml + paymentIconHtml;
+        }
 
         function filterOrders(filterType) {
             currentFilter = filterType;
