@@ -186,7 +186,7 @@ $slotUnix = isset($order['UNIX_bezorgmoment']) ? (int)$order['UNIX_bezorgmoment'
 if (($slotId <= 0) && $slotUnix > 0) {
     $dayOfWeek = (int)date('N', $slotUnix); // 1 (Mon) - 7 (Sun)
     $timeStr = date('H:i:s', $slotUnix);
-    $q = $mysqli->prepare("SELECT id, start_time, end_time FROM timeslot_fixed_ranges WHERE day_of_week = ? AND start_time <= ? AND end_time > ? ORDER BY start_time LIMIT 1");
+    $q = $mysqli->prepare("SELECT id, start_time, end_time FROM timeslot_fixed_ranges WHERE day_of_week = ? AND start_time <= ? AND end_time > ? ORDER BY start_time DESC LIMIT 1");
     if ($q) {
         $q->bind_param('iss', $dayOfWeek, $timeStr, $timeStr);
         $q->execute();

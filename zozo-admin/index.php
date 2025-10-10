@@ -109,7 +109,7 @@ function getSlotStartTime($order, $mysqli)
     if ($slotUnix > 0) {
         $dayOfWeek = (int)date('N', $slotUnix); // 1 (Mon) - 7 (Sun)
         $timeStr = date('H:i:s', $slotUnix);
-        $stmt = $mysqli->prepare("SELECT start_time FROM timeslot_fixed_ranges WHERE day_of_week = ? AND start_time <= ? AND end_time > ? ORDER BY start_time LIMIT 1");
+        $stmt = $mysqli->prepare("SELECT start_time FROM timeslot_fixed_ranges WHERE day_of_week = ? AND start_time <= ? AND end_time > ? ORDER BY start_time DESC LIMIT 1");
         if ($stmt) {
             $stmt->bind_param('iss', $dayOfWeek, $timeStr, $timeStr);
             $stmt->execute();
@@ -191,11 +191,25 @@ function getSlotStartTime($order, $mysqli)
                         <?php
                         $verzendmethode = strtolower($order['verzendmethode'] ?? '');
                         $delivery_type = ($verzendmethode === 'afhalen' || $verzendmethode === 'pickup') ? 'afhaling' : 'levering';
+
+                        // Check if order is fully completed (delivered AND paid)
+                        $status = $order['STATUS_BESTELLING'] ?? '';
+                        $reeds_betaald = $order['reeds_betaald'] ?? null;
+                        $voldaan = $order['VOLDAAN'] ?? null;
+                        $is_paid = false;
+                        if ($reeds_betaald && strpos($reeds_betaald, 'ja') === 0) {
+                            $is_paid = true;
+                        } elseif (!$reeds_betaald && $voldaan === 'ja') {
+                            $is_paid = true;
+                        }
+                        $is_fully_completed = ($status === 'delivered' && $is_paid);
+                        $card_background = $is_fully_completed ? '#f9fafb' : 'white';
+                        $card_opacity = $is_fully_completed ? '0.7' : '1';
                         ?>
-                        <div class="order-card" data-order-id="<?php echo $order['bestelling_id']; ?>" data-delivery-type="<?php echo $delivery_type; ?>" draggable="true" style="background: white; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); padding: 1rem; cursor: grab; transition: transform 0.2s, box-shadow 0.2s;">
+                        <div class="order-card" data-order-id="<?php echo $order['bestelling_id']; ?>" data-delivery-type="<?php echo $delivery_type; ?>" draggable="true" style="background: <?php echo $card_background; ?>; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); padding: 1rem; cursor: grab; transition: transform 0.2s, box-shadow 0.2s; opacity: <?php echo $card_opacity; ?>;">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
                                 <div>
-                                    <div style="font-size: 1.125rem; font-weight: 600; color: #111827; display: flex; align-items: center;">
+                                    <div style="font-size: 1.125rem; font-weight: 600; color: <?php echo $is_fully_completed ? '#9ca3af' : '#111827'; ?>; display: flex; align-items: center;">
                                         <svg style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem; color: #6b7280;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <polyline points="12,6 12,12 16,14"></polyline>
@@ -228,7 +242,7 @@ function getSlotStartTime($order, $mysqli)
                                     </div>
                                 </div>
                                 <div style="text-align: right;">
-                                    <div style="font-size: 1.125rem; font-weight: bold; color: #111827;">
+                                    <div style="font-size: 1.125rem; font-weight: bold; color: <?php echo $is_fully_completed ? '#9ca3af' : '#111827'; ?>;">
                                         €<?= number_format($order['bestelling_tebetalen'], 2, ',', '.') ?>
                                     </div>
                                     <div style="margin-top: 0.25rem; display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem;">
@@ -277,10 +291,13 @@ function getSlotStartTime($order, $mysqli)
                                     </div>
                                 </div>
                             </div>
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem;">
+                            <div style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; margin-top: 0.5rem; gap: 0.5rem;">
                                 <div style="font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; <?php
                                                                                                                                                                                         $verzendmethode = strtolower($order['verzendmethode'] ?? '');
-                                                                                                                                                                                        if ($verzendmethode === 'afhalen' || $verzendmethode === 'pickup') {
+                                                                                                                                                                                        if ($is_fully_completed) {
+                                                                                                                                                                                            // Lichter voor volledig afgehandelde bestellingen
+                                                                                                                                                                                            echo 'background-color: #e5e7eb; color: #6b7280;';
+                                                                                                                                                                                        } elseif ($verzendmethode === 'afhalen' || $verzendmethode === 'pickup') {
                                                                                                                                                                                             echo 'background-color: #D2B48C; color: #ffffff;';
                                                                                                                                                                                         } else {
                                                                                                                                                                                             echo 'background-color: #8B4513; color: #ffffff;';
@@ -294,10 +311,31 @@ function getSlotStartTime($order, $mysqli)
                                     }
                                     ?>
                                 </div>
-                                <button onclick="viewOrder(<?= $order['bestelling_id'] ?>)" style="background-color: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; font-size: 0.875rem; font-weight: 500; cursor: pointer;">
+                                <button onclick="viewOrder(<?= $order['bestelling_id'] ?>)" style="background-color: <?php echo $is_fully_completed ? '#d1d5db' : '#3b82f6'; ?>; color: <?php echo $is_fully_completed ? '#6b7280' : 'white'; ?>; padding: 0.5rem 1rem; border-radius: 0.375rem; border: none; font-size: 0.875rem; font-weight: 500; cursor: pointer; justify-self: center;">
                                     Bekijken
                                 </button>
-                                <div style="width: 1rem;"></div> <!-- Spacer for balance -->
+                                <?php
+                                // Check if order is completed (delivered AND paid)
+                                $status = $order['STATUS_BESTELLING'] ?? '';
+                                $reeds_betaald = $order['reeds_betaald'] ?? null;
+                                $voldaan = $order['VOLDAAN'] ?? null;
+                                $is_paid = false;
+                                if ($reeds_betaald && strpos($reeds_betaald, 'ja') === 0) {
+                                    $is_paid = true;
+                                } elseif (!$reeds_betaald && $voldaan === 'ja') {
+                                    $is_paid = true;
+                                }
+                                $is_completed = ($status === 'delivered' && $is_paid);
+                                if ($is_completed):
+                                ?>
+                                    <button onclick="moveToBottom(<?= $order['bestelling_id'] ?>)" style="background-color: #d1d5db; color: white; width: 2rem; height: 2rem; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 0.2s; justify-self: end;" title="Verplaats naar onderaan" onmouseover="this.style.backgroundColor='#9ca3af'" onmouseout="this.style.backgroundColor='#d1d5db'">
+                                        <svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                                        </svg>
+                                    </button>
+                                <?php else: ?>
+                                    <div></div> <!-- Empty placeholder when no round button -->
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -944,39 +982,6 @@ function getSlotStartTime($order, $mysqli)
         // Simple drag and drop for session-based reordering
         let draggedOrderId = null;
 
-        // Add notification about session-based ordering
-        function showOrderNotification() {
-            // Remove any existing notification first
-            const existing = document.querySelector('.order-notification');
-            if (existing) {
-                existing.remove();
-            }
-
-            const notification = document.createElement('div');
-            notification.className = 'order-notification';
-            notification.style.position = 'fixed';
-            notification.style.top = '1rem';
-            notification.style.left = '50%';
-            notification.style.transform = 'translateX(-50%)';
-            notification.style.backgroundColor = '#10b981';
-            notification.style.color = 'white';
-            notification.style.padding = '0.75rem 1rem';
-            notification.style.borderRadius = '0.5rem';
-            notification.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-            notification.style.zIndex = '1000';
-            notification.style.fontSize = '0.875rem';
-            notification.style.fontWeight = '500';
-            notification.innerHTML = '📋 Volgorde aangepast voor deze sessie - Herlaad pagina om te resetten';
-
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 3000);
-        }
-
         // Placeholder function removed - using simple DOM reordering instead
 
         // Add drag event listeners to order cards
@@ -1012,7 +1017,7 @@ function getSlotStartTime($order, $mysqli)
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            setTimeout(logOrderSequence, 100);
+                            // Order sequence updated successfully
                         }
                     })
                     .catch(error => {
@@ -1049,42 +1054,41 @@ function getSlotStartTime($order, $mysqli)
             e.preventDefault();
         });
 
-        // Function to log current order sequence to console
-        function logOrderSequence() {
+        // Function to move completed order to bottom
+        function moveToBottom(orderId) {
+            const orderCard = document.querySelector(`.order-card[data-order-id="${orderId}"]`);
+            if (!orderCard) return;
+
+            // Move to bottom of the list
+            const container = orderCard.parentNode;
+            container.appendChild(orderCard);
+
+            // Get new order sequence from DOM
             const orderCards = document.querySelectorAll('.order-card');
-            const orderSequence = [];
+            const newSequence = Array.from(orderCards).map(card => card.getAttribute('data-order-id'));
 
-            orderCards.forEach((card, index) => {
-                // Try to get order ID from the card content
-                const orderIdElement = card.querySelector('div:nth-child(2) div:nth-child(2)');
-                const orderId = orderIdElement ? orderIdElement.textContent.trim().replace('#', '') : `Order ${index + 1}`;
-
-                // Get delivery type
-                const deliveryType = card.getAttribute('data-delivery-type') || 'unknown';
-
-                // Get time
-                const timeElement = card.querySelector('div:first-child div:first-child div:first-child');
-                const time = timeElement ? timeElement.textContent.trim() : 'Unknown time';
-
-                orderSequence.push({
-                    position: index + 1,
-                    orderId: orderId,
-                    deliveryType: deliveryType,
-                    time: time
+            // Update session via AJAX
+            fetch('update_order_sequence.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        sequence: newSequence
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Order sequence updated successfully
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating order sequence:', error);
                 });
-            });
-
-            console.log('📋 Huidige volgorde van bestellingen:', orderSequence);
-            console.table(orderSequence);
         }
 
-        // Log initial order on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(logOrderSequence, 100); // Small delay to ensure DOM is fully loaded
-        });
-
-        // Make function globally available for manual console testing
-        window.logOrderSequence = logOrderSequence;
+        // All functionality is working properly
     </script>
 </body>
 

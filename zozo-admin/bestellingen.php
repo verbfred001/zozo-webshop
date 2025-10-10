@@ -389,7 +389,7 @@ $stats = $stats_result->fetch_assoc();
                                                     if (($slot_row === null || empty($slot_row['end_time'])) && $slotUnix > 0) {
                                                         $dayOfWeek = (int)date('N', $slotUnix);
                                                         $timeStr = date('H:i:s', $slotUnix);
-                                                        $s_alt = $mysqli->prepare("SELECT id, start_time, end_time FROM timeslot_fixed_ranges WHERE day_of_week = ? AND start_time <= ? AND end_time > ? ORDER BY start_time LIMIT 1");
+                                                        $s_alt = $mysqli->prepare("SELECT id, start_time, end_time FROM timeslot_fixed_ranges WHERE day_of_week = ? AND start_time <= ? AND end_time > ? ORDER BY start_time DESC LIMIT 1");
                                                         if ($s_alt) {
                                                             $s_alt->bind_param('iss', $dayOfWeek, $timeStr, $timeStr);
                                                             $s_alt->execute();
@@ -430,7 +430,7 @@ $stats = $stats_result->fetch_assoc();
 
                                             // Try to find a timeslot where start_time <= time < end_time for that day
                                             $ts_found = null;
-                                            $s4 = $mysqli->prepare("SELECT id, start_time, end_time FROM timeslot_fixed_ranges WHERE day_of_week = ? AND start_time <= ? AND end_time > ? ORDER BY start_time LIMIT 1");
+                                            $s4 = $mysqli->prepare("SELECT id, start_time, end_time FROM timeslot_fixed_ranges WHERE day_of_week = ? AND start_time <= ? AND end_time > ? ORDER BY start_time DESC LIMIT 1");
                                             if ($s4) {
                                                 $s4->bind_param('iss', $dayOfWeek, $timeStr, $timeStr);
                                                 $s4->execute();
