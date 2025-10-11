@@ -6,17 +6,9 @@ error_reporting(E_ALL);
 
 $langs = ['nl' => 'Nederlands', 'fr' => 'Français', 'en' => 'English'];
 
-// Detecteer taal uit URL of standaard naar 'nl'
+// Detecteer taal uit URL of standaard naar 'nl' (gebruik activelanguage voor branded slugs)
 if (!isset($lang)) {
-    if (preg_match('#^/(nl|fr|en)(/|$)#', $_SERVER['REQUEST_URI'], $m)) {
-        $lang = $m[1];
-    } elseif ($_SERVER['REQUEST_URI'] === '/bienvenue') {
-        $lang = 'fr';
-    } elseif ($_SERVER['REQUEST_URI'] === '/welcome') {
-        $lang = 'en';
-    } else {
-        $lang = 'nl';
-    }
+    $lang = function_exists('activelanguage') ? activelanguage() : 'nl';
 }
 
 // Categorieën en helpers beschikbaar maken

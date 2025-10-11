@@ -8,23 +8,24 @@ $langLabels = [
     'fr' => 'FR',
     'en' => 'ENG'
 ];
+
+// Haal de branded URLs uit de database (indien nog niet beschikbaar)
+if (!isset($url_nl) || !isset($url_fr) || !isset($url_en)) {
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/zozo-includes/DB_connectie.php";
+    $res = $mysqli->query("SELECT url_welkom, url_welkom_fr, url_welkom_en FROM instellingen LIMIT 1");
+    $row = $res ? $res->fetch_assoc() : [];
+    $url_nl = $row['url_welkom'] ?? 'welkom';
+    $url_fr = $row['url_welkom_fr'] ?? 'bienvenue';
+    $url_en = $row['url_welkom_en'] ?? 'welcome';
+}
 $welkoms = [
-    'nl' => ['url' => '/welkom', 'label' => $langLabels['nl']],
-    'fr' => ['url' => '/bienvenue', 'label' => $langLabels['fr']],
-    'en' => ['url' => '/welcome', 'label' => $langLabels['en']],
+    'nl' => ['url' => '/' . $url_nl, 'label' => $langLabels['nl']],
+    'fr' => ['url' => '/' . $url_fr, 'label' => $langLabels['fr']],
+    'en' => ['url' => '/' . $url_en, 'label' => $langLabels['en']],
 ];
 
-// Detect current language from URL
-$uri = $_SERVER['REQUEST_URI'];
-if ($uri === '/welkom') {
-    $current = 'nl';
-} elseif ($uri === '/bienvenue') {
-    $current = 'fr';
-} elseif ($uri === '/welcome') {
-    $current = 'en';
-} else {
-    $current = 'nl';
-}
+// Detect current language from URL using activelanguage() (reads branded slugs from DB)
+$current = function_exists('activelanguage') ? activelanguage() : 'nl';
 
 // Show the selector if there are extra languages (set $talen in config)
 $showLangSelector = isset($talen) && count($talen) > 0;

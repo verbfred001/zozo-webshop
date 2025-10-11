@@ -7,10 +7,8 @@
         $currentPathOnly = parse_url($currentPath, PHP_URL_PATH) ?: $currentPath;
         // ensure language variables are present
         @include_once($_SERVER['DOCUMENT_ROOT'] . '/zozo-includes/lang.php');
-        $activeLang = $lang ?? 'nl';
-        if ($currentPath === '/bienvenue') $activeLang = 'fr';
-        elseif ($currentPath === '/welcome') $activeLang = 'en';
-        elseif ($currentPath === '/welkom') $activeLang = 'nl';
+        // determine active language using activelanguage() which reads branded slugs from DB
+        $activeLang = function_exists('activelanguage') ? activelanguage() : ($lang ?? 'nl');
 
         // haal talen-instellingen op (fallback: toon alle talen als DB niet beschikbaar)
         if (!isset($mysqli)) {
@@ -46,8 +44,18 @@
 
             if (preg_match('#^/(nl|fr|en)/cart$#', $currentPath)) {
                 $url = '/' . $k . '/cart';
-            } elseif (preg_match('#^/(welkom|bienvenue|welcome)$#', $currentPath)) {
-                $url = ($k === 'nl') ? '/welkom' : (($k === 'fr') ? '/bienvenue' : '/welcome');
+            } elseif (preg_match('#^/[^/]+$#', $currentPath)) {
+                // single-segment path: if it's a branded welcome slug, build proper URL from DB
+                // fetch branded slugs if needed
+                if (!isset($url_nl) || !isset($url_fr) || !isset($url_en)) {
+                    require_once $_SERVER['DOCUMENT_ROOT'] . '/zozo-includes/DB_connectie.php';
+                    $rr = $mysqli->query("SELECT url_welkom, url_welkom_fr, url_welkom_en FROM instellingen LIMIT 1");
+                    $rw = $rr ? $rr->fetch_assoc() : [];
+                    $url_nl = $rw['url_welkom'] ?? 'welkom';
+                    $url_fr = $rw['url_welkom_fr'] ?? 'bienvenue';
+                    $url_en = $rw['url_welkom_en'] ?? 'welcome';
+                }
+                $url = ($k === 'nl') ? '/' . $url_nl : (($k === 'fr') ? '/' . $url_fr : '/' . $url_en);
             } else {
                 $part = isset($new_paths[$k]) && $new_paths[$k] !== '' ? '/' . ltrim($new_paths[$k], '/') : '';
                 $url = '/' . $k . $part;

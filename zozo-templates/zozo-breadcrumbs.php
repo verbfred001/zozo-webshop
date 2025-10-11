@@ -3,14 +3,9 @@
 <?php
 // Detecteer taal als $lang niet gezet is of als we op een van de welkompagina's staan
 $uri = $_SERVER['REQUEST_URI'];
-if (!isset($lang) || !$lang || in_array($uri, ['/welkom', '/bienvenue', '/welcome'])) {
-    if ($uri === '/bienvenue') {
-        $lang = 'fr';
-    } elseif ($uri === '/welcome') {
-        $lang = 'en';
-    } else {
-        $lang = 'nl';
-    }
+if (!isset($lang) || !$lang) {
+    // Use activelanguage() which now detects branded slugs from DB
+    $lang = function_exists('activelanguage') ? activelanguage() : 'nl';
 }
 
 // Nu is $all_cats beschikbaar!
@@ -25,11 +20,24 @@ $home_labels = [
     'fr' => 'Bienvenue',
     'en' => 'Welcome'
 ];
-$home_urls = [
-    'nl' => '/welkom',
-    'fr' => '/bienvenue',
-    'en' => '/welcome'
-];
+$home_urls = [];
+// try fetch branded URLs from DB
+if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/zozo-includes/DB_connectie.php')) {
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/zozo-includes/DB_connectie.php';
+    $r = $mysqli->query("SELECT url_welkom, url_welkom_fr, url_welkom_en FROM instellingen LIMIT 1");
+    $rw = $r ? $r->fetch_assoc() : [];
+    $home_urls = [
+        'nl' => '/' . ($rw['url_welkom'] ?? 'welkom'),
+        'fr' => '/' . ($rw['url_welkom_fr'] ?? 'bienvenue'),
+        'en' => '/' . ($rw['url_welkom_en'] ?? 'welcome'),
+    ];
+} else {
+    $home_urls = [
+        'nl' => '/welkom',
+        'fr' => '/bienvenue',
+        'en' => '/welcome'
+    ];
+}
 
 // Breadcrumb opbouwen
 $breadcrumb = [];

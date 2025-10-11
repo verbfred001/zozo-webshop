@@ -30,7 +30,19 @@
 
         <!-- Logo voor desktop (links) en mobiel (midden) -->
         <div class="navbar-logo">
-            <a href="/">
+            <?php
+            // Zorg dat branded URLs beschikbaar zijn
+            if (!isset($url_nl) || !isset($url_fr) || !isset($url_en)) {
+                require_once $_SERVER['DOCUMENT_ROOT'] . '/zozo-includes/DB_connectie.php';
+                $r = $mysqli->query("SELECT url_welkom, url_welkom_fr, url_welkom_en FROM instellingen LIMIT 1");
+                $rowu = $r ? $r->fetch_assoc() : [];
+                $url_nl = $rowu['url_welkom'] ?? 'welkom';
+                $url_fr = $rowu['url_welkom_fr'] ?? 'bienvenue';
+                $url_en = $rowu['url_welkom_en'] ?? 'welcome';
+            }
+            $logoTarget = '/' . ($activeLang === 'fr' ? $url_fr : ($activeLang === 'en' ? $url_en : $url_nl));
+            ?>
+            <a href="<?= htmlspecialchars($logoTarget) ?>">
                 <img src="/zozo-assets/img/Maxice.webp" alt="Logo" width="420" height="120">
             </a>
         </div>
