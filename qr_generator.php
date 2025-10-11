@@ -5,7 +5,7 @@ use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 
 // De URL waarvoor je een QR-code wilt maken
-$url = 'https://maxice.be/9523aP/MyRi@m/8_xr';
+$url = 'https://maxice.be/login/9523aP/MyRi@m/8_xr';
 
 // Maak een nieuwe QR-code instantie
 $qrCode = new QrCode($url);

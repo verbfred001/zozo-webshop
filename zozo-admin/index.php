@@ -2,13 +2,81 @@
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-// Controleer of gebruiker is ingelogd, anders redirect naar login.php
-//if (!isset($_SESSION['admin_logged_in'])) {
-//   header('Location: login.php');
-//   exit;
-//}
 
-// DB connection
+// Haal instellingen op
+if (!isset($mysqli)) {
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/zozo-includes/DB_connectie.php');
+}
+$stmt = $mysqli->prepare("SELECT * FROM instellingen LIMIT 1");
+$stmt->execute();
+$instellingen = $stmt->get_result()->fetch_assoc();
+
+// Check for magic link login
+if (isset($_GET['magic']) && $_GET['magic'] === ($instellingen['magic_link'] ?? '9523aP/MyRi@m/8_xr')) {
+    $_SESSION['admin_logged_in'] = true;
+    // No redirect, let JavaScript handle localStorage
+}
+
+// Controleer of gebruiker is ingelogd
+if (!isset($_SESSION['admin_logged_in'])) {
+    // Output loading page for localStorage check
+?>
+    <!DOCTYPE html>
+    <html lang="nl">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Loading Admin...</title>
+    </head>
+
+    <body>
+        <p>Loading admin panel...</p>
+        <script>
+            const TOKEN_KEY = '<?php echo ADMIN_TOKEN_KEY; ?>';
+            const EXPIRY_KEY = '<?php echo ADMIN_EXPIRY_KEY; ?>';
+            const MAGIC_TOKEN = '<?php echo ADMIN_MAGIC_TOKEN; ?>';
+
+            function loginViaToken() {
+                return fetch('/admin-login-token.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            token: MAGIC_TOKEN
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = '/admin';
+                        } else {
+                            window.location.href = '/';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        window.location.href = '/';
+                    });
+            }
+
+            // Check localStorage
+            const storedToken = localStorage.getItem(TOKEN_KEY);
+            const storedExpiry = localStorage.getItem(EXPIRY_KEY);
+            const now = Date.now();
+
+            if (storedToken === MAGIC_TOKEN && storedExpiry && now < parseInt(storedExpiry)) {
+                loginViaToken();
+            } else {
+                window.location.href = '/';
+            }
+        </script>
+    </body>
+
+    </html>
+<?php
+    exit;
+} // DB connection
 if (!isset($mysqli)) {
     require_once($_SERVER['DOCUMENT_ROOT'] . '/zozo-includes/DB_connectie.php');
 }
@@ -345,7 +413,7 @@ function getSlotStartTime($order, $mysqli)
     </main>
 
     <!-- Floating button to bestellingen page (mobile navigation) -->
-    <a href="/zozo-admin/bestellingen.php" style="position: fixed; bottom: 1rem; left: 1rem; width: 3rem; height: 3rem; background-color: #3b82f6; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); z-index: 100; text-decoration: none;" title="Naar bestellingen overzicht">
+    <a href="/admin/bestellingen" style="position: fixed; bottom: 1rem; left: 1rem; width: 3rem; height: 3rem; background-color: #3b82f6; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); z-index: 100; text-decoration: none;" title="Naar bestellingen overzicht">
         <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
         </svg>
@@ -1143,6 +1211,8 @@ function getSlotStartTime($order, $mysqli)
 
         // All functionality is working properly
     </script>
+
+    <?php include 'includes/admin-js.php'; ?>
 </body>
 
 </html>

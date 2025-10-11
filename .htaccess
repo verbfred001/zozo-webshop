@@ -85,6 +85,10 @@ RewriteRule ^admin/opties-toewijzen$ /zozo-admin/opties-toewijzen.php [L,QSA]
 RewriteRule ^admin/instellingen$ /zozo-admin/instellingen.php [L,QSA]
 RewriteRule ^admin/voorraad$ /zozo-admin/voorraad.php [L,QSA]
 RewriteRule ^admin/kalender$ /zozo-admin/kalender.php [L,QSA]
+RewriteRule ^admin/logout$ /admin-logout.php [L,QSA]
+
+# Magic link for admin login
+RewriteRule ^login/([^/]+)/([^/]+)/([^/]+)$ /admin?magic=$1/$2/$3 [L,QSA]
 
 # --- Fallback: only rewrite to front controller if not a real file/dir ---
 RewriteCond %{REQUEST_FILENAME} !-f

@@ -1,5 +1,67 @@
 <?php
 session_start();
+
+// Controleer of gebruiker is ingelogd
+if (!isset($_SESSION['admin_logged_in'])) {
+    // Output loading page for localStorage check
+?>
+    <!DOCTYPE html>
+    <html lang="nl">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Loading Admin...</title>
+    </head>
+
+    <body>
+        <p>Loading admin panel...</p>
+        <script>
+            const TOKEN_KEY = 'zozo_admin_token';
+            const EXPIRY_KEY = 'zozo_admin_expiry';
+            const MAGIC_TOKEN = 'zozo_admin_magic_2025';
+
+            function loginViaToken() {
+                return fetch('/admin-login-token.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            token: MAGIC_TOKEN
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = '/admin/instellingen';
+                        } else {
+                            window.location.href = '/';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        window.location.href = '/';
+                    });
+            }
+
+            // Check localStorage
+            const storedToken = localStorage.getItem(TOKEN_KEY);
+            const storedExpiry = localStorage.getItem(EXPIRY_KEY);
+            const now = Date.now();
+
+            if (storedToken === MAGIC_TOKEN && storedExpiry && now < parseInt(storedExpiry)) {
+                loginViaToken();
+            } else {
+                window.location.href = '/';
+            }
+        </script>
+    </body>
+
+    </html>
+<?php
+    exit;
+}
+
 require_once($_SERVER['DOCUMENT_ROOT'] . "/zozo-includes/DB_connectie.php");
 
 // Ophalen van instellingen
