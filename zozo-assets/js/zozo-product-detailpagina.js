@@ -399,25 +399,19 @@ function getSelectedDetailOptions() {
 // Check voorraad voor detailpagina
 function checkDetailStock(selectedOptions) {
     if (!window.voorraadbeheerActief) {
-        console.log('Voorraadbeheer is uitgeschakeld, voorraadcontrole wordt overgeslagen');
         return;
     }
 
-    console.log('checkDetailStock aangeroepen met:', selectedOptions);
-
     // geselecteerde opties die stock beïnvloeden
     const stockOptions = selectedOptions.filter(opt => Number(opt.affects_stock) === 1);
-    console.log('stockOptions na filter:', stockOptions);
 
     // bepaal hoeveel groepen in totaal stock beïnvloeden op deze productpagina
     const expectedStockGroups = (currentOptions || []).filter(g =>
         Array.isArray(g.options) && g.options.some(o => Number(o.affects_stock) === 1)
     ).length;
-    console.log('expectedStockGroups:', expectedStockGroups);
 
     // Als er stock‑groepen zijn, wacht tot ze allemaal gekozen zijn.
     if (expectedStockGroups > 0 && stockOptions.length < expectedStockGroups) {
-        console.log('Niet alle stock‑groepen gekozen — voorraadcheck uitgesteld');
         const stockInfo = document.getElementById('detail-stock-info');
         if (stockInfo) {
             stockInfo.style.display = 'none';
@@ -482,7 +476,6 @@ function checkDetailStock(selectedOptions) {
                 }
                 try {
                     stockInfo.setAttribute('data-stock-source', 'product');
-                    if (window.VOORRAAD_DEBUG) console.log('[detail] stock source: product, voorraad:', productStock, 'maxQty:', maxQty);
                 } catch(e){}
             }
         } catch(e) {
@@ -556,7 +549,6 @@ function checkDetailStock(selectedOptions) {
             qtyInput.value = cur;
             try {
                 if (stockInfo) stockInfo.setAttribute('data-stock-source', 'options');
-                if (window.VOORRAAD_DEBUG) console.log('[detail] stock source: options, voorraad:', voorraad, 'opties:', optiesString, 'maxQty:', maxQty);
             } catch(e){}
         }
     });

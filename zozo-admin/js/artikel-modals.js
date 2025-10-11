@@ -25,7 +25,6 @@ async function getSimpleTranslation(text, targetLang) {
     }
     
     const responseText = await response.text();
-    console.log('Response:', responseText); // DEBUG
     
     if (!responseText) {
         throw new Error('Lege response van server');

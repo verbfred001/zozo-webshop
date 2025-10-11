@@ -42,8 +42,6 @@
 
                 processList(document.getElementById('cat-list'));
 
-                console.log('Nieuwe volgorde:', order);
-
                 fetch('/zozo-admin/includes/categorieen_opslaan_volgorde.php', {
                     method: 'POST',
                     headers: {
@@ -124,8 +122,6 @@
         async function translateText(text, targetLang) {
             if (!text.trim()) return '';
 
-            console.log(`Vertaling starten: "${text}" naar ${targetLang}`);
-
             try {
                 // MyMemory API - geen CORS problemen
                 const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=nl|${targetLang}`;
@@ -136,14 +132,11 @@
                     }
                 });
 
-                console.log('API Response status:', response.status);
-
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const result = await response.json();
-                console.log('API Response data:', result);
 
                 // MyMemory heeft een andere response structuur
                 return result.responseData.translatedText || '';
@@ -210,7 +203,6 @@
             });
 
             const result = translatedWords.join(' ');
-            console.log(`Fallback vertaling: "${text}" -> "${result}"`);
             return result;
         }
 
@@ -239,7 +231,6 @@
 
                     try {
                         const frTranslation = await translateText(nlText, 'fr');
-                        console.log('Franse vertaling ontvangen:', frTranslation);
                         if (frTranslation) {
                             frField.value = frTranslation;
                             document.getElementById('cat_afkorting_fr').value = generateSlug(frTranslation);
@@ -283,7 +274,6 @@
 
                     try {
                         const enTranslation = await translateText(nlText, 'en');
-                        console.log('Engelse vertaling ontvangen:', enTranslation);
                         if (enTranslation) {
                             enField.value = enTranslation;
                             document.getElementById('cat_afkorting_en').value = generateSlug(enTranslation);

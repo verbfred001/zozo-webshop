@@ -445,7 +445,7 @@ ${o.option_name}${deltaText}
                             productData: modalProductData?.product || {},
                             addButtonId: 'modal-add-btn'
                         });
-                        try { voorraadDiv.setAttribute('data-stock-source', 'product'); if (window.VOORRAAD_DEBUG) console.log('[modal-open] stock source: product, voorraad:', productStock, 'maxQty:', maxQty); } catch(e){}
+                        try { voorraadDiv.setAttribute('data-stock-source', 'product'); } catch(e){}
                     }
                 }
             } catch (e) { if (window.VOORRAAD_DEBUG) console.error('modal open voorraad error', e); }
@@ -585,9 +585,6 @@ var modalOptionsForm = document.getElementById('modal-options-form');
         }
     });
 
-    // debug: zie wat er geselecteerd is
-    console.log('modal selectedOptions:', selectedOptions, 'requiredCount:', requiredCount, 'filledCount:', filledCount);
-
     // Bouw lijst van opties die voorraad beïnvloeden (voor later gebruik bij check / cart)
     const voorraadOpties = selectedOptions.filter(o => Number(o.affects_stock) === 1);
 
@@ -663,7 +660,6 @@ var modalOptionsForm = document.getElementById('modal-options-form');
                 });
                 try {
                     voorraadDiv.setAttribute('data-stock-source', 'product');
-                    if (window.VOORRAAD_DEBUG) console.log('[modal] stock source: product, voorraad:', productStock, 'maxQty:', maxQty);
                 } catch(e){}
             }
         } catch(e) {
@@ -677,8 +673,6 @@ var modalOptionsForm = document.getElementById('modal-options-form');
     (function(){
         // Bouw één genormaliseerde optiestring van de geselecteerde opties (alleen opties die voorraad beïnvloeden)
         const voorraadOpts = buildOptiesStringForDb(selectedOptions);
-
-        console.log('checkStock ->', currentProduct.id, voorraadOpts);
 
         // één enkele call naar DB voor de exacte combinatie
     checkStock(currentProduct.id, voorraadOpts, function(result) {
@@ -727,7 +721,6 @@ var modalOptionsForm = document.getElementById('modal-options-form');
                 // tag source in DOM and optional debug log
                 try {
                     voorraadDiv.setAttribute('data-stock-source', voorraadOpts && voorraadOpts !== '' ? 'options' : 'product');
-                    if (window.VOORRAAD_DEBUG) console.log('[modal] stock source:', voorraadDiv.getAttribute('data-stock-source'), 'voorraad:', v, 'opties:', voorraadOpts);
                 } catch(e){}
                     // Extra guard: wanneer de modal een berekende expected-date bevat,
                     // forceer dan dat de add-knop enabled is (voorkom dat andere logica hem uitschakelt).

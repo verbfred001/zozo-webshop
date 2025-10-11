@@ -520,7 +520,6 @@ function renderStockOrLevertijd({ targetEl, maxQty, verkrijgbaarFlag, productId,
         targetEl.innerHTML = '';
         return;
     }
-    console.log('[renderStockOrLevertijd] productId=', productId, 'maxQty=', maxQty, 'verkrijgbaar=', verkrijgbaarFlag, 'productData=', productData);
     function dagenTekst(n){ return n + ' dag' + (n === 1 ? '' : 'en'); }
 
     // bepaal levertijd (ajax productData heeft voorrang, fallback naar global meta)
@@ -528,7 +527,6 @@ function renderStockOrLevertijd({ targetEl, maxQty, verkrijgbaarFlag, productId,
     if ((!lv || lv === 0) && window.__zozoProductMeta && window.__zozoProductMeta[productId]) {
         lv = Number(window.__zozoProductMeta[productId].levertijd || 0) || 0;
     }
-    console.log('[renderStockOrLevertijd] computed levertijd=', lv);
     var addBtn = document.getElementById(addButtonId);
 
     // Wanneer geen voorraad maar artikel wél verkrijgbaar is

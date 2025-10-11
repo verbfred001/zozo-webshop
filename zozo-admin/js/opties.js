@@ -1,7 +1,6 @@
 // Vertaling functie
 async function translateText(text, targetLang) {
     if (!text.trim()) return '';
-    console.log(`Vertaling starten: "${text}" naar ${targetLang}`);
     try {
         const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=nl|${targetLang}`;
         const response = await fetch(apiUrl, {
@@ -61,12 +60,10 @@ function showAddOptionForm(groupId) {
 // Edit functies (dynamisch gevuld vanuit PHP data)
 function showEditGroupForm(groupId) {
     // Deze wordt dynamisch gevuld door PHP in de hoofdpagina
-    console.log('Edit group:', groupId);
 }
 
 function showEditOptionForm(optionId, groupId) {
     // Deze wordt dynamisch gevuld door PHP in de hoofdpagina
-    console.log('Edit option:', optionId, 'in group:', groupId);
 }
 
 // Delete functies
