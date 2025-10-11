@@ -1,19 +1,15 @@
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /
-
-    # Admin instellingen pretty routes -> internal controller
-    RewriteRule ^admin/instellingen/?$ /zozo-admin/instellingen.php [L,QSA]
-    RewriteRule ^admin/instellingen/tijdsloten-instellen/?$ /zozo-admin/instellingen.php?tab=tijdsloten&sub=ts-main [L,QSA]
-    RewriteRule ^admin/instellingen/tijdsloten-aantal-dagen/?$ /zozo-admin/instellingen.php?tab=tijdsloten&sub=ts-days [L,QSA]
-    RewriteRule ^admin/instellingen/tijdsloten-vakantie/?$ /zozo-admin/instellingen.php?tab=tijdsloten&sub=ts-holiday [L,QSA]
-    RewriteRule ^admin/instellingen/webshop/?$ /zozo-admin/instellingen.php?tab=shop [L,QSA]
-    RewriteRule ^admin/instellingen/tijdelijke-melding/?$ /zozo-admin/instellingen.php?tab=melding [L,QSA]
-    RewriteRule ^admin/instellingen/talen/?$ /zozo-admin/instellingen.php?tab=talen [L,QSA]
-    RewriteRule ^admin/instellingen/(.*)$ /zozo-admin/instellingen.php [L,QSA]
-</IfModule>
 
 RewriteEngine On
+RewriteBase /
+
+RewriteRule ^admin/instellingen/?$ /zozo-admin/instellingen.php [L,QSA]
+RewriteRule ^admin/instellingen/tijdsloten-instellen/?$ /zozo-admin/instellingen.php?tab=tijdsloten&sub=ts-main [L,QSA]
+RewriteRule ^admin/instellingen/tijdsloten-aantal-dagen/?$ /zozo-admin/instellingen.php?tab=tijdsloten&sub=ts-days [L,QSA]
+RewriteRule ^admin/instellingen/tijdsloten-vakantie/?$ /zozo-admin/instellingen.php?tab=tijdsloten&sub=ts-holiday [L,QSA]
+RewriteRule ^admin/instellingen/webshop/?$ /zozo-admin/instellingen.php?tab=shop [L,QSA]
+RewriteRule ^admin/instellingen/tijdelijke-melding/?$ /zozo-admin/instellingen.php?tab=melding [L,QSA]
+RewriteRule ^admin/instellingen/talen/?$ /zozo-admin/instellingen.php?tab=talen [L,QSA]
+RewriteRule ^admin/instellingen/(.*)$ /zozo-admin/instellingen.php [L,QSA]
 
 # --- Redirect exact root directly to branded landing page (single-hop) ---
 # This will redirect both http and https requests for the exact root to the branded URL
@@ -31,7 +27,6 @@ AddDefaultCharset utf-8
 # --- Default page for the root of the site ---
 # DirectoryIndex zozo-pages/index.php
 DirectoryIndex index.html zozo-pages/index.php
-RewriteRule ^nieuw$ /zozo-pages/index.php [L,QSA]
 
 # --- PHP settings (only works with mod_php) - guarded so it won't break PHP-FPM setups ---
 <IfModule mod_php.c>
@@ -41,17 +36,17 @@ RewriteRule ^nieuw$ /zozo-pages/index.php [L,QSA]
 </IfModule>
 
 # --- Main rewrites ---
-RewriteRule ^welkom$ /zozo-pages/zozo-welkom.php?l=nl [L,QSA]
-RewriteRule ^bienvenue$ /zozo-pages/zozo-welkom.php?l=fr [L,QSA]
-RewriteRule ^welcome$ /zozo-pages/zozo-welkom.php?l=en [L,QSA]
 
 
 
+# --- tijdelijk voor testje.be, zal verwijderd worden in maxice.be ---
 RewriteRule ^QR$ /qr_generator.php [L,QSA]
 
 
-RewriteRule ^nieuwste$ /zozo-pages/zozo-welkom.php [L,QSA]
 RewriteRule ^broodjeszaak-take-away-eethuis-roeselare$ /zozo-pages/zozo-welkom.php?l=nl [L,QSA]
+RewriteRule ^sandwicherie-take-away-restaurant-roeselare$ /zozo-pages/zozo-welkom.php?l=fr [L,QSA]
+RewriteRule ^sandwich-shop-take-away-restaurant-roeselare$ /zozo-pages/zozo-welkom.php?l=en [L,QSA]
+
 RewriteRule ^winkelwagen$ /zozo-pages/cart.php [L,QSA]
 RewriteRule ^contact$ /zozo-pages/contact.php?l=nl [L,QSA]
 RewriteRule ^contact-fr$ /zozo-pages/contact.php?l=fr [L,QSA]
@@ -93,4 +88,4 @@ RewriteRule ^login/([^/]+)/([^/]+)/([^/]+)$ /admin?magic=$1/$2/$3 [L,QSA]
 # --- Fallback: only rewrite to front controller if not a real file/dir ---
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /zozo-pages/index.php [L,QSA]
+RewriteRule . /zozo-pages/zozo-welkom.php [L,QSA]
