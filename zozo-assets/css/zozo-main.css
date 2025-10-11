@@ -109,13 +109,19 @@
     gap: 32px;
 }
 
-.footer-content > div {
+.footer-company, .footer-hours, .cat-links, .footer-marketing {
     background: rgba(255,255,255,0.03);
     border-radius: 10px;
     padding: 18px 16px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     flex: 1 1 0;
     min-width: 0;
+}
+
+.footer-column-middle {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 /* Decorative footer image (left column) */
@@ -149,12 +155,18 @@
         gap: 12px !important;
         padding: 0 12px !important; /* verminderd van 18px naar 12px voor mobiel */
     }
-    .footer-content > div {
+    .footer-company, .footer-hours, .cat-links, .footer-marketing {
         min-width: 0 !important;
         width: 86% !important; /* verminderd van 100% naar 86% om overflow te voorkomen */
         padding: 12px 12px !important;
     }
-    .footer-hours { max-width: none !important; flex: 1 1 auto !important; }
+    .footer-hours, .cat-links {
+        width: 50% !important;
+        padding: 8px 8px !important;
+    }
+    .footer-marketing {
+        width: 100% !important;
+    }
 }
 
 /* On large screens, lift the company text so it aligns visually with the image */
@@ -236,18 +248,49 @@
         align-items: flex-start;
         gap: 28px;
     }
-    .footer-content > div {
+    .footer-company, .footer-hours, .cat-links, .footer-marketing {
         min-width: 220px;
         padding: 22px 18px;
     }
+
+    .footer-column-middle {
+        min-width: 290px;
+    }
+
+    .footer-company {
+        min-width: 280px;
+    }
 }
 
-@media (max-width: 879px) {
-    .footer-content > div {
+@media (min-width: 880px) and (max-width: 990px) {
+    .footer-company {
+        min-width: 200px;
+    }
+}
+
+@media (max-width: 880px) {
+    .footer-company, .footer-hours, .cat-links, .footer-marketing {
         margin-bottom: 12px;
+    }
+    .footer-column-middle {
+        flex-direction: row;
+        width: 90%;
     }
     .zozo-footer table {
         font-size: 1em;
+    }
+}
+
+@media (max-width: 625px) {
+    .footer-column-middle {
+        flex-direction: column;
+    }
+    .footer-hours, .cat-links {
+        width: 98% !important;
+        padding: 8px 8px !important;
+    }
+    .footer-marketing {
+        width: 95% !important;
     }
 }
 
@@ -1199,6 +1242,23 @@ select.input-invalid ~ .custom-select-wrapper .custom-select-display {
 .custom-select-wrapper .custom-select-display.invalid-field,
 label.invalid-field + .custom-select-wrapper .custom-select-display {
   color: #e74c3c;
+}
+
+/* Footer category links */
+.cat-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.cat-links li {
+    margin-bottom: 5px;
+}
+.cat-links a {
+    font-size: 0.9em;
+}
+.check-icon {
+    color: #28a745;
+    margin-right: 5px;
 }
 
 

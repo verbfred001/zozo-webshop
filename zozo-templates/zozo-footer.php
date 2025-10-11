@@ -2,6 +2,8 @@
 // filepath: e:\meettoestel.be\zozo-templates\zozo-footer.php
 
 require_once($_SERVER['DOCUMENT_ROOT'] . "/zozo-includes/DB_connectie.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/zozo-includes/lang.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/zozo-includes/zozo-categories.php");
 $res = $mysqli->query("SELECT * FROM instellingen LIMIT 1");
 $inst = $res ? $res->fetch_assoc() : null;
 ?>
@@ -10,7 +12,7 @@ $inst = $res ? $res->fetch_assoc() : null;
 <footer class="zozo-footer">
     <div class="footer-content">
         <!-- Left column: bedrijfsgegevens + privacy -->
-        <div>
+        <div class="footer-company">
             <!-- Decoratieve afbeelding links in footer (boven de bedrijfsnaam) -->
             <div class="footer-deco-wrap" aria-hidden="true">
                 <img src="/zozo-assets/img/myriam-maxice.webp" alt="" class="footer-deco-img" loading="lazy">
@@ -41,38 +43,62 @@ $inst = $res ? $res->fetch_assoc() : null;
             </div>
         </div>
 
-        <!-- Middle column: openingsuren -->
-        <div class="footer-hours">
-            <table style="font-size:0.95em;">
-                <tr>
-                    <td>Ma:</td>
-                    <td><?= htmlspecialchars($inst['openingsuren_maandag'] ?? '') ?></td>
-                </tr>
-                <tr>
-                    <td>Di:</td>
-                    <td><?= htmlspecialchars($inst['openingsuren_dinsdag'] ?? '') ?></td>
-                </tr>
-                <tr>
-                    <td>Wo:</td>
-                    <td><?= htmlspecialchars($inst['openingsuren_woensdag'] ?? '') ?></td>
-                </tr>
-                <tr>
-                    <td>Do:</td>
-                    <td><?= htmlspecialchars($inst['openingsuren_donderdag'] ?? '') ?></td>
-                </tr>
-                <tr>
-                    <td>Vr:</td>
-                    <td><?= htmlspecialchars($inst['openingsuren_vrijdag'] ?? '') ?></td>
-                </tr>
-                <tr>
-                    <td>Za:</td>
-                    <td><?= htmlspecialchars($inst['openingsuren_zaterdag'] ?? '') ?></td>
-                </tr>
-                <tr>
-                    <td>Zo:</td>
-                    <td><?= htmlspecialchars($inst['openingsuren_zondag'] ?? '') ?></td>
-                </tr>
-            </table>
+        <!-- Middle column -->
+        <div class="footer-column-middle">
+            <div class="footer-hours">
+                <table style="font-size:0.95em;">
+                    <tr>
+                        <td>Ma:</td>
+                        <td><?= htmlspecialchars($inst['openingsuren_maandag'] ?? '') ?></td>
+                    </tr>
+                    <tr>
+                        <td>Di:</td>
+                        <td><?= htmlspecialchars($inst['openingsuren_dinsdag'] ?? '') ?></td>
+                    </tr>
+                    <tr>
+                        <td>Wo:</td>
+                        <td><?= htmlspecialchars($inst['openingsuren_woensdag'] ?? '') ?></td>
+                    </tr>
+                    <tr>
+                        <td>Do:</td>
+                        <td><?= htmlspecialchars($inst['openingsuren_donderdag'] ?? '') ?></td>
+                    </tr>
+                    <tr>
+                        <td>Vr:</td>
+                        <td><?= htmlspecialchars($inst['openingsuren_vrijdag'] ?? '') ?></td>
+                    </tr>
+                    <tr>
+                        <td>Za:</td>
+                        <td><?= htmlspecialchars($inst['openingsuren_zaterdag'] ?? '') ?></td>
+                    </tr>
+                    <tr>
+                        <td>Zo:</td>
+                        <td><?= htmlspecialchars($inst['openingsuren_zondag'] ?? '') ?></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="cat-links">
+                <ul>
+                    <?php
+                    foreach ($categories as $cat) {
+                        $parent_name = htmlspecialchars(cat_name($cat, $lang));
+                        $parent_slug = htmlspecialchars(cat_slug($cat, $lang));
+                        if (!empty($cat['children'])) {
+                            foreach ($cat['children'] as $child) {
+                                $child_name = htmlspecialchars(cat_name($child, $lang));
+                                $child_slug = htmlspecialchars(cat_slug($child, $lang));
+                                $url = '/' . $lang . '/' . $parent_slug . '/' . $child_slug;
+                                echo '<li><span class="check-icon">✓</span> <a href="' . $url . '">' . $parent_name . ' - ' . $child_name . '</a></li>';
+                            }
+                        } else {
+                            $url = '/' . $lang . '/' . $parent_slug;
+                            echo '<li><span class="check-icon">✓</span> <a href="' . $url . '">' . $parent_name . '</a></li>';
+                        }
+                    }
+                    ?>
+                </ul>
+            </div>
         </div>
 
         <!-- Right column: marketing, payment, allergen note, social icons and copyright -->
